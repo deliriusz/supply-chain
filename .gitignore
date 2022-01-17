@@ -1,0 +1,8 @@
+frontend/cache
+frontend/node_modules
+frontend/artifacts
+frontend/contracts/artifacts
+frontend/contracts/flat_*
+frontend/contracts/.deps
+frontend/contracts/.debugger
+

@@ -1,0 +1,11 @@
+.paginator {
+   font-size: 3em;
+   font-weight: bold;
+   color: grey;
+}
+
+.paginator:hover {
+   color: #2185d0;
+   cursor: pointer;
+   background-color: rgb(249, 249, 249);
+}
