@@ -31,6 +31,7 @@ func FindProduct(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		fmt.Errorf(err.Error())
 		return
 	}
 
@@ -49,12 +50,19 @@ func CreateProduct(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		fmt.Errorf(err.Error())
 		return
 	}
 
 	product := model.ToProduct(input)
 
-	model.DB.Create(&product)
+	err := model.DB.Create(&product).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		fmt.Errorf(err.Error())
+		return
+	}
 
 	for _, sd := range input.Specification {
 		model.DB.Create(model.ToSpecification(sd))

@@ -1,8 +1,8 @@
 package model
 
 type ImageDTO struct {
-	Id        uint   `json:"id" binding:"optional"`
-	ProductId uint   `json:"productId" binding:"optional"`
+	Id        uint   `json:"id"`
+	ProductId uint   `json:"productId"`
 	Url       string `json:"url" binding:"required"`
-	ImageName string `json:"imageName" binding:"optional"`
+	ImageName string `json:"imageName"`
 }
