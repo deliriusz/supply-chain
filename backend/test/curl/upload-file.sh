@@ -1,0 +1,1 @@
+curl -F 'upload=@../image.png' http://localhost:8080/product/1/image

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/model"
 )
@@ -31,7 +32,7 @@ func FindProduct(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		fmt.Errorf(err.Error())
+		log.Error(err)
 		return
 	}
 
@@ -50,7 +51,7 @@ func CreateProduct(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		fmt.Errorf(err.Error())
+		log.Error(err)
 		return
 	}
 
@@ -60,7 +61,7 @@ func CreateProduct(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		fmt.Errorf(err.Error())
+		log.Error(err)
 		return
 	}
 
@@ -75,6 +76,7 @@ func CreateImage(c *gin.Context) {
 	productId, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
+		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -82,6 +84,7 @@ func CreateImage(c *gin.Context) {
 	_, productExists := getProduct(uint(productId))
 
 	if !productExists {
+		log.WithFields(log.Fields{"ProductId": productId}).Error("Product not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 		return
 	}
@@ -89,6 +92,7 @@ func CreateImage(c *gin.Context) {
 	file, _, err := c.Request.FormFile("upload")
 
 	if err != nil {
+		log.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -102,9 +106,18 @@ func CreateImage(c *gin.Context) {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(file)
 
-	os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, buf.Bytes(), 0644)
+	// err = nil
+	err = os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, buf.Bytes(), 0644)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 
-	model.DB.Create(&image)
+	err = model.DB.Create(&image).Error
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 }
 
 func GetImage(c *gin.Context) {
@@ -118,6 +131,7 @@ func getProduct(productId uint) (model.Product, bool) {
 
 	if err := model.DB.Where("id = ?",
 		productId).Preload("Img").Preload("Specification").First(&product, productId).Error; err != nil {
+		log.Error(err)
 		return model.Product{}, false
 	}
 
