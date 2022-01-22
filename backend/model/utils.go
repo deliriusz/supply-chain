@@ -37,7 +37,7 @@ func ToSpecificationDTO(specification Specification) SpecificationDTO {
 func ToImageDTO(image Image) ImageDTO {
 	return ImageDTO{
 		Id:  image.Id,
-		Url: fmt.Sprintf("/image/%d", image.Id),
+		Url: fmt.Sprintf("/image/%s", image.ImageName),
 	}
 }
 

@@ -122,8 +122,9 @@ func CreateImage(c *gin.Context) {
 
 func GetImage(c *gin.Context) {
 	fs := http.FileSystem(http.Dir(config.IMAGE_LOCAL_STORAGE))
+	filename := c.Param("fileName")
 
-	c.FileFromFS(c.Param("fileName"), fs)
+	c.FileFromFS(filename, fs)
 }
 
 func getProduct(productId uint) (model.Product, bool) {
