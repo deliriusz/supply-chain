@@ -32,7 +32,7 @@ func main() {
 
 	router.GET("/product", controller.GetProducts)
 	router.POST("/product", controller.CreateProduct)
-	router.GET("/product/:id", controller.FindProduct)
+	router.GET("/product/:id", controller.GetProduct)
 	router.POST("/product/:id/image", controller.CreateImage)
 	router.GET("/image/:fileName", controller.GetImage)
 

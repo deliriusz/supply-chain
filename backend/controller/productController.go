@@ -18,7 +18,9 @@ func GetProducts(c *gin.Context) {
 	var products []model.Product
 	var productDtos []model.ProductDTO
 
-	model.DB.Preload("Img").Preload("Specification").Find(&products)
+	model.DB.Preload("Img").Preload("Specification").
+		Scopes(model.Paginate(c.Query("limit"), c.Query("offset"))).
+		Find(&products)
 
 	for _, returnedProduct := range products {
 		productDtos = append(productDtos, model.ToProductDTO(returnedProduct))
@@ -27,7 +29,7 @@ func GetProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, productDtos)
 }
 
-func FindProduct(c *gin.Context) {
+func GetProduct(c *gin.Context) {
 	productId, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
@@ -69,7 +71,7 @@ func CreateProduct(c *gin.Context) {
 		model.DB.Create(model.ToSpecification(sd))
 	}
 
-	c.String(http.StatusAccepted, "")
+	c.JSON(http.StatusOK, gin.H{"id": product.Id})
 }
 
 func CreateImage(c *gin.Context) {
@@ -118,6 +120,8 @@ func CreateImage(c *gin.Context) {
 		log.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
+
+	c.JSON(http.StatusOK, gin.H{"id": image.ImageName})
 }
 
 func GetImage(c *gin.Context) {

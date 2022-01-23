@@ -1,6 +1,8 @@
 package model
 
 import (
+	"strconv"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -19,4 +21,24 @@ func ConnectDatabase() {
 	database.AutoMigrate(&Product{})
 
 	DB = database
+}
+
+func Paginate(limit string, offset string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		limit, err := strconv.Atoi(limit)
+		if err != nil {
+			limit = 10
+		} else if limit > 100 {
+			limit = 100
+		}
+
+		offset, err := strconv.Atoi(offset)
+		if err != nil {
+			offset = 0
+		} else if offset < 0 {
+			offset = 0
+		}
+
+		return db.Offset(offset).Limit(limit)
+	}
 }
