@@ -68,7 +68,8 @@ func CreateProduct(c *gin.Context) {
 	}
 
 	for _, sd := range input.Specification {
-		model.DB.Create(model.ToSpecification(sd))
+		spec := model.ToSpecification(sd)
+		model.DB.Create(&spec)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"id": product.Id})
