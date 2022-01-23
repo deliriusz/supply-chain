@@ -1,25 +1,25 @@
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
+   Chart as ChartJS,
+   CategoryScale,
+   LinearScale,
+   PointElement,
+   LineElement,
+   Title,
+   Tooltip,
+   Legend,
 } from 'chart.js'
 import { Chart } from 'react-chartjs-2'
 
 import React, { useState } from "react"
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+   CategoryScale,
+   LinearScale,
+   PointElement,
+   LineElement,
+   Title,
+   Tooltip,
+   Legend
 )
 
 const labels = [
@@ -50,7 +50,7 @@ const SalesChart = () => {
 
    return (
       <div>
-      <Chart type='line' data={data} />
+         <Chart type='line' data={data} />
       </div>
    )
 }
