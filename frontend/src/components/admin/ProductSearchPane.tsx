@@ -55,7 +55,7 @@ const AddProductPane = () => {
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
                   id="title" label='Title' placeholder='Title' />
             </Form.Field>
-            <Form.Group inline>
+            <Form.Group>
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
                   label='Price' placeholder='Price' id="price" width={3} />
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
