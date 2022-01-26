@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Icon, Menu, MenuItemProps, Segment, Statistic } from "semantic-ui-react";
-import SalesChart from "./SalesChart";
+import AddProductPane from "./ProductSearchPane";
+import StatisticsPane from "./StatisticsPane";
 
 //TODO: think about making menu sticky
 const Dashboard = () => {
@@ -22,146 +23,13 @@ const Dashboard = () => {
                onClick={handleItemClick}
             />
             <Menu.Item
-               name='product search'
-               active={activeItem === 'product search'}
+               name='add product'
+               active={activeItem === 'add product'}
                onClick={handleItemClick}
             />
          </Menu>
-         {activeItem}
-         <Segment compact>
-            <Statistic.Group>
-               <Statistic>
-                  <Statistic.Value>22</Statistic.Value>
-                  <Statistic.Label>Saves</Statistic.Label>
-               </Statistic>
-
-               <Statistic>
-                  <Statistic.Value text>
-                     Three
-                     <br />
-                     Thousand
-                  </Statistic.Value>
-                  <Statistic.Label>Signups</Statistic.Label>
-               </Statistic>
-
-               <Statistic>
-                  <Statistic.Value>
-                     <Icon name='plane' />5
-                  </Statistic.Value>
-                  <Statistic.Label>Flights</Statistic.Label>
-               </Statistic>
-
-               <Statistic>
-                  <Statistic.Value>
-                     42
-                  </Statistic.Value>
-                  <Statistic.Label>Team Members</Statistic.Label>
-               </Statistic>
-            </Statistic.Group>
-         </Segment>
-         <SalesChart />
-         <h3>contract a product button</h3>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
-         <p>list of all products with filtering</p>
+         {activeItem == 'statistics' && <StatisticsPane />}
+         {activeItem == 'add product' && <AddProductPane />}
       </>
    )
 }

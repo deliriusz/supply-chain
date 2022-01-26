@@ -23,6 +23,7 @@ let productList: Product[] = [
       title: 'Bulbulator',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce porta consectetur magna sed elementum. Maecenas sed dignissim erat. Proin ullamcorper libero vel arcu vehicula ultricies. Aliquam finibus massa vel luctus porta. Pellentesque vehicula tortor in vehicula ultricies. Maecenas semper faucibus quam, in fringilla ipsum consequat sit amet. Proin eget rhoncus eros. Suspendisse at lorem dapibus, vehicula sem eget, pretium ligula. Maecenas interdum risus id malesuada scelerisque. Nam cursus pharetra nisi sed rhoncus. Aliquam fringilla rhoncus velit quis malesuada. Etiam tempus mauris ut hendrerit suscipit. Vestibulum enim eros, mattis in consequat in, mollis eu justo.',
       price: 1000,
+      quantity: 1000,
       specification: [
          {
             name: "Size",
@@ -64,6 +65,7 @@ let productList: Product[] = [
       title: 'Nice & Dandy',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce porta consectetur magna sed elementum. Maecenas sed dignissim erat. Proin ullamcorper libero vel arcu vehicula ultricies. Aliquam finibus massa vel luctus porta. Pellentesque vehicula tortor in vehicula ultricies. Maecenas semper faucibus quam, in fringilla ipsum consequat sit amet. Proin eget rhoncus eros. Suspendisse at lorem dapibus, vehicula sem eget, pretium ligula. Maecenas interdum risus id malesuada scelerisque. Nam cursus pharetra nisi sed rhoncus. Aliquam fringilla rhoncus velit quis malesuada. Etiam tempus mauris ut hendrerit suscipit. Vestibulum enim eros, mattis in consequat in, mollis eu justo.',
       price: 222,
+      quantity: 1000,
       specification: [
          {
             name: "Size",

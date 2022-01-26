@@ -1,13 +1,14 @@
 interface Specification {
    name: string
-   value: string | number
+   value: string
 }
 
 export default interface Product {
-   id: number
+   id: number | undefined
    imgUrl: string[]
    title: string
    description: string
    price: number
+   quantity: number
    specification: Specification[]
 }
