@@ -3,6 +3,8 @@ import { Button, Form, Header, Icon, Segment } from "semantic-ui-react";
 import Product from '../../interfaces/Product'
 import './ProductSearchPane.css'
 
+const EMPTY_SPEC = { name: '', value: '' }
+
 const AddProductPane = () => {
    const [product, setProduct] = useState<Product>({
       description: '',
@@ -28,18 +30,21 @@ const AddProductPane = () => {
    }
 
    const addSpecFormParameter = () => {
-      setProduct({ ...product, specification: [...product.specification, { name: '', value: '' }] })
+      setProduct({ ...product, specification: [...product.specification, EMPTY_SPEC] })
    }
 
    const removeSpecFormParameter = (idx: number) => {
-      //TODO: fix edge cases, e.g. removing item from the middle
-      var specArray: any
+      var specArray = product.specification
+      console.log(product.specification)
 
-      if (product.specification.length >= 1) {
-         specArray = []
+      if (product.specification.length <= 1) {
+         specArray = [EMPTY_SPEC]
       } else {
-         specArray = product.specification.splice(idx, 1)
+         specArray.splice(idx, 1)
       }
+
+      console.log(idx)
+      console.log(specArray)
 
       setProduct({ ...product, specification: specArray })
       console.log("product after:")
@@ -66,9 +71,9 @@ const AddProductPane = () => {
                   return (
                      <Form.Group inline>
                         <Form.Input onChange={(_, data) => setSpecFormParameter("name", idx, data.value)}
-                           id={`spec-name-${idx}`} label='Name' placeholder='Name' width={4} />
+                           id={`spec-name-${idx}`} value={product.specification[idx].name} label='Name' placeholder='Name' width={4} />
                         <Form.Input onChange={(_, data) => setSpecFormParameter("value", idx, data.value)}
-                           id={`spec-value-${idx}`} label='Value' placeholder='Value' width={6} />
+                           id={`spec-value-${idx}`} label='Value' value={product.specification[idx].value} placeholder='Value' width={6} />
                         <Button as='a' className="specification-button" onClick={addSpecFormParameter}>+</Button>
                         <Button as='a' className="specification-button" onClick={() => removeSpecFormParameter(idx)}>-</Button>
                      </Form.Group>
