@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Header, Icon, Segment } from "semantic-ui-react";
+import { Button, Form, FormProps } from "semantic-ui-react";
 import Product from '../../interfaces/Product'
 import './ProductSearchPane.css'
 
@@ -25,8 +25,6 @@ const AddProductPane = () => {
       const newSpecItem = { ...newSpec[idx], [name]: value }
       newSpec[idx] = newSpecItem
       setProduct({ ...product, specification: newSpec })
-      console.log("product after:")
-      console.log(product)
    }
 
    const addSpecFormParameter = () => {
@@ -43,26 +41,25 @@ const AddProductPane = () => {
          specArray.splice(idx, 1)
       }
 
-      console.log(idx)
-      console.log(specArray)
-
       setProduct({ ...product, specification: specArray })
-      console.log("product after:")
-      console.log(product)
+   }
+
+   const submitForm = (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
+      event.preventDefault()
    }
 
    return (
       <>
-         <Form>
+         <Form onSubmit={(event: React.FormEvent<HTMLFormElement>, data: FormProps) => submitForm(event, data)}>
             <Form.Field>
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
                   id="title" label='Title' placeholder='Title' />
             </Form.Field>
-            <Form.Group>
+            <Form.Group inline>
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
                   label='Price' placeholder='Price' id="price" width={3} />
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
-                  label='Available Quantity' id="quantity" placeholder='Available Quantity' width={3} />
+                  label='Quantity' id="quantity" placeholder='Available Quantity' width={3} />
             </Form.Group>
             <hr />
             <h5>Specification</h5>
@@ -87,6 +84,9 @@ const AddProductPane = () => {
             </Form.Field>
             <hr />
             <h5>Images</h5>
+
+            <Form.Button>Submit</Form.Button>
+
          </Form>
       </>
    )
