@@ -46,7 +46,7 @@ const SalesChart = () => {
 
    return (
       <div>
-         <Chart type='line' data={data} />
+         <Chart type='line' data={data}  />
       </div>
    )
 }
