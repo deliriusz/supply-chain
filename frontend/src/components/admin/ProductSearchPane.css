@@ -1,0 +1,32 @@
+.field-group {
+   justify-content: center;
+}
+
+.image-group {
+   display: flex;
+   justify-content: space-around;
+   flex-wrap: wrap;
+}
+
+.image-container>img.ui.image {
+   margin: 0;
+}
+
+.remove-image, .remove-image>.close.icon {
+   cursor: pointer ! important;
+}
+
+.image-container {
+   position: relative;
+   overflow: hidden;
+}
+
+hr {
+   width: 75%;
+   display: block;
+   height: 1px;
+   border: 0;
+   border-top: 1px solid #ccc;
+   margin: 2em auto;
+   padding: 0;
+}
