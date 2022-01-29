@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form, FormProps, Icon, Image, Label } from "semantic-ui-react";
 import Product from '../../interfaces/Product'
 import './ProductSearchPane.css'

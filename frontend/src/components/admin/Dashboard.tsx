@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Menu, MenuItemProps } from "semantic-ui-react";
-import AddProductPane from "./ProductSearchPane";
+import AddProductPane from "./AddProductPane";
 import StatisticsPane from "./StatisticsPane";
 
 //TODO: think about making menu sticky
