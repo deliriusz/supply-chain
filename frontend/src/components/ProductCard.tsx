@@ -1,6 +1,4 @@
-import { checkProperties } from "ethers/lib/utils";
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button, Card, Image } from "semantic-ui-react";
 import Product from "../interfaces/Product";
 

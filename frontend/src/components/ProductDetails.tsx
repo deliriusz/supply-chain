@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button, Card, Divider, Grid, Header, Icon, Image, Segment, Table } from "semantic-ui-react";
+import { Button, Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
 import Product from "../interfaces/Product";
 import { useParams } from 'react-router-dom';
 import * as ProductService from '../services/ProductService'

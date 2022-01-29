@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icon, Menu, MenuItemProps, Segment, Statistic } from "semantic-ui-react";
+import { Menu, MenuItemProps } from "semantic-ui-react";
 import AddProductPane from "./ProductSearchPane";
 import StatisticsPane from "./StatisticsPane";
 
@@ -7,7 +7,9 @@ import StatisticsPane from "./StatisticsPane";
 const Dashboard = () => {
 
    const [activeItem, setActiveItem] = useState<string>('statistics');
-   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement>, data: MenuItemProps) => { setActiveItem(data.name ? data.name : 'statistics') };
+   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement>, data: MenuItemProps) => {
+      setActiveItem(data.name ? data.name : 'statistics')
+   };
 
    return (
       <>
@@ -28,8 +30,8 @@ const Dashboard = () => {
                onClick={handleItemClick}
             />
          </Menu>
-         {activeItem == 'statistics' && <StatisticsPane />}
-         {activeItem == 'add product' && <AddProductPane />}
+         {activeItem === 'statistics' && <StatisticsPane />}
+         {activeItem === 'add product' && <AddProductPane />}
       </>
    )
 }

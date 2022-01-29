@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-import { GridColumn, Icon, Menu, MenuItemProps, Segment, Statistic } from "semantic-ui-react";
+import React from "react";
+import { GridColumn, Icon, Segment, Statistic } from "semantic-ui-react";
 import SalesChart from "./SalesChart";
 
 const StatisticsPane = () => {
-
-   const [activeItem, setActiveItem] = useState<string>('statistics');
-   const handleItemClick = (event: React.MouseEvent<HTMLAnchorElement>, data: MenuItemProps) => { setActiveItem(data.name ? data.name : 'statistics') };
 
    return (
       <>

@@ -1,11 +1,11 @@
 import React, { useState } from "react"
-import { Button, Card, Grid, Icon, Image, Segment } from "semantic-ui-react";
+import { Card, Grid, Image } from "semantic-ui-react";
 import './ImageCarousel.css'
 
 const IMAGE_PREVIEW_WIDTH = 3;
 const IMAGE_PREVIEW_SILDER_WIDTH = 1;
 const IMAGE_PREVIEW_COUNT = Math.floor(16 / IMAGE_PREVIEW_WIDTH) - 1;
-const PLACEHOLDER_IMG = <div className="ui placeholder"><div className="image"></div></div>
+// const PLACEHOLDER_IMG = <div className="ui placeholder"><div className="image"></div></div>
 
 const ImageCarousel: React.FC<{ images: string[] | undefined }> = ({ images }) => {
 
@@ -28,7 +28,6 @@ const ImageCarousel: React.FC<{ images: string[] | undefined }> = ({ images }) =
    const increasePreviewPage = () => {
       const imagesCount = images ? images.length : 0
       const newPage = page + 1
-      // 4 * 3 < 9
       if (IMAGE_PREVIEW_COUNT * newPage < imagesCount) {
          setPage(newPage)
       }
