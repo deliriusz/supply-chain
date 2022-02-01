@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Button, Form, FormProps, Icon, Image, Label } from "semantic-ui-react";
+import { Button, Form, FormProps, GridRow, Header, HeaderSubheader, Icon, Image, Label, Message } from "semantic-ui-react";
 import Product from '../../interfaces/Product'
-import './ProductSearchPane.css'
+import { createProduct, ResponseContent } from '../../services/ProductService'
+import './AddProductPane.css'
 
 const EMPTY_SPEC = { name: '', value: '' }
 
+//TODO: add images when creating product, add loading when from is submitted
 const AddProductPane = () => {
    const [product, setProduct] = useState<Product>({
       description: '',
@@ -17,6 +19,10 @@ const AddProductPane = () => {
    })
    const [images, setImages] = useState<File[]>([])
    const [imageUrls, setImageUrls] = useState<string[]>([])
+   const [formSubmitError, setFormSubmitError] = useState<boolean>(false)
+   const [formSubmitSuccess, setFormSubmitSuccess] = useState<boolean>(false)
+   const [formSubmitErrorMessage, setFormSubmitErrorMessage] = useState<string>("")
+   const [createdProductId, setCreatedProductId] = useState<string>("")
 
    const readImage = (file: File) => {
       const reader = new FileReader();
@@ -78,8 +84,24 @@ const AddProductPane = () => {
       setProduct({ ...product, specification: specArray })
    }
 
-   const submitForm = (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
+   const submitForm = async (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
       event.preventDefault()
+      console.log(window.location)
+
+      const normalizedProduct: Product = (JSON.parse(JSON.stringify(product)))
+      if (typeof normalizedProduct.price === "string") {
+         normalizedProduct.price = parseInt(normalizedProduct.price)
+      }
+      if (typeof normalizedProduct.quantity === "string") {
+         normalizedProduct.quantity = parseInt(normalizedProduct.quantity)
+      }
+
+      const response: ResponseContent = await createProduct(normalizedProduct)
+      console.log(response)
+      setFormSubmitErrorMessage(JSON.stringify(response.data))
+      setFormSubmitError(!response.isOk)
+      setFormSubmitSuccess(response.isOk)
+      setCreatedProductId(response.data.id)
    }
 
    const removeImage = (id: number) => {
@@ -89,7 +111,8 @@ const AddProductPane = () => {
 
    return (
       <>
-         <Form onSubmit={(event: React.FormEvent<HTMLFormElement>, data: FormProps) => submitForm(event, data)}>
+         <Form error={formSubmitError} success={formSubmitSuccess}
+            onSubmit={(event: React.FormEvent<HTMLFormElement>, data: FormProps) => submitForm(event, data)}>
             <Form.Field>
                <Form.Input onChange={(event, data) => setFormParameter(event, data.value)}
                   id="title" label='Title' placeholder='Title' />
@@ -119,17 +142,23 @@ const AddProductPane = () => {
 
             <Form.Field>
                <Form.TextArea onChange={(event, data) => setFormParameter(event, data.value ? data.value.toString() : '')}
-                  fluid='' id="description" label='Description' placeholder='Description' />
+                  id="description" label='Description' placeholder='Description' />
             </Form.Field>
             <hr />
             <h5>Images</h5>
             <Form.Group>
-               <input type="file" id="upload-file" onChange={(e) => setImage(e)}
-                  accept="image/png, image/jpg" multiple></input>
-               <label htmlFor="file">
-                  <Button as="span" onClick={e => e.stopPropagation()}>
-                     Upload
-                  </Button>
+               <label className="custom-file-upload">
+                  <input type="file" id="upload-file" onChange={(e) => setImage(e)}
+                     accept="image/png, image/jpg" multiple></input>
+                  <GridRow>
+                     <Icon size="massive" name="upload" />
+                  </GridRow>
+                  <GridRow>
+                     <Header size="huge">Click to upload</Header>
+                  </GridRow>
+                  <GridRow>
+                     <Header size="medium">... Or drag and drop here</Header>
+                  </GridRow>
                </label>
             </Form.Group>
 
@@ -143,7 +172,6 @@ const AddProductPane = () => {
                            </Label>
                            <Image
                               rounded
-                              // bordered
                               className="image-content"
                               size="medium"
                               src={val}
@@ -153,6 +181,16 @@ const AddProductPane = () => {
                   })
                }
             </Image.Group>
+            <Message
+               success
+               header='Product successfully created'
+               content={<p>You can check it by visiting <a href={`${window.location.origin}/product/${createdProductId}`}>THIS LINK</a></p>}
+            />
+            <Message
+               error
+               header='Error while sending a form'
+               content={formSubmitErrorMessage}
+            />
             <Form.Button>Submit</Form.Button>
 
          </Form>

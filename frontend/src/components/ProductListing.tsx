@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Product from '../interfaces/Product';
 import ProductCard from './ProductCard';
 import * as ProductService from '../services/ProductService'
-import { Grid } from 'semantic-ui-react';
+import { Grid, GridColumn } from 'semantic-ui-react';
 
 const ProductListing = () => {
-   const [products, setProducts] = useState<Product[]>(ProductService.getProducts());
+   useEffect(() => {
+      ProductService.getProducts().then(products => setProducts(products))
+   }, [])
+   const [products, setProducts] = useState<Product[]>([]);
 
    return (
       <>
@@ -13,10 +16,10 @@ const ProductListing = () => {
             {
                products.map((element, idx, arr) => {
                   return (
-                     <div className='column'>
+                     <GridColumn width={5}>
                         <ProductCard
                            product={element} />
-                     </div>
+                     </GridColumn>
                   )
                })
             }

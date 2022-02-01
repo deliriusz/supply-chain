@@ -1,5 +1,11 @@
 import Product from "../interfaces/Product";
 
+interface ResponseContent {
+   data?: any,
+   isOk: boolean,
+   status: number,
+}
+
 let productList: Product[] = [
    {
       id: 1,
@@ -87,12 +93,68 @@ let productList: Product[] = [
    }
 ]
 
-const getProducts = (offset: number = 0, limit: number = 10): Product[] => {
-   return productList
+const getProducts = async (offset: number = 0, limit: number = 10): Promise<Product[]> => {
+   const requestOptions = {
+      method: "GET",
+   }
+
+   var responseContent: ResponseContent = { isOk: false, status: 500 };
+
+   await fetch(`${process.env.REACT_APP_BACKEND_URL}/product?offset=${offset}&limit=${limit}`, requestOptions)
+      .then(async response => {
+         const responseData: any = await response.json()
+
+         responseContent = { data: responseData, isOk: response.ok, status: response.status }
+         responseContent.data = responseData
+         responseContent.isOk = response.ok
+         responseContent.status = response.status
+
+         console.log(response)
+
+         if (!response.ok) {
+            return Promise.reject(responseContent)
+         }
+
+      }).catch(err => {
+         console.log(err)
+      })
+
+   return responseContent.data
 }
 
 const getProduct = (id: number): Product | undefined => {
    return productList.filter((v, i, a) => v.id === id)[0]
 }
 
-export { getProduct, getProducts }
+const createProduct = async (product: Product): Promise<ResponseContent> => {
+   const requestOptions = {
+      method: "POST",
+      body: JSON.stringify(product),
+   }
+
+   var responseContent: ResponseContent = { isOk: false, status: 500 };
+
+   await fetch(`${process.env.REACT_APP_BACKEND_URL}/product`, requestOptions)
+      .then(async response => {
+         const responseData: any = await response.json()
+
+         responseContent = { data: responseData, isOk: response.ok, status: response.status }
+         responseContent.data = responseData
+         responseContent.isOk = response.ok
+         responseContent.status = response.status
+
+         console.log(response)
+
+         if (!response.ok) {
+            return Promise.reject(responseContent)
+         }
+
+      }).catch(err => {
+         // response = err
+      })
+
+   return responseContent
+}
+
+export type { ResponseContent }
+export { getProduct, getProducts, createProduct }
