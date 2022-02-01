@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
 import Product from "../interfaces/Product";
 import { useParams } from 'react-router-dom';
@@ -11,7 +11,10 @@ interface ProductDetailsProps {
 
 const ProductDetails = () => {
    let { productId } = useParams()
-   let [product, setProduct] = useState<Product | undefined>(ProductService.getProduct(parseInt(productId + '', 10)))
+   useEffect(() => {
+      ProductService.getProduct(parseInt(productId + '')).then(product => setProduct(product))
+   }, [])
+   let [product, setProduct] = useState<Product | undefined>()
 
    return (
       <Grid>
