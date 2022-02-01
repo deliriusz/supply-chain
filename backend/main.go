@@ -1,6 +1,9 @@
 package main
 
 import (
+	"time"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"rafal-kalinowski.pl/config"
@@ -29,6 +32,15 @@ func main() {
 	// 		{Id: 2, ProductId: 1, Name: "color", Value: "red"},
 	// 	},
 	// })
+
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	router.GET("/product", controller.GetProducts)
 	router.POST("/product", controller.CreateProduct)
