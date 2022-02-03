@@ -6,7 +6,12 @@ interface ResponseContent {
    status: number,
 }
 
-const getProducts = async (offset: number = 0, limit: number = 10): Promise<Product[]> => {
+interface GetProductsResponse {
+   total: number,
+   products: Product[]
+}
+
+const getProducts = async (offset: number = 0, limit: number = 10): Promise<GetProductsResponse> => {
    const requestOptions = {
       method: "GET",
    }

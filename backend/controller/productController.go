@@ -18,6 +18,9 @@ func GetProducts(c *gin.Context) {
 	var products []model.Product
 	var productDtos []model.ProductDTO
 
+	count := 0
+	model.DB.Find(&[]model.Product{}).Count(&count)
+
 	model.DB.Preload("Img").Preload("Specification").
 		Scopes(model.Paginate(c.Query("limit"), c.Query("offset"))).
 		Find(&products)
@@ -26,7 +29,7 @@ func GetProducts(c *gin.Context) {
 		productDtos = append(productDtos, model.ToProductDTO(returnedProduct))
 	}
 
-	c.JSON(http.StatusOK, productDtos)
+	c.JSON(http.StatusOK, gin.H{"total": count, "products": productDtos})
 }
 
 func GetProduct(c *gin.Context) {

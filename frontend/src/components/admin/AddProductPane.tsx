@@ -86,7 +86,6 @@ const AddProductPane = () => {
 
    const submitForm = async (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
       event.preventDefault()
-      console.log(window.location)
 
       const normalizedProduct: Product = (JSON.parse(JSON.stringify(product)))
       if (typeof normalizedProduct.price === "string") {
@@ -184,7 +183,7 @@ const AddProductPane = () => {
             <Message
                success
                header='Product successfully created'
-               content={<p>You can check it by visiting <a href={`${window.location.origin}/product/${createdProductId}`}>THIS LINK</a></p>}
+               content={<p>You can check it by visiting <a href={`/product/${createdProductId}`}>THIS LINK</a></p>}
             />
             <Message
                error
