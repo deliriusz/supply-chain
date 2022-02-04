@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Image, Menu, Icon, Rating, Button } from "semantic-ui-react";
+import { Table, Image, Menu, Icon, Rating } from "semantic-ui-react";
 import Product from "../interfaces/Product";
 import * as ProductService from '../services/ProductService'
 import _ from 'lodash';

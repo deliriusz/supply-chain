@@ -16,7 +16,7 @@ const ProductListing = () => {
             {
                products.map((element, idx, arr) => {
                   return (
-                     <GridColumn width={5}>
+                     <GridColumn key={`product-${idx}`} width={5}>
                         <ProductCard
                            product={element} />
                      </GridColumn>

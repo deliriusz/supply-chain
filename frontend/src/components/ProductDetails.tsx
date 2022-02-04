@@ -5,10 +5,6 @@ import { useParams } from 'react-router-dom';
 import * as ProductService from '../services/ProductService'
 import ImageCarousel from "./ImageCarousel";
 
-interface ProductDetailsProps {
-   product: Product
-}
-
 const ProductDetails = () => {
    let { productId } = useParams()
    useEffect(() => {
