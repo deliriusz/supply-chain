@@ -4,6 +4,28 @@ import (
 	"fmt"
 )
 
+func ToPurchaseDTO(purchase PurchaseOrder) PurchaseOrderDTO {
+	return PurchaseOrderDTO{
+		Id:      purchase.Id,
+		UserId:  purchase.UserId,
+		Product: purchase.Product,
+		Price:   purchase.Price,
+		Date:    purchase.Date,
+		Status:  purchase.Status,
+	}
+}
+
+func ToPurchase(purchase PurchaseOrderDTO) PurchaseOrder {
+	return PurchaseOrder{
+		Id:      purchase.Id,
+		UserId:  purchase.UserId,
+		Product: purchase.Product,
+		Price:   purchase.Price,
+		Date:    purchase.Date,
+		Status:  purchase.Status,
+	}
+}
+
 func ToProductDTO(product Product) ProductDTO {
 	var imgDtos []ImageDTO
 	var specDtos []SpecificationDTO

@@ -33,6 +33,24 @@ func main() {
 	// 	},
 	// })
 
+	// model.DB.Create(&model.PurchaseOrder{
+	// 	Id:      1,
+	// 	UserId:  1,
+	// 	Product: model.Product{Id: 1},
+	// 	Price:   1590,
+	// 	Date:    "2020-02-02T01:20:15Z",
+	// 	Status:  "IN_PROGRESS",
+	// })
+
+	// model.DB.Create(&model.PurchaseOrder{
+	// 	Id:      2,
+	// 	UserId:  1,
+	// 	Product: model.Product{Id: 2},
+	// 	Price:   99,
+	// 	Date:    "2022-11-22T15:21:36Z",
+	// 	Status:  "SENT",
+	// })
+
 	router.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET"},
@@ -47,6 +65,10 @@ func main() {
 	router.GET("/product/:id", controller.GetProduct)
 	router.POST("/product/:id/image", controller.CreateImage)
 	router.GET("/image/:fileName", controller.GetImage)
+	router.GET("/purchase", controller.GetPurchases)
+	router.GET("/purchase/:id", controller.GetPurchase)
+	router.GET("/purchase/user/:id", controller.GetPurchaseForUser)
+	router.POST("/purchase", controller.CreatePurchase)
 
 	router.Run()
 }
