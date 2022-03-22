@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -10,6 +11,20 @@ import (
 	"rafal-kalinowski.pl/controller"
 	"rafal-kalinowski.pl/model"
 )
+
+func before() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("before")
+		c.Next()
+	}
+}
+
+func after() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+		fmt.Println("after")
+	}
+}
 
 func main() {
 	router := gin.Default()
@@ -60,14 +75,30 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	authenticatedRoutes := router.Group("/")
+	{
+		authenticatedRoutes.Use(before())
+		authenticatedRoutes.Use(after())
+		authenticatedRoutes.GET("/purchase", controller.GetPurchases)
+		authenticatedRoutes.GET("/purchase/:id", controller.GetPurchase)
+		authenticatedRoutes.GET("/purchase/user/:id", controller.GetPurchaseForUser)
+	}
+
+	adminRoutes := router.Group("/")
+	{
+		adminRoutes.Use(before())
+	}
+
+	router.POST("/auth/challenge", controller.GetLoginChallenge)
+	router.POST("/auth/login", controller.Login)
 	router.GET("/product", controller.GetProducts)
 	router.POST("/product", controller.CreateProduct)
 	router.GET("/product/:id", controller.GetProduct)
 	router.POST("/product/:id/image", controller.CreateImage)
 	router.GET("/image/:fileName", controller.GetImage)
-	router.GET("/purchase", controller.GetPurchases)
-	router.GET("/purchase/:id", controller.GetPurchase)
-	router.GET("/purchase/user/:id", controller.GetPurchaseForUser)
+	// router.GET("/purchase", controller.GetPurchases)
+	// router.GET("/purchase/:id", controller.GetPurchase)
+	// router.GET("/purchase/user/:id", controller.GetPurchaseForUser)
 	router.POST("/purchase", controller.CreatePurchase)
 
 	router.Run()

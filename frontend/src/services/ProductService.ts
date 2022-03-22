@@ -1,10 +1,5 @@
 import Product from "../interfaces/Product";
-
-interface ResponseContent {
-   data?: any,
-   isOk: boolean,
-   status: number,
-}
+import ResponseContent from "../interfaces/ResponseContent";
 
 interface GetProductsResponse {
    total: number,
