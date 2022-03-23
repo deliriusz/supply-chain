@@ -10,9 +10,18 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type AUTH_ROLE int
+
+const (
+	ROLE_ADMIN AUTH_ROLE = iota
+	ROLE_USER
+	ROLE_CLIENT
+)
+
 var LOGIN_SESSION_TTL_IN_SECS int
 var IMAGE_LOCAL_STORAGE string
 var PROJECT_ROOT string
+var COOKIE_SESSIONID string
 var CORS_ALLOW_ORIGINS []string
 var ADDRESS_LOGIN_NONCE_MAP map[string]int64
 var VALID_ADDRESS_REGEXP *regexp.Regexp
@@ -30,4 +39,6 @@ func Init() {
 
 	ADDRESS_LOGIN_NONCE_MAP = make(map[string]int64)
 	VALID_ADDRESS_REGEXP = regexp.MustCompile("^0x[0-9a-fA-F]{40}$")
+
+	COOKIE_SESSIONID = "SESSIONID"
 }

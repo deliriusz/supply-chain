@@ -58,11 +58,56 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	currentTimestamp := time.Now().UnixMilli()
+	sessionTTL := config.LOGIN_SESSION_TTL_IN_SECS
+
 	sessionIdNonceSeed, _ := getSecureRandom()
-	sessionIdSeed := fmt.Sprintf("%s-%d-%d", input.Signature, time.Now().UnixNano(), sessionIdNonceSeed)
+	sessionIdSeed := fmt.Sprintf("%s-%d-%d", input.Signature, currentTimestamp, sessionIdNonceSeed)
 	sessionId := hex.EncodeToString(crypto.Keccak256([]byte(sessionIdSeed)))
-	//TODO: change isSecure to true when deployed
-	c.SetCookie("SESSIONID", sessionId, config.LOGIN_SESSION_TTL_IN_SECS, "/", "localhost", false, true)
+
+	loginSession := model.Login{
+		Address:   input.Address,
+		SessionId: sessionId,
+		ExpiresAt: currentTimestamp + int64(sessionTTL)*1000,
+	}
+
+	err := model.DB.Create(&loginSession).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	c.SetCookie(config.COOKIE_SESSIONID, sessionId, sessionTTL, "/", "localhost", true, true)
+}
+
+func Logout(c *gin.Context) {
+	cookie, _ := c.Cookie(config.COOKIE_SESSIONID)
+	session, err := GetSessionById(cookie)
+
+	if err == nil && session.ExpiresAt > 0 {
+		RemoveSession(session.Id)
+		c.SetCookie(config.COOKIE_SESSIONID, "", -1, "/", "localhost", true, true)
+	}
+}
+
+func GetSessionById(sessionId string) (model.Login, error) {
+	var login model.Login
+
+	err := model.DB.Where("session_id = ?", sessionId).
+		First(&login, sessionId).Error
+
+	if err != nil {
+		log.Error(err)
+	}
+
+	return login, err
+}
+
+func RemoveSession(id uint) error {
+	err := model.DB.Delete(&model.Login{}, id).Error
+
+	return err
 }
 
 func checkLoginRequest(input *model.LoginChallenge, c *gin.Context) error {

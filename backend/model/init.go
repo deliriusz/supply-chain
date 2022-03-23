@@ -20,6 +20,7 @@ func ConnectDatabase() {
 	database.AutoMigrate(&Specification{})
 	database.AutoMigrate(&Product{})
 	database.AutoMigrate(&PurchaseOrder{})
+	database.AutoMigrate(&Login{})
 
 	DB = database
 }
