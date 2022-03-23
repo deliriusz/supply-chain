@@ -29,14 +29,12 @@ func GetLoginChallenge(c *gin.Context) {
 		return
 	}
 
-	nBig, err := rand.Int(rand.Reader, big.NewInt(math.MaxInt64-1))
+	nonce, err := getSecureRandom()
 	if err != nil {
 		log.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	// start at 1
-	nonce := nBig.Int64() + 1
 
 	config.ADDRESS_LOGIN_NONCE_MAP[input.Address] = nonce
 
@@ -60,9 +58,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	sessionIdSeed := fmt.Sprintf("%s-%d", input.Signature, time.Now().UnixNano())
+	sessionIdNonceSeed, _ := getSecureRandom()
+	sessionIdSeed := fmt.Sprintf("%s-%d-%d", input.Signature, time.Now().UnixNano(), sessionIdNonceSeed)
 	sessionId := hex.EncodeToString(crypto.Keccak256([]byte(sessionIdSeed)))
-	c.SetCookie("SESSIONID", sessionId, config.LOGIN_SESSION_TTL_IN_SECS, "/", "localhost", false, false)
+	//TODO: change isSecure to true when deployed
+	c.SetCookie("SESSIONID", sessionId, config.LOGIN_SESSION_TTL_IN_SECS, "/", "localhost", false, true)
 }
 
 func checkLoginRequest(input *model.LoginChallenge, c *gin.Context) error {
@@ -106,4 +106,12 @@ func verifySig(from, sigHex string, msg []byte) bool {
 func signHash(data []byte) []byte {
 	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
 	return crypto.Keccak256([]byte(msg))
+}
+
+func getSecureRandom() (int64, error) {
+	nBig, err := rand.Int(rand.Reader, big.NewInt(math.MaxInt64-1))
+	if err != nil {
+		return 1, err
+	}
+	return nBig.Int64() + 1, nil
 }
