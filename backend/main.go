@@ -67,9 +67,7 @@ func main() {
 	// })
 
 	router.Use(cors.New(cors.Config{
-		// AllowAllOrigins:  true,
-		//TODO: change AllowOrigins
-		AllowOrigins:     []string{"https://localhost:3000", "https://localhost:8080", "http://localhost:3000", "http://localhost:8080"},
+		AllowOrigins:     config.CORS_ALLOW_ORIGINS,
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET"},
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},

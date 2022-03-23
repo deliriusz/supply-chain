@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -12,6 +13,7 @@ import (
 var LOGIN_SESSION_TTL_IN_SECS int
 var IMAGE_LOCAL_STORAGE string
 var PROJECT_ROOT string
+var CORS_ALLOW_ORIGINS []string
 var ADDRESS_LOGIN_NONCE_MAP map[string]int64
 var VALID_ADDRESS_REGEXP *regexp.Regexp
 
@@ -22,6 +24,7 @@ func Init() {
 	}
 
 	IMAGE_LOCAL_STORAGE = os.Getenv("IMAGE_LOCAL_STORAGE")
+	CORS_ALLOW_ORIGINS = strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"), ",")
 	PROJECT_ROOT = os.Getenv("PROJECT_ROOT")
 	LOGIN_SESSION_TTL_IN_SECS, _ = strconv.Atoi(os.Getenv("LOGIN_SESSION_TTL_IN_SECS"))
 
