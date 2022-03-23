@@ -7,8 +7,10 @@ interface GetProductsResponse {
 }
 
 const getProducts = async (offset: number = 0, limit: number = 10): Promise<GetProductsResponse> => {
-   const requestOptions = {
+   const requestOptions: RequestInit = {
       method: "GET",
+      mode: "cors",
+      credentials: "include",
    }
 
    var responseContent: ResponseContent = { isOk: false, status: 500 };
@@ -34,8 +36,10 @@ const getProducts = async (offset: number = 0, limit: number = 10): Promise<GetP
 }
 
 const getProduct = async (id: number): Promise<Product | undefined> => {
-   const requestOptions = {
+   const requestOptions: RequestInit = {
       method: "GET",
+      mode: "cors",
+      credentials: "include",
    }
 
    var responseContent: ResponseContent = { isOk: false, status: 500 };
@@ -61,9 +65,11 @@ const getProduct = async (id: number): Promise<Product | undefined> => {
 }
 
 const createProduct = async (product: Product): Promise<ResponseContent> => {
-   const requestOptions = {
+   const requestOptions: RequestInit = {
       method: "POST",
+      mode: "cors",
       body: JSON.stringify(product),
+      credentials: "include",
    }
 
    var responseContent: ResponseContent = { isOk: false, status: 500 };

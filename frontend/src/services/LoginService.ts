@@ -10,8 +10,10 @@ interface LoginRequest {
 const getChallenge = async (address: string): Promise<ResponseContent> => {
    let request: LoginRequest = { address }
 
-   const requestOptions = {
+   const requestOptions: RequestInit = {
       method: "POST",
+      credentials: "include",
+      mode: "cors",
       body: JSON.stringify(request),
    }
 
@@ -39,8 +41,10 @@ const getChallenge = async (address: string): Promise<ResponseContent> => {
 
 const login = async (login: LoginRequest): Promise<ResponseContent> => {
 
-   const requestOptions = {
+   const requestOptions: RequestInit = {
       method: "POST",
+      credentials: "include",
+      mode: "cors",
       body: JSON.stringify(login),
    }
 
