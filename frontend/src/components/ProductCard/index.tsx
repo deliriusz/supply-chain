@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Card, Image } from "semantic-ui-react";
-import Product from "../interfaces/Product";
+import Product from "../../interfaces/Product";
 
 interface ProductCardProps {
    product: Product

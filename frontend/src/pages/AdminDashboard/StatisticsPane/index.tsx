@@ -1,6 +1,6 @@
 import React from "react";
 import { GridColumn, Icon, Segment, Statistic } from "semantic-ui-react";
-import SalesChart from "./SalesChart";
+import SalesChart from "../../../components/SalesChart";
 
 const StatisticsPane = () => {
 

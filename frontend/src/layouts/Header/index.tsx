@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Icon, Image } from "semantic-ui-react";
-import { getChallenge, login } from "../services/LoginService";
-import web3 from "../web3";
-import GenericErrorModal from "./GenericErrorModal";
-import './Header.css'
-import PageInformationModal from "./PageInformationModal";
+import { getChallenge, login } from "../../services/LoginService";
+import web3 from "../../web3";
+import GenericErrorModal from "../../components/GenericErrorModal";
+import './style.css'
+import PageInformationModal from "../../components/PageInformationModal";
 
 const Header = () => {
    const [isError, setIsError] = React.useState(false)
@@ -51,9 +51,6 @@ const Header = () => {
                <Link className="item" to="/trace">Trace</Link>
                <div className="right menu">
                   <PageInformationModal />
-                  {/* <Link className="item" to="/admin">Log in &nbsp;
-                     <Icon name="sign-in" />
-                  </Link> */}
                   <a className="item" onClick={loginWithMetamask}>Log in &nbsp;
                      <Icon name="sign-in" />
                   </a>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Image, Menu, Icon, Rating } from "semantic-ui-react";
-import Product from "../interfaces/Product";
-import * as ProductService from '../services/ProductService'
+import Product from "../../interfaces/Product";
+import * as ProductService from '../../services/ProductService'
 import _ from 'lodash';
 
 const getPages = (page: number, maxPage: number, pagesToGenerate = 5): number[] => {

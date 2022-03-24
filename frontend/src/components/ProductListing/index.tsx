@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Product from '../interfaces/Product';
-import ProductCard from './ProductCard';
-import * as ProductService from '../services/ProductService'
+import Product from '../../interfaces/Product';
+import ProductCard from '../ProductCard';
+import * as ProductService from '../../services/ProductService'
 import { Grid, GridColumn } from 'semantic-ui-react';
 
 const ProductListing = () => {

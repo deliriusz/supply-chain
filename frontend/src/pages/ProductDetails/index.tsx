@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
-import Product from "../interfaces/Product";
+import Product from "../../interfaces/Product";
 import { useParams } from 'react-router-dom';
-import * as ProductService from '../services/ProductService'
-import ImageCarousel from "./ImageCarousel";
+import * as ProductService from '../../services/ProductService'
+import ImageCarousel from "../../components/ImageCarousel";
 
 const ProductDetails = () => {
    let { productId } = useParams()

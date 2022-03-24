@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Card, Grid, Image } from "semantic-ui-react";
-import './ImageCarousel.css'
+import './style.css'
 
 const IMAGE_PREVIEW_WIDTH = 3;
 const IMAGE_PREVIEW_SILDER_WIDTH = 1;

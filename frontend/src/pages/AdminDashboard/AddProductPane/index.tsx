@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Form, FormProps, GridRow, Header, Icon, Image, Label, Message } from "semantic-ui-react";
-import Product from '../../interfaces/Product'
-import { createProduct, ResponseContent } from '../../services/ProductService'
-import './AddProductPane.css'
+import Product from '../../../interfaces/Product'
+import { createProduct, ResponseContent } from '../../../services/ProductService'
+import './style.css'
 
 const EMPTY_SPEC = { name: '', value: '' }
 

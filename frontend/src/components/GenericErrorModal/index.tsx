@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Icon, Modal, ModalProps } from 'semantic-ui-react'
+import { Button, Modal, ModalProps } from 'semantic-ui-react'
 
 function GenericErrorModal(props: ModalProps) {
    const [open, setOpen] = React.useState(props.open)
@@ -9,12 +9,6 @@ function GenericErrorModal(props: ModalProps) {
          onClose={() => setOpen(false)}
          onOpen={() => setOpen(true)}
          open={open}
-      // open={props.open}
-      // trigger={
-      //    <a className="item" href="#">
-      //       <Icon name="question" />
-      //    </a>
-      // }
       >
          <Modal.Header>{props.header}</Modal.Header>
          <Modal.Content>
