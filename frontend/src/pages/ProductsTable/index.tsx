@@ -57,11 +57,11 @@ const ProductsTable = () => {
                      return (
                         <Table.Row>
                            <Table.Cell><Image src={val.imgUrl && val.imgUrl[0]} /></Table.Cell>
-                           <Table.Cell selectable><a href={`/product/${idx + 1}`}>{val.title}</a></Table.Cell>
+                           <Table.Cell selectable><a href={`/product/${val.id}`}>{val.title}</a></Table.Cell>
                            <Table.Cell><Rating disabled icon='star' defaultRating={3 + idx % 3} maxRating={5} /></Table.Cell>
                            <Table.Cell>{val.price}</Table.Cell>
                            <Table.Cell>{val.quantity}</Table.Cell>
-                           <Table.Cell selectable><a href={`/product/${idx + 1}`}>Check Details</a></Table.Cell>
+                           <Table.Cell selectable><a href={`/product/${val.id}`}>Check Details</a></Table.Cell>
                         </Table.Row>
                      )
                   })
