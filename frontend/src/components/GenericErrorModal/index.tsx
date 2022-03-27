@@ -3,6 +3,9 @@ import { Button, Modal, ModalProps } from 'semantic-ui-react'
 
 function GenericErrorModal(props: ModalProps) {
    const [open, setOpen] = React.useState(props.open)
+   React.useEffect(() => {
+      setOpen(props.open)
+   }, [props])
 
    return (
       <Modal

@@ -6,41 +6,60 @@ import web3 from "../../web3";
 import GenericErrorModal from "../../components/GenericErrorModal";
 import './style.css'
 import PageInformationModal from "../../components/PageInformationModal";
+import AuthContext from "../../hooks/AuthContext";
 
 const Header = () => {
-   const [isError, setIsError] = React.useState(false)
-   const [errorDescription, setErrorDescription] = React.useState("")
+   const authContext = React.useContext(AuthContext)
+
 
    const loginWithMetamask = async () => {
-      if (typeof web3 !== "undefined") {
-         let accounts = await web3.eth.getAccounts()
-
-         let challenge = await getChallenge(accounts[0])
-         console.log(challenge)
-         if (challenge.isOk) {
-            let hashed = web3.eth.accounts.hashMessage(challenge.data.nonce)
-            let signature = await web3.eth.sign(hashed, accounts[0])
-
-            let response = await login({
-               address: accounts[0],
-               signature: signature,
+      if (typeof web3 === "undefined") {
+         authContext.dispatcher!(
+            {
+               isAuthenticated: false,
+               address: null,
+               message: "MetaMask browser extension is required in order to use this page",
+               isError: true,
+               action: "LOGIN_ERROR",
             })
-            setIsError(response.isOk)
-            setErrorDescription(response.data)
 
-         } else {
-            setErrorDescription("Unable to authorize for login. Please try again.")
-            setIsError(true)
-         }
+         return
+      }
+      let accounts = await web3.eth.getAccounts()
+
+      let challenge = await getChallenge(accounts[0])
+      if (challenge.isOk) {
+         let hashed = web3.eth.accounts.hashMessage(challenge.data.nonce)
+         let signature = await web3.eth.sign(hashed, accounts[0])
+
+         let response = await login({
+            address: accounts[0],
+            signature: signature,
+         })
+
+         authContext.dispatcher!(
+            {
+               isAuthenticated: response.isOk,
+               address: accounts[0],
+               message: response.data,
+               isError: !response.isOk,
+               action: response.isOk ? "LOGIN" : "LOGIN_ERROR",
+            })
+
       } else {
-         setErrorDescription("MetaMask browser extension is required in order to use this page")
-         setIsError(true)
+         authContext.dispatcher!(
+            {
+               isAuthenticated: false,
+               address: null,
+               message: "Unable to authorize for login. Please try again.",
+               isError: true,
+               action: "LOGIN_ERROR",
+            })
       }
    }
+
    return (
       <>
-         <GenericErrorModal open={isError} description={errorDescription} header="Login error" onClose={() => setIsError(false)} />
-
          <div className="ui fixed inverted menu">
             <Container>
                <Link className="header item" to="/">
@@ -58,7 +77,7 @@ const Header = () => {
             </Container>
          </div>
       </>
-   );
-};
+   )
+}
 
 export default Header;
