@@ -71,6 +71,14 @@ func Login(c *gin.Context) {
 		ExpiresAt: currentTimestamp + int64(sessionTTL)*1000,
 	}
 
+	if err := model.DB.Where("address = ?", input.Address).
+		Delete(&loginSession, input.Address).Error; err != nil {
+
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
 	err := model.DB.Create(&loginSession).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -96,6 +104,19 @@ func GetSessionById(sessionId string) (model.Login, error) {
 
 	err := model.DB.Where("session_id = ?", sessionId).
 		First(&login, sessionId).Error
+
+	if err != nil {
+		log.Error(err)
+	}
+
+	return login, err
+}
+
+func GetSessionByAddress(address string) (model.Login, error) {
+	var login model.Login
+
+	err := model.DB.Where("address = ?", address).
+		First(&login, address).Error
 
 	if err != nil {
 		log.Error(err)
