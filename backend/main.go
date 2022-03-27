@@ -108,7 +108,7 @@ func main() {
 
 	router.POST("/auth/challenge", controller.GetLoginChallenge)
 	router.POST("/auth/login", controller.Login)
-	router.POST("/auth/logout", controller.Logout)
+	router.GET("/auth/logout", controller.Logout)
 	router.GET("/product", controller.GetProducts)
 	router.POST("/product", controller.CreateProduct)
 	router.GET("/product/:id", controller.GetProduct)
