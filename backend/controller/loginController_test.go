@@ -17,6 +17,7 @@ func TestLoginChallenge(t *testing.T) {
 	config.Init("../.env")
 	router := gin.Default()
 	LOGIN_CHALLENGE_URI := "/auth/challenge"
+
 	router.POST(LOGIN_CHALLENGE_URI, controller.GetLoginChallenge)
 
 	validLoginChallenge := model.LoginChallenge{Address: "0x482BC0fBA93cAdf4fC894D49730F8d19e2f359FD"}
