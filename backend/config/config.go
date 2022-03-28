@@ -26,8 +26,8 @@ var CORS_ALLOW_ORIGINS []string
 var ADDRESS_LOGIN_NONCE_MAP map[string]int64
 var VALID_ADDRESS_REGEXP *regexp.Regexp
 
-func Init() {
-	err := godotenv.Load()
+func Init(envFiles ...string) {
+	err := godotenv.Load(envFiles...)
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
