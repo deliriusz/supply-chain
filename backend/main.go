@@ -45,44 +45,15 @@ func authenticate(role config.AUTH_ROLE) gin.HandlerFunc {
 }
 
 func main() {
-	router := gin.Default()
 	config.Init()
 	model.ConnectDatabase()
+	router := GetRouter()
 
-	// model.DB.Create(&model.Image{Id: 101, ProductId: 101, Data: []byte("")})
-	// model.DB.Create(&model.Image{Id: 102, ProductId: 101, Data: []byte("")})
+	router.Run()
+}
 
-	// model.DB.Create(&model.Product{
-	// 	Id: 1,
-	// 	Img: []model.Image{{Id: 1, ProductId: 1, Data: []byte("")},
-	// 		{Id: 2, ProductId: 1, Data: []byte("")}},
-	// 	Title:             "title",
-	// 	Description:       "lorem ipslum",
-	// 	Price:             1000,
-	// 	AvailableQuantity: 20,
-	// 	Specification: []model.Specification{
-	// 		{Id: 1, ProductId: 1, Name: "size", Value: "6x2 inch"},
-	// 		{Id: 2, ProductId: 1, Name: "color", Value: "red"},
-	// 	},
-	// })
-
-	// model.DB.Create(&model.PurchaseOrder{
-	// 	Id:      1,
-	// 	UserId:  1,
-	// 	Product: model.Product{Id: 1},
-	// 	Price:   1590,
-	// 	Date:    "2020-02-02T01:20:15Z",
-	// 	Status:  "IN_PROGRESS",
-	// })
-
-	// model.DB.Create(&model.PurchaseOrder{
-	// 	Id:      2,
-	// 	UserId:  1,
-	// 	Product: model.Product{Id: 2},
-	// 	Price:   99,
-	// 	Date:    "2022-11-22T15:21:36Z",
-	// 	Status:  "SENT",
-	// })
+func GetRouter() *gin.Engine {
+	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     config.CORS_ALLOW_ORIGINS,
@@ -119,5 +90,5 @@ func main() {
 	// router.GET("/purchase/user/:id", controller.GetPurchaseForUser)
 	router.POST("/purchase", controller.CreatePurchase)
 
-	router.Run()
+	return router
 }

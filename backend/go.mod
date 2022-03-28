@@ -6,6 +6,7 @@ require github.com/sirupsen/logrus v1.8.1
 
 require (
 	github.com/btcsuite/btcd v0.20.1-beta // indirect
+	github.com/franela/goblin v0.0.0-20211003143422-0a4f594942bf // indirect
 	google.golang.org/protobuf v1.23.0 // indirect
 )
 
