@@ -75,19 +75,16 @@ func GetRouter() *gin.Engine {
 	adminRoutes := router.Group("/")
 	{
 		adminRoutes.Use(authenticate(config.ROLE_ADMIN))
+		adminRoutes.POST("/product", controller.CreateProduct)
 	}
 
 	router.POST("/auth/challenge", controller.GetLoginChallenge)
 	router.POST("/auth/login", controller.Login)
 	router.GET("/auth/logout", controller.Logout)
 	router.GET("/product", controller.GetProducts)
-	router.POST("/product", controller.CreateProduct)
 	router.GET("/product/:id", controller.GetProduct)
 	router.POST("/product/:id/image", controller.CreateImage)
 	router.GET("/image/:fileName", controller.GetImage)
-	// router.GET("/purchase", controller.GetPurchases)
-	// router.GET("/purchase/:id", controller.GetPurchase)
-	// router.GET("/purchase/user/:id", controller.GetPurchaseForUser)
 	router.POST("/purchase", controller.CreatePurchase)
 
 	return router
