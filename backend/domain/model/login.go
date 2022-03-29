@@ -5,4 +5,5 @@ type Login struct {
 	Address   string ``
 	SessionId string ``
 	ExpiresAt int64  ``
+	TTL       uint   ``
 }

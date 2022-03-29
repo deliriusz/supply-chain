@@ -9,12 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/controller"
-	"rafal-kalinowski.pl/model"
+	"rafal-kalinowski.pl/domain/model"
 )
 
 func TestLoginChallenge(t *testing.T) {
 	g := Goblin(t)
-	config.Init("../.env")
+	config.Init("../../.env")
 	router := gin.Default()
 	LOGIN_CHALLENGE_URI := "/auth/challenge"
 
