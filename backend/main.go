@@ -50,7 +50,7 @@ func main() {
 	}
 
 	loginRepository := repository.NewLoginRepository(repoConnector)
-	loginService := domain.NewService(loginRepository)
+	loginService := domain.NewLoginService(loginRepository)
 	httpApi := api.NewHTTPHandler(loginService)
 
 	httpApi.Init()

@@ -21,7 +21,7 @@ func (s *loginService) Logout(login *model.Login) error {
 	return s.repository.Logout(login)
 }
 
-func NewService(repository LoginRepository) LoginService {
+func NewLoginService(repository LoginRepository) LoginService {
 	return &loginService{
 		repository,
 	}
