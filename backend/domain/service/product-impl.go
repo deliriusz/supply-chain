@@ -27,7 +27,7 @@ func (s *productService) CreateImage(productId uint, file *multipart.File) error
 	return s.repository.CreateImage(productId, file)
 }
 
-func (s *productService) GetImage(fileName string) (name, dir string, file *os.File) {
+func (s *productService) GetImage(fileName string) (string, string, *os.File, error) {
 	return s.repository.GetImage(fileName)
 }
 

@@ -12,7 +12,7 @@ type ProductService interface {
 	GetProduct(id uint) (model.Product, error)
 	CreateProduct(*model.Product) error
 	CreateImage(productId uint, file *multipart.File) error
-	GetImage(fileName string) (name, dir string, file *os.File)
+	GetImage(fileName string) (string, string, *os.File, error)
 }
 
 type ProductRepository interface {
@@ -20,5 +20,5 @@ type ProductRepository interface {
 	GetProduct(id uint) (model.Product, error)
 	CreateProduct(*model.Product) error
 	CreateImage(productId uint, file *multipart.File) error
-	GetImage(fileName string) (name, dir string, file *os.File)
+	GetImage(fileName string) (string, string, *os.File, error)
 }
