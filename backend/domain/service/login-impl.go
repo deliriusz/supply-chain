@@ -21,6 +21,10 @@ func (s *loginService) Logout(login *model.Login) error {
 	return s.repository.Logout(login)
 }
 
+func (s *loginService) GetSessionById(sessionId string) (*model.Login, error) {
+	return s.repository.GetSessionById(sessionId)
+}
+
 func NewLoginService(repository LoginRepository) LoginService {
 	return &loginService{
 		repository,
