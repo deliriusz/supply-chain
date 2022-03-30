@@ -1,4 +1,4 @@
-package controller_test
+package api_test
 
 import (
 	"testing"
@@ -38,8 +38,8 @@ func TestCreateProduct(t *testing.T) {
 	router.POST("/product", controller.CreateProduct)
 
 	g.Describe("Product", func() {
-		router := gin.Default()
-		router.POST("/auth/challenge", controller.GetLoginChallenge)
+		// router := gin.Default()
+		// router.POST("/auth/challenge", controller.GetLoginChallenge)
 
 		// req, _ := http.NewRequest("POST", "/auth/challenge", nil)
 		// Passing Test
