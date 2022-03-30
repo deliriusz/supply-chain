@@ -88,6 +88,18 @@ func (r *loginRepository) Logout(login *model.Login) error {
 	return nil
 }
 
+func (r *loginRepository) GetSessionById(sessionId string) (*model.Login, error) {
+	DB := r.repoConnector.GetConnector()
+	var login model.Login
+
+	if err := DB.Where("session_id = ?",
+		sessionId).First(&login, sessionId).Error; err != nil {
+		return &login, err
+	}
+
+	return &login, nil
+}
+
 func NewLoginRepository(c RepoConnector) domain.LoginRepository {
 	repo := &loginRepository{
 		repoConnector: c,

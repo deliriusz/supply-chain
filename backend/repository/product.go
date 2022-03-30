@@ -26,39 +26,42 @@ func NewProductRepository(c RepoConnector) domain.ProductRepository {
 	return repo
 }
 
-func (repo *productRepository) GetProducts(limit, offset uint) []model.Product {
+func (r *productRepository) GetProducts(limit, offset uint) []model.Product {
+	DB := r.repoConnector.GetConnector()
 	var products []model.Product
 
 	count := 0
-	model.DB.Find(&[]model.Product{}).Count(&count)
+	DB.Find(&[]model.Product{}).Count(&count)
 
-	model.DB.Preload("Img").Preload("Specification").
+	DB.Preload("Img").Preload("Specification").
 		Scopes(Paginate(int(limit), int(offset))).
 		Find(&products)
 
 	return products
 }
 
-func (repo *productRepository) GetProduct(id uint) (model.Product, error) {
-	product, err := getProduct(id)
+func (r *productRepository) GetProduct(id uint) (model.Product, error) {
+	product, err := r.getProduct(id)
 
 	return product, err
 }
 
-func (repo *productRepository) CreateProduct(product *model.Product) error {
-	if err := model.DB.Create(&product).Error; err != nil {
+func (r *productRepository) CreateProduct(product *model.Product) error {
+	DB := r.repoConnector.GetConnector()
+	if err := DB.Create(&product).Error; err != nil {
 		return err
 	}
 
 	for _, sd := range product.Specification {
-		model.DB.Create(&sd)
+		DB.Create(&sd)
 	}
 
 	return nil
 }
 
-func (repo *productRepository) CreateImage(productId uint, file *multipart.File) error {
-	if _, err := getProduct(productId); err != nil {
+func (r *productRepository) CreateImage(productId uint, file *multipart.File) error {
+	DB := r.repoConnector.GetConnector()
+	if _, err := r.getProduct(productId); err != nil {
 		return err
 	}
 
@@ -78,24 +81,25 @@ func (repo *productRepository) CreateImage(productId uint, file *multipart.File)
 		return err
 	}
 
-	if err := model.DB.Create(&image).Error; err != nil {
+	if err := DB.Create(&image).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (repo *productRepository) GetImage(fileName string) (string, string, *os.File, error) {
+func (r *productRepository) GetImage(fileName string) (string, string, *os.File, error) {
 	directory := config.IMAGE_LOCAL_STORAGE
 	file, err := os.Open(directory + "/" + fileName)
 
 	return fileName, directory, file, err
 }
 
-func getProduct(productId uint) (model.Product, error) {
+func (r *productRepository) getProduct(productId uint) (model.Product, error) {
+	DB := r.repoConnector.GetConnector()
 	var product model.Product
 
-	if err := model.DB.Where("id = ?",
+	if err := DB.Where("id = ?",
 		productId).Preload("Img").Preload("Specification").First(&product, productId).Error; err != nil {
 		return model.Product{}, err
 	}

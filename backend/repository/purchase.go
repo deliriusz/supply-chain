@@ -17,23 +17,25 @@ func NewPurchaseRepository(c RepoConnector) domain.PurchaseRepository {
 	return repo
 }
 
-func (repo *purchaseRepository) GetPurchases(limit, offset uint) []model.PurchaseOrder {
+func (r *purchaseRepository) GetPurchases(limit, offset uint) []model.PurchaseOrder {
+	DB := r.repoConnector.GetConnector()
 	var purchase []model.PurchaseOrder
 
 	count := 0
-	model.DB.Find(&[]model.PurchaseOrder{}).Count(&count)
+	DB.Find(&[]model.PurchaseOrder{}).Count(&count)
 
-	model.DB.Preload("Product").
+	DB.Preload("Product").
 		Scopes(Paginate(int(limit), int(offset))).
 		Find(&purchase)
 
 	return purchase
 }
 
-func (repo *purchaseRepository) GetPurchase(id uint) (model.PurchaseOrder, error) {
+func (r *purchaseRepository) GetPurchase(id uint) (model.PurchaseOrder, error) {
+	DB := r.repoConnector.GetConnector()
 	var purchase model.PurchaseOrder
 
-	if err := model.DB.Where("id = ?", id).Preload("Product").
+	if err := DB.Where("id = ?", id).Preload("Product").
 		First(&purchase, id).Error; err != nil {
 		return purchase, err
 	}
@@ -41,24 +43,26 @@ func (repo *purchaseRepository) GetPurchase(id uint) (model.PurchaseOrder, error
 	return purchase, nil
 }
 
-func (repo *purchaseRepository) CreatePurchase(purchase *model.PurchaseOrder) error {
-	if err := model.DB.Create(&purchase).Error; err != nil {
+func (r *purchaseRepository) CreatePurchase(purchase *model.PurchaseOrder) error {
+	DB := r.repoConnector.GetConnector()
+	if err := DB.Create(&purchase).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (repo *purchaseRepository) GetPurchasesForUser(limit, offset uint, user string) []model.PurchaseOrder {
+func (r *purchaseRepository) GetPurchasesForUser(limit, offset uint, user string) []model.PurchaseOrder {
+	DB := r.repoConnector.GetConnector()
 	var purchase []model.PurchaseOrder
 	count := 0
 
-	model.DB.Where("user_id = ?", user).Find(&[]model.PurchaseOrder{}).Count(&count)
+	DB.Where("user_id = ?", user).Find(&[]model.PurchaseOrder{}).Count(&count)
 
-	model.DB.Preload("Product").
+	DB.Preload("Product").
 		Scopes(Paginate(int(limit), int(offset))).
 		Where("id = ?", user).Find(&[]model.PurchaseOrder{})
 
-	model.DB.Where("user_id = ?", user).Preload("Product").Find(&purchase)
+	DB.Where("user_id = ?", user).Preload("Product").Find(&purchase)
 	return purchase
 }
