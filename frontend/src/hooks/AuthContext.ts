@@ -10,6 +10,15 @@ export const initialState: Auth = {
    action: "LOGOUT",
 };
 
+export const loadState = (): Auth => {
+   let userString = localStorage.getItem("user")
+   if (userString != null) {
+      return JSON.parse(userString)
+   }
+
+   return initialState
+}
+
 interface AuthDispatchContext {
    auth: Auth,
    dispatcher: React.Dispatch<Auth> | null
@@ -18,9 +27,10 @@ interface AuthDispatchContext {
 const AuthContext = React.createContext<AuthDispatchContext>({ auth: initialState, dispatcher: null });
 
 export const reducer = (state: Auth, action: Auth) => {
+   console.log(action)
    switch (action.action) {
       case "LOGIN":
-         localStorage.setItem("user", JSON.stringify(action.address))
+         localStorage.setItem("user", JSON.stringify(action))
          return action
       case "LOGIN_ERROR":
          localStorage.clear()
