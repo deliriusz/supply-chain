@@ -6,7 +6,7 @@ type purchaseService struct {
 	repository PurchaseRepository
 }
 
-func (s *purchaseService) GetPurchases(limit, offset uint) []model.PurchaseOrder {
+func (s *purchaseService) GetPurchases(limit, offset uint) ([]model.PurchaseOrder, uint) {
 	return s.repository.GetPurchases(limit, offset)
 }
 
@@ -18,7 +18,7 @@ func (s *purchaseService) CreatePurchase(po *model.PurchaseOrder) error {
 	return s.repository.CreatePurchase(po)
 }
 
-func (s *purchaseService) GetPurchasesForUser(limit, offset uint, user string) []model.PurchaseOrder {
+func (s *purchaseService) GetPurchasesForUser(limit, offset uint, user string) ([]model.PurchaseOrder, uint) {
 	return s.repository.GetPurchasesForUser(limit, offset, user)
 }
 

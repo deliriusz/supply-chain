@@ -3,12 +3,12 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"rafal-kalinowski.pl/config"
-	"rafal-kalinowski.pl/controller"
 	"rafal-kalinowski.pl/domain/model"
 	domain "rafal-kalinowski.pl/domain/service"
 )
@@ -103,20 +103,20 @@ func (hdl *httpHandler) setupNormalRoutes() {
 	router.POST("/auth/challenge", hdl.GetLoginChallenge)
 	router.POST("/auth/login", hdl.Login)
 	router.GET("/auth/logout", hdl.Logout)
-	router.GET("/product", controller.GetProducts)
-	router.GET("/product/:id", controller.GetProduct)
-	router.POST("/product/:id/image", controller.CreateImage)
-	router.GET("/image/:fileName", controller.GetImage)
-	router.POST("/purchase", controller.CreatePurchase)
+	router.GET("/product", hdl.GetProducts)
+	router.GET("/product/:id", hdl.GetProduct)
+	router.POST("/product/:id/image", hdl.CreateImage)
+	router.GET("/image/:fileName", hdl.GetImage)
+	router.POST("/purchase", hdl.CreatePurchase)
 }
 
 func (hdl *httpHandler) setupAuthenticatedRoutes() {
 	authenticatedRoutes := hdl.router.Group("/")
 	{
 		authenticatedRoutes.Use(hdl.authenticate(config.ROLE_CLIENT))
-		authenticatedRoutes.GET("/purchase", controller.GetPurchases)
-		authenticatedRoutes.GET("/purchase/:id", controller.GetPurchase)
-		authenticatedRoutes.GET("/purchase/user/:id", controller.GetPurchaseForUser)
+		authenticatedRoutes.GET("/purchase", hdl.GetPurchases)
+		authenticatedRoutes.GET("/purchase/:id", hdl.GetPurchase)
+		authenticatedRoutes.GET("/purchase/user/:id", hdl.GetPurchaseForUser)
 	}
 }
 
@@ -124,7 +124,7 @@ func (hdl *httpHandler) setupAdminRoutes() {
 	adminRoutes := hdl.router.Group("/")
 	{
 		adminRoutes.Use(hdl.authenticate(config.ROLE_ADMIN))
-		adminRoutes.POST("/product", controller.CreateProduct)
+		adminRoutes.POST("/product", hdl.CreateProduct)
 	}
 }
 
@@ -137,4 +137,29 @@ func (hdl *httpHandler) setupCors() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+}
+
+func safeStringToInt(numString string, defaultVal int) int {
+	num, err := strconv.Atoi(numString)
+
+	if err != nil {
+		return defaultVal
+	}
+
+	return num
+}
+
+func safePaginationFromContext(c *gin.Context) (int, int) {
+	safeLimit := safeStringToInt(c.Query("limit"), 10)
+	safeOffset := safeStringToInt(c.Query("offset"), 0)
+
+	if safeLimit < 0 {
+		safeLimit = 0
+	}
+
+	if safeOffset < 0 {
+		safeOffset = 10
+	}
+
+	return safeLimit, safeOffset
 }

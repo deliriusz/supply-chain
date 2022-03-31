@@ -26,18 +26,18 @@ func NewProductRepository(c RepoConnector) domain.ProductRepository {
 	return repo
 }
 
-func (r *productRepository) GetProducts(limit, offset uint) []model.Product {
+func (r *productRepository) GetProducts(limit, offset uint) ([]model.Product, uint) {
 	DB := r.repoConnector.GetConnector()
 	var products []model.Product
 
-	count := 0
+	count := uint(0)
 	DB.Find(&[]model.Product{}).Count(&count)
 
 	DB.Preload("Img").Preload("Specification").
 		Scopes(Paginate(int(limit), int(offset))).
 		Find(&products)
 
-	return products
+	return products, count
 }
 
 func (r *productRepository) GetProduct(id uint) (model.Product, error) {
@@ -59,10 +59,10 @@ func (r *productRepository) CreateProduct(product *model.Product) error {
 	return nil
 }
 
-func (r *productRepository) CreateImage(productId uint, file *multipart.File) error {
+func (r *productRepository) CreateImage(productId uint, file *multipart.File) (string, error) {
 	DB := r.repoConnector.GetConnector()
 	if _, err := r.getProduct(productId); err != nil {
-		return err
+		return "", err
 	}
 
 	imageNameBase := fmt.Sprintf("%d-%d-%d", productId, time.Now().UnixNano(), rand.Int63())
@@ -78,14 +78,14 @@ func (r *productRepository) CreateImage(productId uint, file *multipart.File) er
 
 	// err = nil
 	if err := os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, buf.Bytes(), 0644); err != nil {
-		return err
+		return "", err
 	}
 
 	if err := DB.Create(&image).Error; err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return image.ImageName, nil
 }
 
 func (r *productRepository) GetImage(fileName string) (string, string, *os.File, error) {

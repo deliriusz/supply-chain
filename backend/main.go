@@ -3,14 +3,12 @@ package main
 import (
 	"rafal-kalinowski.pl/adapter/api"
 	"rafal-kalinowski.pl/config"
-	"rafal-kalinowski.pl/domain/model"
 	domain "rafal-kalinowski.pl/domain/service"
 	"rafal-kalinowski.pl/repository"
 )
 
 func main() {
 	config.Init()
-	model.ConnectDatabase() //TODO: delete
 
 	repoConnector := repository.NewRepoConnector()
 	if err := repoConnector.InitConnection("firmex.db", ""); err != nil {

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
 	"rafal-kalinowski.pl/domain/model"
 )
@@ -25,7 +26,7 @@ func (c *connector) InitConnection(name, url string) error {
 	database, err := gorm.Open("sqlite3", name)
 
 	if err != nil {
-		panic("Failed to connect to database!")
+		panic(err)
 	}
 
 	database.AutoMigrate(&model.Image{})

@@ -17,18 +17,18 @@ func NewPurchaseRepository(c RepoConnector) domain.PurchaseRepository {
 	return repo
 }
 
-func (r *purchaseRepository) GetPurchases(limit, offset uint) []model.PurchaseOrder {
+func (r *purchaseRepository) GetPurchases(limit, offset uint) ([]model.PurchaseOrder, uint) {
 	DB := r.repoConnector.GetConnector()
 	var purchase []model.PurchaseOrder
 
-	count := 0
+	count := uint(0)
 	DB.Find(&[]model.PurchaseOrder{}).Count(&count)
 
 	DB.Preload("Product").
 		Scopes(Paginate(int(limit), int(offset))).
 		Find(&purchase)
 
-	return purchase
+	return purchase, count
 }
 
 func (r *purchaseRepository) GetPurchase(id uint) (model.PurchaseOrder, error) {
@@ -52,10 +52,10 @@ func (r *purchaseRepository) CreatePurchase(purchase *model.PurchaseOrder) error
 	return nil
 }
 
-func (r *purchaseRepository) GetPurchasesForUser(limit, offset uint, user string) []model.PurchaseOrder {
+func (r *purchaseRepository) GetPurchasesForUser(limit, offset uint, user string) ([]model.PurchaseOrder, uint) {
 	DB := r.repoConnector.GetConnector()
 	var purchase []model.PurchaseOrder
-	count := 0
+	count := uint(0)
 
 	DB.Where("user_id = ?", user).Find(&[]model.PurchaseOrder{}).Count(&count)
 
@@ -64,5 +64,5 @@ func (r *purchaseRepository) GetPurchasesForUser(limit, offset uint, user string
 		Where("id = ?", user).Find(&[]model.PurchaseOrder{})
 
 	DB.Where("user_id = ?", user).Preload("Product").Find(&purchase)
-	return purchase
+	return purchase, count
 }

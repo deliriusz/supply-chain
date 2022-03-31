@@ -5,15 +5,15 @@ import (
 )
 
 type PurchaseService interface {
-	GetPurchases(limit, offset uint) []model.PurchaseOrder
+	GetPurchases(limit, offset uint) ([]model.PurchaseOrder, uint)
 	GetPurchase(id uint) (model.PurchaseOrder, error)
 	CreatePurchase(*model.PurchaseOrder) error
-	GetPurchasesForUser(limit, offset uint, user string) []model.PurchaseOrder
+	GetPurchasesForUser(limit, offset uint, user string) ([]model.PurchaseOrder, uint)
 }
 
 type PurchaseRepository interface {
-	GetPurchases(limit, offset uint) []model.PurchaseOrder
+	GetPurchases(limit, offset uint) ([]model.PurchaseOrder, uint)
 	GetPurchase(id uint) (model.PurchaseOrder, error)
 	CreatePurchase(*model.PurchaseOrder) error
-	GetPurchasesForUser(limit, offset uint, user string) []model.PurchaseOrder
+	GetPurchasesForUser(limit, offset uint, user string) ([]model.PurchaseOrder, uint)
 }
