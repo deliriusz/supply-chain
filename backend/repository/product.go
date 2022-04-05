@@ -76,7 +76,6 @@ func (r *productRepository) CreateImage(productId uint, file *multipart.File) (s
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(*file)
 
-	// err = nil
 	if err := os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, buf.Bytes(), 0644); err != nil {
 		return "", err
 	}
