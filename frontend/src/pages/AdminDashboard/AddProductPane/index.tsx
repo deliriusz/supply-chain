@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, Form, FormProps, GridRow, Header, Icon, Image, Label, Message } from "semantic-ui-react";
 import Product from '../../../interfaces/Product'
-import { createProduct, ResponseContent } from '../../../services/ProductService'
+import ResponseContent from "../../../interfaces/ResponseContent";
+import { createProduct } from '../../../services/ProductService'
 import './style.css'
 
 const EMPTY_SPEC = { name: '', value: '' }
@@ -95,7 +96,7 @@ const AddProductPane = () => {
          normalizedProduct.quantity = parseInt(normalizedProduct.quantity)
       }
 
-      const response: ResponseContent = await createProduct(normalizedProduct)
+      const response: ResponseContent<any> = await createProduct(normalizedProduct)
       console.log(response)
       setFormSubmitErrorMessage(JSON.stringify(response.data))
       setFormSubmitError(!response.isOk)

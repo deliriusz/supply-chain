@@ -1,5 +1,5 @@
-export default interface ResponseContent {
-   data?: any,
+export default interface ResponseContent<T> {
+   data?: T,
    isOk: boolean,
    status: number,
 }

@@ -26,8 +26,8 @@ const Header = () => {
       let accounts = await web3.eth.getAccounts()
 
       let challenge = await getChallenge(accounts[0])
-      if (challenge.isOk) {
-         let hashed = web3.eth.accounts.hashMessage(challenge.data.nonce)
+      if (challenge.isOk && challenge.data && challenge.data.nonce) {
+         let hashed = web3.eth.accounts.hashMessage(challenge.data.nonce + '')
          let signature = await web3.eth.sign(hashed, accounts[0])
 
          let response = await login({
