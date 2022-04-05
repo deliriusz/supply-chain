@@ -16,8 +16,9 @@ func TestCreateProduct(t *testing.T) {
 	g := Goblin(t)
 
 	g.Describe("Test CreateProduct", func() {
-		g.BeforeEach(Setup)
-		g.AfterEach(Cleanup)
+		g.JustBeforeEach(Cleanup)
+		g.JustBeforeEach(Setup)
+		g.After(Cleanup)
 
 		g.It("Should create a product without an error", func() {
 			testProduct := createRandomProduct()
@@ -87,7 +88,7 @@ func TestImage(t *testing.T) {
 	g.Describe("Test Image", func() {
 		g.JustBeforeEach(Cleanup)
 		g.JustBeforeEach(Setup)
-		// g.AfterEach(Cleanup)
+		g.After(Cleanup)
 
 		g.It("Should create image for existing product", func() {
 			testProduct := createRandomProduct()

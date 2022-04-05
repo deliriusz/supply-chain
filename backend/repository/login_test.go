@@ -16,8 +16,9 @@ func TestLoginChallenge(t *testing.T) {
 	loginChallenge2 := model.LoginChallenge{Address: "0xcAdf4fC894D49730F8d19e2f35930F8dDFD30F8d"}
 
 	g.Describe("Test GetLoginChallenge", func() {
-		g.BeforeEach(Setup)
-		g.AfterEach(Cleanup)
+		g.JustBeforeEach(Cleanup)
+		g.JustBeforeEach(Setup)
+		g.After(Cleanup)
 
 		g.It("Should return different nonce for each address", func() {
 			resp1, err1 := loginRepo.GetLoginChallenge(&loginChallenge1)
