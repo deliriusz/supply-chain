@@ -1,7 +1,7 @@
 package model
 
 type Login struct {
-	Id        uint   `gorm:"primary_key"`
+	Id        uint   `gorm:"primaryKey"`
 	Address   string ``
 	SessionId string ``
 	ExpiresAt int64  ``
