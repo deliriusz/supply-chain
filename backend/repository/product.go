@@ -53,12 +53,6 @@ func (r *productRepository) CreateProduct(product *model.Product) error {
 		return err
 	}
 
-	for _, sd := range product.Specification {
-		// without that, it errors out with unique constraint
-		sd.Id = 0
-		DB.Create(&sd)
-	}
-
 	return nil
 }
 
