@@ -30,5 +30,5 @@ func Setup() {
 }
 
 func Cleanup() {
-	os.Remove(TABLE_NAME)
+	os.Remove("./" + TABLE_NAME)
 }

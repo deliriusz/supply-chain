@@ -70,7 +70,7 @@ func (r *productRepository) CreateImage(productId uint, file *bufio.Reader) (str
 
 	image := model.Image{
 		ProductId: uint(productId),
-		ImageName: string(imageNameKeccak),
+		ImageName: hex.EncodeToString(imageNameKeccak),
 	}
 
 	fileContents, _ := ioutil.ReadAll(file)
