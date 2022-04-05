@@ -5,7 +5,6 @@ import (
 
 	. "github.com/franela/goblin"
 	"github.com/gin-gonic/gin"
-	"rafal-kalinowski.pl/controller"
 )
 
 // model.DB.Create(&model.PurchaseOrder{
@@ -30,7 +29,7 @@ func TestCreatePurchase(t *testing.T) {
 	g := Goblin(t)
 	g.Describe("LoginChallenge", func() {
 		router := gin.Default()
-		router.POST("/auth/challenge", controller.GetLoginChallenge)
+		router.POST("/auth/challenge", httpApi.GetLoginChallenge)
 
 		// req, _ := http.NewRequest("POST", "/auth/challenge", nil)
 		// Passing Test

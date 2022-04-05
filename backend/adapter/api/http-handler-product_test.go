@@ -6,7 +6,6 @@ import (
 	. "github.com/franela/goblin"
 	"github.com/gin-gonic/gin"
 	"rafal-kalinowski.pl/config"
-	"rafal-kalinowski.pl/controller"
 )
 
 // model.DB.Create(&model.Image{Id: 101, ProductId: 101, Data: []byte("")})
@@ -31,11 +30,11 @@ func TestCreateProduct(t *testing.T) {
 	config.Init("../.env")
 	router := gin.Default()
 
-	router.GET("/product", controller.GetProducts)
-	router.GET("/product/:id", controller.GetProduct)
-	router.POST("/product/:id/image", controller.CreateImage)
-	router.GET("/image/:fileName", controller.GetImage)
-	router.POST("/product", controller.CreateProduct)
+	router.GET("/product", httpApi.GetProducts)
+	router.GET("/product/:id", httpApi.GetProduct)
+	router.POST("/product/:id/image", httpApi.CreateImage)
+	router.GET("/image/:fileName", httpApi.GetImage)
+	router.POST("/product", httpApi.CreateProduct)
 
 	g.Describe("Product", func() {
 		// router := gin.Default()

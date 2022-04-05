@@ -7,8 +7,8 @@ import (
 
 	. "github.com/franela/goblin"
 	"github.com/gin-gonic/gin"
-	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/adapter/api"
+	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 )
 
@@ -18,7 +18,7 @@ func TestLoginChallenge(t *testing.T) {
 	router := gin.Default()
 	LOGIN_CHALLENGE_URI := "/auth/challenge"
 
-	router.POST(LOGIN_CHALLENGE_URI, api.GetLoginChallenge)
+	router.POST(LOGIN_CHALLENGE_URI, httpApi.GetLoginChallenge)
 
 	validLoginChallenge := model.LoginChallenge{Address: "0x482BC0fBA93cAdf4fC894D49730F8d19e2f359FD"}
 	stringifiedValidLoginChallenge, _ := json.Marshal(validLoginChallenge)
