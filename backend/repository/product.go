@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"bytes"
+	"bufio"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
-	"mime/multipart"
 	"os"
 	"time"
 
@@ -59,7 +59,7 @@ func (r *productRepository) CreateProduct(product *model.Product) error {
 	return nil
 }
 
-func (r *productRepository) CreateImage(productId uint, file *multipart.File) (string, error) {
+func (r *productRepository) CreateImage(productId uint, file *bufio.Reader) (string, error) {
 	DB := r.repoConnector.GetConnector()
 	if _, err := r.getProduct(productId); err != nil {
 		return "", err
@@ -73,10 +73,9 @@ func (r *productRepository) CreateImage(productId uint, file *multipart.File) (s
 		ImageName: string(imageNameKeccak),
 	}
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(*file)
+	fileContents, _ := ioutil.ReadAll(file)
 
-	if err := os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, fileContents, 0644); err != nil {
 		return "", err
 	}
 
@@ -87,11 +86,11 @@ func (r *productRepository) CreateImage(productId uint, file *multipart.File) (s
 	return image.ImageName, nil
 }
 
-func (r *productRepository) GetImage(fileName string) (string, string, *os.File, error) {
+func (r *productRepository) GetImage(fileName string) (string, string, *bufio.Reader, error) {
 	directory := config.IMAGE_LOCAL_STORAGE
 	file, err := os.Open(directory + "/" + fileName)
 
-	return fileName, directory, file, err
+	return fileName, directory, bufio.NewReader(file), err
 }
 
 func (r *productRepository) getProduct(productId uint) (model.Product, error) {

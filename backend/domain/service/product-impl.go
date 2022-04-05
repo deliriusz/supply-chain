@@ -1,8 +1,7 @@
 package domain
 
 import (
-	"mime/multipart"
-	"os"
+	"bufio"
 
 	"rafal-kalinowski.pl/domain/model"
 )
@@ -23,11 +22,11 @@ func (s *productService) CreateProduct(product *model.Product) error {
 	return s.repository.CreateProduct(product)
 }
 
-func (s *productService) CreateImage(productId uint, file *multipart.File) (string, error) {
+func (s *productService) CreateImage(productId uint, file *bufio.Reader) (string, error) {
 	return s.repository.CreateImage(productId, file)
 }
 
-func (s *productService) GetImage(fileName string) (string, string, *os.File, error) {
+func (s *productService) GetImage(fileName string) (string, string, *bufio.Reader, error) {
 	return s.repository.GetImage(fileName)
 }
 
