@@ -2,6 +2,7 @@ package repository
 
 import (
 	"bufio"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -53,6 +54,8 @@ func (r *productRepository) CreateProduct(product *model.Product) error {
 	}
 
 	for _, sd := range product.Specification {
+		// without that, it errors out with unique constraint
+		sd.Id = 0
 		DB.Create(&sd)
 	}
 
