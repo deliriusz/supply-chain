@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bufio"
 	"net/http"
 	"strconv"
 
@@ -77,7 +78,9 @@ func (hdl *httpHandler) CreateImage(c *gin.Context) {
 		return
 	}
 
-	if imageName, err := hdl.productService.CreateImage(uint(productId), &file); err != nil {
+	fileReader := bufio.NewReader(file)
+
+	if imageName, err := hdl.productService.CreateImage(uint(productId), fileReader); err != nil {
 		log.Error(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Product not found"})
 		return
