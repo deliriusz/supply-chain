@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"io/ioutil"
 	"os"
 
 	"rafal-kalinowski.pl/config"
@@ -31,4 +32,8 @@ func Setup() {
 
 func Cleanup() {
 	os.Remove("./" + TABLE_NAME)
+	dir, _ := ioutil.ReadDir(config.IMAGE_LOCAL_STORAGE)
+	for _, d := range dir {
+		os.RemoveAll(config.IMAGE_LOCAL_STORAGE + d.Name())
+	}
 }

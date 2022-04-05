@@ -47,10 +47,6 @@ func TestCreateProduct(t *testing.T) {
 			g.Assert(createdProducts[0].Price).Equal(testProduct.Price)
 			g.Assert(createdProducts[0].Title).Equal(testProduct.Title)
 
-			g.Assert(len(createdProducts[0].Img)).Equal(len(testProduct.Img))
-			g.Assert(createdProducts[0].Img[0].ProductId).Equal(testProduct.Img[0].ProductId)
-			g.Assert(createdProducts[0].Img[0].ImageName).Equal(testProduct.Img[0].ImageName)
-
 			g.Assert(len(createdProducts[0].Specification)).Equal(len(testProduct.Specification))
 
 			for i := 0; i < len(createdProducts[0].Specification); i++ {
@@ -146,7 +142,7 @@ func TestImage(t *testing.T) {
 
 			g.Assert(len(productWithImage.Img)).Equal(1)
 			g.Assert(productWithImage.Img[0].Id > 0).IsTrue()
-			g.Assert(productWithImage.Img[0].ProductId).Equal(1)
+			g.Assert(productWithImage.Img[0].ProductId == 1).IsTrue()
 			g.Assert(productWithImage.Img[0].ImageName).Equal(createdImageName)
 		})
 
@@ -195,9 +191,9 @@ func TestImage(t *testing.T) {
 
 			g.Assert(len(productWithImages.Img)).Equal(createdImagesCount)
 			g.Assert(productWithImages.Img[0].Id > 0).IsTrue()
-			g.Assert(productWithImages.Img[0].ProductId).Equal(1)
+			g.Assert(productWithImages.Img[0].ProductId == 1).IsTrue()
 			g.Assert(productWithImages.Img[createdImagesCount-1].Id > 0).IsTrue()
-			g.Assert(productWithImages.Img[createdImagesCount-1].ProductId).Equal(1)
+			g.Assert(productWithImages.Img[createdImagesCount-1].ProductId == 1).IsTrue()
 		})
 	})
 }
@@ -207,13 +203,6 @@ func createRandomProduct() *model.Product {
 	randomBaseString := strconv.Itoa(randomBaseNumber)
 
 	return &model.Product{
-		// Id: uint(randomBaseNumber),
-		Img: []model.Image{
-			{
-				ProductId: uint(randomBaseNumber),
-				ImageName: randomBaseString + ".png",
-			},
-		},
 		Title:             randomBaseString + " title",
 		Description:       randomBaseString + " description",
 		Price:             uint(randomBaseNumber),
