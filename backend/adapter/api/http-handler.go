@@ -14,9 +14,18 @@ import (
 )
 
 type HTTPHandler interface {
-	domain.LoginService
-	domain.ProductService
-	domain.PurchaseService
+	GetLoginChallenge(*gin.Context)
+	Login(*gin.Context)
+	Logout(*gin.Context)
+	GetProducts(*gin.Context)
+	GetProduct(*gin.Context)
+	CreateProduct(*gin.Context)
+	CreateImage(*gin.Context)
+	GetImage(*gin.Context)
+	GetPurchases(*gin.Context)
+	GetPurchase(*gin.Context)
+	CreatePurchase(*gin.Context)
+	GetPurchasesForUser(*gin.Context)
 	Start() error
 	Init()
 }
@@ -30,11 +39,12 @@ type httpHandler struct {
 
 func NewHTTPHandler(loginService domain.LoginService,
 	productService domain.ProductService,
-	purchaseService domain.PurchaseService) *httpHandler {
+	purchaseService domain.PurchaseService) *HTTPHandler {
 	return &httpHandler{
 		loginService:    loginService,
 		productService:  productService,
 		purchaseService: purchaseService,
+		router:          &gin.Engine{},
 	}
 }
 
