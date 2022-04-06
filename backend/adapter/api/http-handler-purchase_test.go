@@ -28,6 +28,10 @@ import (
 func TestCreatePurchase(t *testing.T) {
 	g := Goblin(t)
 	g.Describe("LoginChallenge", func() {
+		g.JustBeforeEach(Cleanup)
+		g.JustBeforeEach(Setup)
+		g.After(Cleanup)
+
 		router := gin.Default()
 		router.POST("/auth/challenge", httpApi.GetLoginChallenge)
 

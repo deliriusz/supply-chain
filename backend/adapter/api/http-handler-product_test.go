@@ -37,6 +37,10 @@ func TestCreateProduct(t *testing.T) {
 	router.POST("/product", httpApi.CreateProduct)
 
 	g.Describe("Product", func() {
+		g.JustBeforeEach(Cleanup)
+		g.JustBeforeEach(Setup)
+		g.After(Cleanup)
+
 		// router := gin.Default()
 		// router.POST("/auth/challenge", controller.GetLoginChallenge)
 

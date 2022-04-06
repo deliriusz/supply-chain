@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	. "github.com/franela/goblin"
-	"github.com/gin-gonic/gin"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 )
@@ -14,10 +13,7 @@ import (
 func TestLoginChallenge(t *testing.T) {
 	g := Goblin(t)
 	config.Init("../../.env")
-	router := gin.Default()
 	LOGIN_CHALLENGE_URI := "/auth/challenge"
-
-	router.POST(LOGIN_CHALLENGE_URI, httpApi.GetLoginChallenge)
 
 	validLoginChallenge := model.LoginChallenge{Address: "0x482BC0fBA93cAdf4fC894D49730F8d19e2f359FD"}
 	stringifiedValidLoginChallenge, _ := json.Marshal(validLoginChallenge)
@@ -26,6 +22,11 @@ func TestLoginChallenge(t *testing.T) {
 	stringifiedInvalidLoginChallenge, _ := json.Marshal(invalidLoginChallenge)
 
 	g.Describe("Test LoginChallenge", func() {
+		g.Before(Setup)
+		g.JustBeforeEach(Cleanup)
+		g.JustBeforeEach(Setup)
+		g.After(Cleanup)
+
 		g.It("Should fail on invalid address", func() {
 			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedInvalidLoginChallenge)
 

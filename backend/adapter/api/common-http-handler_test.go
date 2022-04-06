@@ -21,6 +21,7 @@ var loginService domain.LoginService
 var productService domain.ProductService
 var purchaseService domain.PurchaseService
 var httpApi api.HTTPHandler
+var router *gin.Engine
 
 func init() {
 	TABLE_NAME = "firmex-api-test.db"
@@ -40,6 +41,9 @@ func Setup() {
 	purchaseRepository = repository.NewPurchaseRepository(repoConnector)
 	purchaseService = domain.NewPurchaseService(purchaseRepository)
 	httpApi = api.NewHTTPHandler(loginService, productService, purchaseService)
+
+	router = gin.Default()
+	router.POST("/auth/challenge", httpApi.GetLoginChallenge)
 }
 
 func Cleanup() {
