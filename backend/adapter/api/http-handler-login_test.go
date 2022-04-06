@@ -12,7 +12,6 @@ import (
 
 func TestLoginChallenge(t *testing.T) {
 	g := Goblin(t)
-	config.Init("../../.env")
 	LOGIN_CHALLENGE_URI := "/auth/challenge"
 
 	validLoginChallenge := model.LoginChallenge{Address: "0x482BC0fBA93cAdf4fC894D49730F8d19e2f359FD"}
@@ -22,7 +21,6 @@ func TestLoginChallenge(t *testing.T) {
 	stringifiedInvalidLoginChallenge, _ := json.Marshal(invalidLoginChallenge)
 
 	g.Describe("Test LoginChallenge", func() {
-		g.Before(Setup)
 		g.JustBeforeEach(Cleanup)
 		g.JustBeforeEach(Setup)
 		g.After(Cleanup)

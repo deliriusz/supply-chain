@@ -36,23 +36,24 @@ func TestCreateProduct(t *testing.T) {
 			}
 
 			createdProducts, count := productRepo.GetProducts(10, 0)
+			firstCreatedProduct := createdProducts[0]
 
 			// for some reason it fails with message 0x1 is not equal to 1 when testing for equality
 			g.Assert(count == 1).IsTrue()
 			g.Assert(len(createdProducts)).Equal(1)
 
-			g.Assert(createdProducts[0].Id == 1).IsTrue()
-			g.Assert(createdProducts[0].AvailableQuantity).Equal(testProduct.AvailableQuantity)
-			g.Assert(createdProducts[0].Description).Equal(testProduct.Description)
-			g.Assert(createdProducts[0].Price).Equal(testProduct.Price)
-			g.Assert(createdProducts[0].Title).Equal(testProduct.Title)
+			g.Assert(firstCreatedProduct.Id == 1).IsTrue()
+			g.Assert(firstCreatedProduct.Quantity).Equal(testProduct.Quantity)
+			g.Assert(firstCreatedProduct.Description).Equal(testProduct.Description)
+			g.Assert(firstCreatedProduct.Price).Equal(testProduct.Price)
+			g.Assert(firstCreatedProduct.Title).Equal(testProduct.Title)
 
-			g.Assert(len(createdProducts[0].Specification)).Equal(len(testProduct.Specification))
+			g.Assert(len(firstCreatedProduct.Specification)).Equal(len(testProduct.Specification))
 
-			for i := 0; i < len(createdProducts[0].Specification); i++ {
-				g.Assert(createdProducts[0].Specification[i].ProductId).Equal(testProduct.Specification[i].ProductId)
-				g.Assert(createdProducts[0].Specification[i].Name).Equal(testProduct.Specification[i].Name)
-				g.Assert(createdProducts[0].Specification[i].Value).Equal(testProduct.Specification[i].Value)
+			for i := 0; i < len(firstCreatedProduct.Specification); i++ {
+				g.Assert(firstCreatedProduct.Specification[i].ProductId).Equal(testProduct.Specification[i].ProductId)
+				g.Assert(firstCreatedProduct.Specification[i].Name).Equal(testProduct.Specification[i].Name)
+				g.Assert(firstCreatedProduct.Specification[i].Value).Equal(testProduct.Specification[i].Value)
 			}
 		})
 
@@ -206,7 +207,7 @@ func createRandomProduct() *model.Product {
 		Title:             randomBaseString + " title",
 		Description:       randomBaseString + " description",
 		Price:             uint(randomBaseNumber),
-		AvailableQuantity: uint(randomBaseNumber),
+		Quantity: uint(randomBaseNumber),
 		Specification: []model.Specification{
 			{
 				Name:  "size",

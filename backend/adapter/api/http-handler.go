@@ -164,11 +164,11 @@ func safePaginationFromContext(c *gin.Context) (int, int) {
 	safeOffset := safeStringToInt(c.Query("offset"), 0)
 
 	if safeLimit < 0 {
-		safeLimit = 0
+		safeLimit = 10
 	}
 
 	if safeOffset < 0 {
-		safeOffset = 10
+		safeOffset = 0
 	}
 
 	return safeLimit, safeOffset

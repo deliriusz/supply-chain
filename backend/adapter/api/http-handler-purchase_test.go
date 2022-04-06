@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	. "github.com/franela/goblin"
-	"github.com/gin-gonic/gin"
 )
 
 // model.DB.Create(&model.PurchaseOrder{
@@ -32,23 +31,5 @@ func TestCreatePurchase(t *testing.T) {
 		g.JustBeforeEach(Setup)
 		g.After(Cleanup)
 
-		router := gin.Default()
-		router.POST("/auth/challenge", httpApi.GetLoginChallenge)
-
-		// req, _ := http.NewRequest("POST", "/auth/challenge", nil)
-		// Passing Test
-		g.It("Should add two numbers ", func() {
-			g.Assert(1 + 1).Equal(2)
-		})
-		// Failing Test
-		g.It("Should match equal numbers", func() {
-			g.Assert(2).Equal(4)
-		})
-		// Pending Test
-		g.It("Should substract two numbers")
-		// Excluded Test
-		g.Xit("Should add two numbers ", func() {
-			g.Assert(3 + 1).Equal(4)
-		})
 	})
 }

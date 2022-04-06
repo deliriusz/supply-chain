@@ -43,7 +43,7 @@ func ToProductDTO(product Product) ProductDTO {
 		Title:             product.Title,
 		Description:       product.Description,
 		Price:             product.Price,
-		AvailableQuantity: product.AvailableQuantity,
+		Quantity: product.Quantity,
 		Img:               imgDtos,
 		Specification:     specDtos,
 	}
@@ -94,7 +94,7 @@ func ToProduct(productDto ProductDTO) Product {
 		Title:             productDto.Title,
 		Description:       productDto.Description,
 		Price:             productDto.Price,
-		AvailableQuantity: productDto.AvailableQuantity,
+		Quantity: productDto.Quantity,
 		Img:               imgs,
 		Specification:     specs,
 	}
