@@ -39,7 +39,7 @@ type httpHandler struct {
 
 func NewHTTPHandler(loginService domain.LoginService,
 	productService domain.ProductService,
-	purchaseService domain.PurchaseService) *HTTPHandler {
+	purchaseService domain.PurchaseService) HTTPHandler {
 	return &httpHandler{
 		loginService:    loginService,
 		productService:  productService,
@@ -126,7 +126,7 @@ func (hdl *httpHandler) setupAuthenticatedRoutes() {
 		authenticatedRoutes.Use(hdl.authenticate(config.ROLE_CLIENT))
 		authenticatedRoutes.GET("/purchase", hdl.GetPurchases)
 		authenticatedRoutes.GET("/purchase/:id", hdl.GetPurchase)
-		authenticatedRoutes.GET("/purchase/user/:id", hdl.GetPurchaseForUser)
+		authenticatedRoutes.GET("/purchase/user/:id", hdl.GetPurchasesForUser)
 	}
 }
 

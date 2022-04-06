@@ -46,7 +46,7 @@ func (hdl *httpHandler) GetPurchase(c *gin.Context) {
 	}
 }
 
-func (hdl *httpHandler) GetPurchaseForUser(c *gin.Context) {
+func (hdl *httpHandler) GetPurchasesForUser(c *gin.Context) {
 	var purchaseDtos []model.PurchaseOrderDTO
 
 	userId := c.Param("id")
