@@ -1,3 +1,4 @@
 asset
 .vscode
 *.db
+*.db-journal
