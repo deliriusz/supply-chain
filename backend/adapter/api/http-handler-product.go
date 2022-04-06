@@ -10,6 +10,11 @@ import (
 	"rafal-kalinowski.pl/domain/model"
 )
 
+type GetProductsResponse struct {
+	Total    int             `json:"total"`
+	Products []model.Product `json:"products"`
+}
+
 func (hdl *httpHandler) GetProducts(c *gin.Context) {
 	var productDtos []model.ProductDTO
 	limit, offset := safePaginationFromContext(c)
