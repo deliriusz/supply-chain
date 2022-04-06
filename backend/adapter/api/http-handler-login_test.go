@@ -7,7 +7,6 @@ import (
 
 	. "github.com/franela/goblin"
 	"github.com/gin-gonic/gin"
-	"rafal-kalinowski.pl/adapter/api"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 )
@@ -28,21 +27,21 @@ func TestLoginChallenge(t *testing.T) {
 
 	g.Describe("Test LoginChallenge", func() {
 		g.It("Should fail on invalid address", func() {
-			respRecorder := api.ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedInvalidLoginChallenge)
+			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedInvalidLoginChallenge)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusBadRequest)
 			g.Assert(len(config.ADDRESS_LOGIN_NONCE_MAP)).Equal(0)
 		})
 
 		g.It("Should fail on wrong request", func() {
-			respRecorder := api.ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, nil)
+			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, nil)
 
 			g.Assert(http.StatusBadRequest).Equal(respRecorder.Code)
 			g.Assert(0).Equal(len(config.ADDRESS_LOGIN_NONCE_MAP))
 		})
 
 		g.It("Should generate random nonce on each valid request", func() {
-			respRecorder := api.ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge)
+			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge)
 			g.Assert(http.StatusOK).Equal(respRecorder.Code)
 			resp := respRecorder.Body.Bytes()
 			loginChallengeResponse := model.LoginChallenge{}
@@ -57,7 +56,7 @@ func TestLoginChallenge(t *testing.T) {
 			g.Assert(nonce).Equal(config.ADDRESS_LOGIN_NONCE_MAP[validLoginChallenge.Address])
 
 			// second nonce retrieval
-			respRecorder = api.ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge)
+			respRecorder = ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge)
 			g.Assert(http.StatusOK).Equal(respRecorder.Code)
 			resp = respRecorder.Body.Bytes()
 

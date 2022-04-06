@@ -1,8 +1,12 @@
 package api_test
 
 import (
+	"bytes"
+	"net/http"
+	"net/http/httptest"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"rafal-kalinowski.pl/adapter/api"
 	"rafal-kalinowski.pl/config"
 	domain "rafal-kalinowski.pl/domain/service"
@@ -16,7 +20,7 @@ var purchaseRepository domain.PurchaseRepository
 var loginService domain.LoginService
 var productService domain.ProductService
 var purchaseService domain.PurchaseService
-var httpApi api.httpHandler
+var httpApi api.HTTPHandler
 
 func init() {
 	TABLE_NAME = "firmex-api-test.db"
@@ -40,4 +44,12 @@ func Setup() {
 
 func Cleanup() {
 	os.Remove("./" + TABLE_NAME)
+}
+
+func ServeTestRequest(router *gin.Engine, method, uri string, data []byte) *httptest.ResponseRecorder {
+	respRecorder := httptest.NewRecorder()
+	req, _ := http.NewRequest(method, uri, bytes.NewReader(data))
+	router.ServeHTTP(respRecorder, req)
+
+	return respRecorder
 }
