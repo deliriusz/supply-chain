@@ -3,12 +3,17 @@ package api_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"testing"
 
 	. "github.com/franela/goblin"
 	"rafal-kalinowski.pl/adapter/api"
+	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 )
 
@@ -41,7 +46,7 @@ func TestCreateProduct(t *testing.T) {
 		g.After(Cleanup)
 
 		g.It("Should fail when trying to create product with invalid data", func() {
-			respRecorder := ServeTestRequest(router, "POST", PRODUCT_BASE_URI, []byte("{}"))
+			respRecorder := ServeTestRequest(router, "POST", PRODUCT_BASE_URI, []byte("{}"), nil)
 			savedProducts, count := productRepository.GetProducts(10, 0)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusBadRequest)
@@ -50,7 +55,7 @@ func TestCreateProduct(t *testing.T) {
 		})
 
 		g.It("Should create product from valid request", func() {
-			respRecorder := ServeTestRequest(router, "POST", PRODUCT_BASE_URI, []byte(productJson))
+			respRecorder := ServeTestRequest(router, "POST", PRODUCT_BASE_URI, []byte(productJson), nil)
 			savedProducts, count := productRepository.GetProducts(10, 0)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusOK)
@@ -95,17 +100,73 @@ func TestGetProduct(t *testing.T) {
 		g.It("Should return no data for offset bigger than total products count", func() {
 			assertPaginatedProductsAreValid(g, PRODUCT_BASE_URI+"?offset=120&limit=12", 120, 12)
 		})
+
+		g.It("Should get single existing product", func() {
+			respRecorder := ServeTestRequest(router, "GET", PRODUCT_BASE_URI+"/1", nil, nil)
+			product := getSignleProductResponseFromByteArray(respRecorder.Body)
+
+			g.Assert(respRecorder.Code).Equal(http.StatusOK)
+			g.Assert(product.Id).IsNotZero()
+		})
+
+		g.It("Should fail on wrong product id", func() {
+			respRecorder := ServeTestRequest(router, "GET", PRODUCT_BASE_URI+"/sdf", nil, nil)
+			product := getSignleProductResponseFromByteArray(respRecorder.Body)
+
+			g.Assert(respRecorder.Code).Equal(http.StatusBadRequest)
+			g.Assert(product.Id).IsZero()
+		})
+
+		g.It("Should fail on not existing product id", func() {
+			respRecorder := ServeTestRequest(router, "GET", PRODUCT_BASE_URI+"/999999", nil, nil)
+			product := getSignleProductResponseFromByteArray(respRecorder.Body)
+
+			g.Assert(respRecorder.Code).Equal(http.StatusNotFound)
+			g.Assert(product.Id).IsZero()
+		})
 	})
 }
 
 func TestImage(t *testing.T) {
 	g := Goblin(t)
 
+	CREATE_IMAGE_BASE_URI := "/product/%d/image"
+	CONTENT_TYPE_HEADER_NAME := "Content-Type"
+	CREATE_IMAGE_HEADERS := map[string]string{}
+
 	g.Describe("Test Image", func() {
 		g.JustBeforeEach(Cleanup)
 		g.JustBeforeEach(Setup)
+		g.JustBeforeEach(fillProductsRepo)
 		g.After(Cleanup)
 
+		g.It("Should fail when trying to create image for nonexisting product", func() {
+			bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
+			if err != nil {
+				g.Fail(err)
+			}
+
+			CREATE_IMAGE_HEADERS[CONTENT_TYPE_HEADER_NAME] = contentType
+
+			respRecorder := ServeTestRequest(router, "POST",
+				fmt.Sprintf(CREATE_IMAGE_BASE_URI, 99999), *bytePayload, CREATE_IMAGE_HEADERS)
+
+			g.Assert(respRecorder.Code).Equal(http.StatusNotFound)
+		})
+
+		g.It("Should create single image for a product", func() {
+			bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
+			if err != nil {
+				g.Fail(err)
+			}
+
+			CREATE_IMAGE_HEADERS[CONTENT_TYPE_HEADER_NAME] = contentType
+
+			respRecorder := ServeTestRequest(router, "POST",
+				fmt.Sprintf(CREATE_IMAGE_BASE_URI, 1), *bytePayload, nil)
+
+			g.Assert(respRecorder.Code).Equal(http.StatusOK)
+		})
 	})
 }
 
@@ -134,6 +195,50 @@ func fillProductsRepo() {
 	}
 }
 
+func getMimeFileBytesFromName(dir, name string) (*[]byte, string, error) {
+	var bBuffer bytes.Buffer
+	multipartFileWriter := multipart.NewWriter(&bBuffer)
+
+	imageFile, err := os.Open(config.IMAGE_LOCAL_STORAGE + dir + name)
+	if err != nil {
+		return nil, "", err
+	}
+
+	defer imageFile.Close()
+	fw, err := multipartFileWriter.CreateFormFile("upload", name)
+	if err != nil {
+		return nil, "", err
+	}
+
+	if _, err = io.Copy(fw, imageFile); err != nil {
+		return nil, "", err
+	}
+
+	// Add the other fields
+	// if fw, err = multipartFileWriter.CreateFormField("key"); err != nil {
+	// 	return nil, err
+	// }
+
+	// if _, err = fw.Write([]byte("KEY")); err != nil {
+	// 	return nil, err
+	// }
+
+	contentType := multipartFileWriter.FormDataContentType()
+	multipartFileWriter.Close()
+
+	bytes, err := ioutil.ReadAll(&bBuffer)
+	// fmt.Println(string(bytes))
+	return &bytes, contentType, err
+}
+
+func getSignleProductResponseFromByteArray(data *bytes.Buffer) *model.ProductDTO {
+	dataBytes, _ := ioutil.ReadAll(data)
+	respData := model.ProductDTO{}
+	json.Unmarshal(dataBytes, &respData)
+
+	return &respData
+}
+
 func getProductsResponseFromByteArray(data *bytes.Buffer) *api.GetProductsResponse {
 	dataBytes, _ := ioutil.ReadAll(data)
 	respData := api.GetProductsResponse{}
@@ -143,7 +248,7 @@ func getProductsResponseFromByteArray(data *bytes.Buffer) *api.GetProductsRespon
 }
 
 func assertPaginatedProductsAreValid(g *G, uri string, offset, limit int) {
-	respRecorder := ServeTestRequest(router, "GET", uri, nil)
+	respRecorder := ServeTestRequest(router, "GET", uri, nil, nil)
 	resp := getProductsResponseFromByteArray(respRecorder.Body)
 	savedProducts, count := productRepository.GetProducts(uint(limit), uint(offset))
 
