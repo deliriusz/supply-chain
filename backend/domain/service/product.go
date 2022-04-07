@@ -10,7 +10,7 @@ type ProductService interface {
 	GetProducts(limit, offset uint) ([]model.Product, uint)
 	GetProduct(id uint) (model.Product, error)
 	CreateProduct(*model.Product) error
-	CreateImage(productId uint, file *bufio.Reader) (string, error)
+	CreateImage(productId uint, file *bufio.Reader) (model.Image, error)
 	GetImage(fileName string) (string, string, *bufio.Reader, error)
 }
 
@@ -18,6 +18,6 @@ type ProductRepository interface {
 	GetProducts(limit, offset uint) ([]model.Product, uint)
 	GetProduct(id uint) (model.Product, error)
 	CreateProduct(*model.Product) error
-	CreateImage(productId uint, file *bufio.Reader) (string, error)
+	CreateImage(productId uint, file *bufio.Reader) (model.Image, error)
 	GetImage(fileName string) (string, string, *bufio.Reader, error)
 }

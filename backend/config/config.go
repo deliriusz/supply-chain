@@ -20,6 +20,7 @@ const (
 
 var LOGIN_SESSION_TTL_IN_SECS int
 var IMAGE_LOCAL_STORAGE string
+var IMAGE_REPO_BASE_URI string
 var PROJECT_ROOT string
 var COOKIE_SESSIONID string
 var CORS_ALLOW_ORIGINS []string
@@ -32,6 +33,7 @@ func Init(envFiles ...string) {
 		log.Fatal("Error loading .env file")
 	}
 
+	IMAGE_REPO_BASE_URI = os.Getenv("IMAGE_REPO_BASE_URI")
 	IMAGE_LOCAL_STORAGE = os.Getenv("IMAGE_LOCAL_STORAGE")
 	CORS_ALLOW_ORIGINS = strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"), ",")
 	PROJECT_ROOT = os.Getenv("PROJECT_ROOT")

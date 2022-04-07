@@ -2,6 +2,8 @@ package model
 
 import (
 	"fmt"
+
+	"rafal-kalinowski.pl/config"
 )
 
 func ToPurchaseDTO(purchase PurchaseOrder) PurchaseOrderDTO {
@@ -39,13 +41,13 @@ func ToProductDTO(product Product) ProductDTO {
 	}
 
 	return ProductDTO{
-		Id:                product.Id,
-		Title:             product.Title,
-		Description:       product.Description,
-		Price:             product.Price,
-		Quantity: product.Quantity,
-		Img:               imgDtos,
-		Specification:     specDtos,
+		Id:            product.Id,
+		Title:         product.Title,
+		Description:   product.Description,
+		Price:         product.Price,
+		Quantity:      product.Quantity,
+		Img:           imgDtos,
+		Specification: specDtos,
 	}
 }
 
@@ -58,8 +60,9 @@ func ToSpecificationDTO(specification Specification) SpecificationDTO {
 
 func ToImageDTO(image Image) ImageDTO {
 	return ImageDTO{
-		Id:  image.Id,
-		Url: fmt.Sprintf("/image/%s", image.ImageName),
+		Id:   image.Id,
+		Name: image.Name,
+		Url:  fmt.Sprintf("%s%s", config.IMAGE_REPO_BASE_URI, image.Name),
 	}
 }
 
@@ -67,6 +70,7 @@ func ToImage(imgDto ImageDTO) Image {
 	return Image{
 		Id:        imgDto.Id,
 		ProductId: imgDto.ProductId,
+		Name:      imgDto.Name,
 	}
 }
 
@@ -90,12 +94,12 @@ func ToProduct(productDto ProductDTO) Product {
 	}
 
 	return Product{
-		Id:                productDto.Id,
-		Title:             productDto.Title,
-		Description:       productDto.Description,
-		Price:             productDto.Price,
-		Quantity: productDto.Quantity,
-		Img:               imgs,
-		Specification:     specs,
+		Id:            productDto.Id,
+		Title:         productDto.Title,
+		Description:   productDto.Description,
+		Price:         productDto.Price,
+		Quantity:      productDto.Quantity,
+		Img:           imgs,
+		Specification: specs,
 	}
 }

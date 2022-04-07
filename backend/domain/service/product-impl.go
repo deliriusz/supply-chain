@@ -22,7 +22,7 @@ func (s *productService) CreateProduct(product *model.Product) error {
 	return s.repository.CreateProduct(product)
 }
 
-func (s *productService) CreateImage(productId uint, file *bufio.Reader) (string, error) {
+func (s *productService) CreateImage(productId uint, file *bufio.Reader) (model.Image, error) {
 	return s.repository.CreateImage(productId, file)
 }
 

@@ -104,7 +104,7 @@ func TestGetProduct(t *testing.T) {
 
 		g.It("Should get single existing product", func() {
 			respRecorder := ServeTestRequest(router, "GET", PRODUCT_BASE_URI+"/1", nil, nil)
-			product := getSignleProductResponseFromByteArray(respRecorder.Body)
+			product := getSingleProductResponseFromByteArray(respRecorder.Body)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusOK)
 			g.Assert(product.Id).IsNotZero()
@@ -112,7 +112,7 @@ func TestGetProduct(t *testing.T) {
 
 		g.It("Should fail on wrong product id", func() {
 			respRecorder := ServeTestRequest(router, "GET", PRODUCT_BASE_URI+"/sdf", nil, nil)
-			product := getSignleProductResponseFromByteArray(respRecorder.Body)
+			product := getSingleProductResponseFromByteArray(respRecorder.Body)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusBadRequest)
 			g.Assert(product.Id).IsZero()
@@ -120,7 +120,7 @@ func TestGetProduct(t *testing.T) {
 
 		g.It("Should fail on not existing product id", func() {
 			respRecorder := ServeTestRequest(router, "GET", PRODUCT_BASE_URI+"/999999", nil, nil)
-			product := getSignleProductResponseFromByteArray(respRecorder.Body)
+			product := getSingleProductResponseFromByteArray(respRecorder.Body)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusNotFound)
 			g.Assert(product.Id).IsZero()
@@ -161,9 +161,8 @@ func TestImage(t *testing.T) {
 			g.Timeout(time.Hour)
 
 			bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
-			if err != nil {
-				g.Fail(err)
-			}
+
+			g.Assert(err).IsNil()
 
 			CREATE_IMAGE_HEADERS[CONTENT_TYPE_HEADER_NAME] = contentType
 
@@ -171,6 +170,14 @@ func TestImage(t *testing.T) {
 				fmt.Sprintf(CREATE_IMAGE_BASE_URI, 1), *bytePayload, CREATE_IMAGE_HEADERS)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusOK)
+
+			product, err := productRepository.GetProduct(1)
+
+			g.Assert(err).IsNil()
+			g.Assert(len(product.Img)).Equal(1)
+			g.Assert(product.Img[0].ProductId).Equal(1)
+			g.Assert(product.Img[0].Id).Equal(1)
+			g.Assert(product.Img[0].Name).Equal("TODO:")
 		})
 	})
 }
@@ -226,7 +233,7 @@ func getMimeFileBytesFromName(dir, name string) (*[]byte, string, error) {
 	return &bytes, contentType, err
 }
 
-func getSignleProductResponseFromByteArray(data *bytes.Buffer) *model.ProductDTO {
+func getSingleProductResponseFromByteArray(data *bytes.Buffer) *model.ProductDTO {
 	dataBytes, _ := ioutil.ReadAll(data)
 	respData := model.ProductDTO{}
 	json.Unmarshal(dataBytes, &respData)

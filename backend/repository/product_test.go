@@ -144,7 +144,7 @@ func TestImage(t *testing.T) {
 			g.Assert(len(productWithImage.Img)).Equal(1)
 			g.Assert(productWithImage.Img[0].Id > 0).IsTrue()
 			g.Assert(productWithImage.Img[0].ProductId == 1).IsTrue()
-			g.Assert(productWithImage.Img[0].ImageName).Equal(createdImageName)
+			g.Assert(productWithImage.Img[0].Name).Equal(createdImageName)
 		})
 
 		g.It("Should fail during image creation when product does not exist", func() {

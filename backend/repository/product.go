@@ -56,31 +56,31 @@ func (r *productRepository) CreateProduct(product *model.Product) error {
 	return nil
 }
 
-func (r *productRepository) CreateImage(productId uint, file *bufio.Reader) (string, error) {
+func (r *productRepository) CreateImage(productId uint, file *bufio.Reader) (model.Image, error) {
+	image := model.Image{}
+
 	DB := r.repoConnector.GetConnector()
 	if _, err := r.getProduct(productId); err != nil {
-		return "", err
+		return image, err
 	}
 
 	imageNameBase := fmt.Sprintf("%d-%d-%d", productId, time.Now().UnixNano(), rand.Int63())
 	imageNameKeccak := crypto.Keccak256([]byte(imageNameBase))
 
-	image := model.Image{
-		ProductId: uint(productId),
-		ImageName: hex.EncodeToString(imageNameKeccak),
-	}
+	image.Name = hex.EncodeToString(imageNameKeccak)
+	image.ProductId = uint(productId)
 
 	fileContents, _ := ioutil.ReadAll(file)
 
-	if err := os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.ImageName, fileContents, 0644); err != nil {
-		return "", err
+	if err := os.WriteFile(config.IMAGE_LOCAL_STORAGE+image.Name, fileContents, 0644); err != nil {
+		return image, err
 	}
 
 	if err := DB.Create(&image).Error; err != nil {
-		return "", err
+		return image, err
 	}
 
-	return image.ImageName, nil
+	return image, nil
 }
 
 func (r *productRepository) GetImage(fileName string) (string, string, *bufio.Reader, error) {
