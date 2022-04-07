@@ -112,10 +112,8 @@ func (hdl *httpHandler) setupNormalRoutes() {
 
 	router.POST("/auth/challenge", hdl.GetLoginChallenge)
 	router.POST("/auth/login", hdl.Login)
-	router.GET("/auth/logout", hdl.Logout)
 	router.GET("/product", hdl.GetProducts)
 	router.GET("/product/:id", hdl.GetProduct)
-	router.POST("/product/:id/image", hdl.CreateImage)
 	router.GET("/image/:fileName", hdl.GetImage)
 	router.POST("/purchase", hdl.CreatePurchase)
 }
@@ -124,6 +122,7 @@ func (hdl *httpHandler) setupAuthenticatedRoutes() {
 	authenticatedRoutes := hdl.router.Group("/")
 	{
 		authenticatedRoutes.Use(hdl.authenticate(config.ROLE_CLIENT))
+		authenticatedRoutes.GET("/auth/logout", hdl.Logout)
 		authenticatedRoutes.GET("/purchase", hdl.GetPurchases)
 		authenticatedRoutes.GET("/purchase/:id", hdl.GetPurchase)
 		authenticatedRoutes.GET("/purchase/user/:id", hdl.GetPurchasesForUser)
@@ -135,6 +134,7 @@ func (hdl *httpHandler) setupAdminRoutes() {
 	{
 		adminRoutes.Use(hdl.authenticate(config.ROLE_ADMIN))
 		adminRoutes.POST("/product", hdl.CreateProduct)
+		adminRoutes.POST("/product/:id/image", hdl.CreateImage)
 	}
 }
 
