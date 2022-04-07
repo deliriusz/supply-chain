@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
 
 	. "github.com/franela/goblin"
 	"rafal-kalinowski.pl/adapter/api"
@@ -141,6 +142,8 @@ func TestImage(t *testing.T) {
 		g.After(Cleanup)
 
 		g.It("Should fail when trying to create image for nonexisting product", func() {
+			g.Timeout(time.Hour)
+
 			bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
 			if err != nil {
 				g.Fail(err)
@@ -155,6 +158,8 @@ func TestImage(t *testing.T) {
 		})
 
 		g.It("Should create single image for a product", func() {
+			g.Timeout(time.Hour)
+
 			bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
 			if err != nil {
 				g.Fail(err)
@@ -163,7 +168,7 @@ func TestImage(t *testing.T) {
 			CREATE_IMAGE_HEADERS[CONTENT_TYPE_HEADER_NAME] = contentType
 
 			respRecorder := ServeTestRequest(router, "POST",
-				fmt.Sprintf(CREATE_IMAGE_BASE_URI, 1), *bytePayload, nil)
+				fmt.Sprintf(CREATE_IMAGE_BASE_URI, 1), *bytePayload, CREATE_IMAGE_HEADERS)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusOK)
 		})
@@ -227,7 +232,6 @@ func getMimeFileBytesFromName(dir, name string) (*[]byte, string, error) {
 	multipartFileWriter.Close()
 
 	bytes, err := ioutil.ReadAll(&bBuffer)
-	// fmt.Println(string(bytes))
 	return &bytes, contentType, err
 }
 
