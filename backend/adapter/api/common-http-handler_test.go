@@ -2,6 +2,7 @@ package api_test
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -60,9 +61,17 @@ func Cleanup() {
 	os.Remove("./" + TABLE_NAME)
 }
 
-func ServeTestRequest(router *gin.Engine, method, uri string, data []byte) *httptest.ResponseRecorder {
+func ServeTestRequest(router *gin.Engine, method, uri string, data []byte, headers map[string]string) *httptest.ResponseRecorder {
 	respRecorder := httptest.NewRecorder()
 	req, _ := http.NewRequest(method, uri, bytes.NewReader(data))
+
+	for k, v := range headers {
+		req.Header.Add(k, v)
+		// req.Header.Set(k, v)
+	}
+
+	fmt.Printf("CONTENT TYPE=%s\n", req.Header.Get("Content-Type"))
+
 	router.ServeHTTP(respRecorder, req)
 
 	return respRecorder

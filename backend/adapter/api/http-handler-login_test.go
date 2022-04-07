@@ -26,21 +26,21 @@ func TestLoginChallenge(t *testing.T) {
 		g.After(Cleanup)
 
 		g.It("Should fail on invalid address", func() {
-			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedInvalidLoginChallenge)
+			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedInvalidLoginChallenge, nil)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusBadRequest)
 			g.Assert(len(config.ADDRESS_LOGIN_NONCE_MAP)).Equal(0)
 		})
 
 		g.It("Should fail on wrong request", func() {
-			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, nil)
+			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, nil, nil)
 
 			g.Assert(http.StatusBadRequest).Equal(respRecorder.Code)
 			g.Assert(0).Equal(len(config.ADDRESS_LOGIN_NONCE_MAP))
 		})
 
 		g.It("Should generate random nonce on each valid request", func() {
-			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge)
+			respRecorder := ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge, nil)
 			g.Assert(http.StatusOK).Equal(respRecorder.Code)
 			resp := respRecorder.Body.Bytes()
 			loginChallengeResponse := model.LoginChallenge{}
@@ -55,7 +55,7 @@ func TestLoginChallenge(t *testing.T) {
 			g.Assert(nonce).Equal(config.ADDRESS_LOGIN_NONCE_MAP[validLoginChallenge.Address])
 
 			// second nonce retrieval
-			respRecorder = ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge)
+			respRecorder = ServeTestRequest(router, "POST", LOGIN_CHALLENGE_URI, stringifiedValidLoginChallenge, nil)
 			g.Assert(http.StatusOK).Equal(respRecorder.Code)
 			resp = respRecorder.Body.Bytes()
 
