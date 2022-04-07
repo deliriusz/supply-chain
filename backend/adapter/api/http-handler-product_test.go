@@ -219,15 +219,6 @@ func getMimeFileBytesFromName(dir, name string) (*[]byte, string, error) {
 		return nil, "", err
 	}
 
-	// Add the other fields
-	// if fw, err = multipartFileWriter.CreateFormField("key"); err != nil {
-	// 	return nil, err
-	// }
-
-	// if _, err = fw.Write([]byte("KEY")); err != nil {
-	// 	return nil, err
-	// }
-
 	contentType := multipartFileWriter.FormDataContentType()
 	multipartFileWriter.Close()
 
