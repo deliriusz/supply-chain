@@ -94,7 +94,7 @@ func TestImage(t *testing.T) {
 				g.Fail(err)
 			}
 
-			fileReader, getFileReaderErr := getReaderFromName("../test/image.png")
+			fileReader, getFileReaderErr := getReaderFromName("../testdata/image.png")
 			if getFileReaderErr != nil {
 				g.Fail(getFileReaderErr)
 			}
@@ -124,7 +124,7 @@ func TestImage(t *testing.T) {
 				g.Fail(err)
 			}
 
-			fileReader, getFileReaderErr := getReaderFromName("../test/image.png")
+			fileReader, getFileReaderErr := getReaderFromName("../testdata/image.png")
 			if getFileReaderErr != nil {
 				g.Fail(getFileReaderErr)
 			}
@@ -148,7 +148,7 @@ func TestImage(t *testing.T) {
 		})
 
 		g.It("Should fail during image creation when product does not exist", func() {
-			fileReader, getFileReaderErr := getReaderFromName("../test/image.png")
+			fileReader, getFileReaderErr := getReaderFromName("../testdata/image.png")
 			if getFileReaderErr != nil {
 				g.Fail(getFileReaderErr)
 			}
@@ -168,7 +168,7 @@ func TestImage(t *testing.T) {
 			}
 
 			for i := 0; i < createdImagesCount; i++ {
-				fileReader, getFileReaderErr := getReaderFromName("../test/image.png")
+				fileReader, getFileReaderErr := getReaderFromName("../testdata/image.png")
 				if getFileReaderErr != nil {
 					g.Fail(getFileReaderErr)
 				}
@@ -204,10 +204,10 @@ func createRandomProduct() *model.Product {
 	randomBaseString := strconv.Itoa(randomBaseNumber)
 
 	return &model.Product{
-		Title:             randomBaseString + " title",
-		Description:       randomBaseString + " description",
-		Price:             uint(randomBaseNumber),
-		Quantity: uint(randomBaseNumber),
+		Title:       randomBaseString + " title",
+		Description: randomBaseString + " description",
+		Price:       uint(randomBaseNumber),
+		Quantity:    uint(randomBaseNumber),
 		Specification: []model.Specification{
 			{
 				Name:  "size",
