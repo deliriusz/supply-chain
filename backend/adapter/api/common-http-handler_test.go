@@ -2,7 +2,6 @@ package api_test
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -67,10 +66,7 @@ func ServeTestRequest(router *gin.Engine, method, uri string, data []byte, heade
 
 	for k, v := range headers {
 		req.Header.Add(k, v)
-		// req.Header.Set(k, v)
 	}
-
-	fmt.Printf("CONTENT TYPE=%s\n", req.Header.Get("Content-Type"))
 
 	router.ServeHTTP(respRecorder, req)
 
