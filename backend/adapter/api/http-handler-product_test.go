@@ -169,15 +169,19 @@ func TestImage(t *testing.T) {
 			respRecorder := ServeTestRequest(router, "POST",
 				fmt.Sprintf(CREATE_IMAGE_BASE_URI, 1), *bytePayload, CREATE_IMAGE_HEADERS)
 
+			image := getImageResponseFromByteArray(respRecorder.Body)
+
 			g.Assert(respRecorder.Code).Equal(http.StatusOK)
+			g.Assert(image.Id > 0).IsTrue()
+			g.Assert(len(image.Name) > 0).IsTrue()
+			g.Assert(image.Url).Equal(config.IMAGE_REPO_BASE_URI + image.Name)
 
 			product, err := productRepository.GetProduct(1)
 
 			g.Assert(err).IsNil()
 			g.Assert(len(product.Img)).Equal(1)
-			g.Assert(product.Img[0].ProductId).Equal(1)
-			g.Assert(product.Img[0].Id).Equal(1)
-			g.Assert(product.Img[0].Name).Equal("TODO:")
+			g.Assert(product.Img[0].Id == 1).IsTrue()
+			g.Assert(product.Img[0].Name).Equal(image.Name)
 		})
 	})
 }
@@ -236,6 +240,14 @@ func getMimeFileBytesFromName(dir, name string) (*[]byte, string, error) {
 func getSingleProductResponseFromByteArray(data *bytes.Buffer) *model.ProductDTO {
 	dataBytes, _ := ioutil.ReadAll(data)
 	respData := model.ProductDTO{}
+	json.Unmarshal(dataBytes, &respData)
+
+	return &respData
+}
+
+func getImageResponseFromByteArray(data *bytes.Buffer) *model.ImageDTO {
+	dataBytes, _ := ioutil.ReadAll(data)
+	respData := model.ImageDTO{}
 	json.Unmarshal(dataBytes, &respData)
 
 	return &respData

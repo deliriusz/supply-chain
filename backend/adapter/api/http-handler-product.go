@@ -85,12 +85,12 @@ func (hdl *httpHandler) CreateImage(c *gin.Context) {
 
 	fileReader := bufio.NewReader(file)
 
-	if imageName, err := hdl.productService.CreateImage(uint(productId), fileReader); err != nil {
+	if image, err := hdl.productService.CreateImage(uint(productId), fileReader); err != nil {
 		log.Error(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Product not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"id": imageName})
+		c.JSON(http.StatusOK, model.ToImageDTO(image))
 	}
 }
 
