@@ -99,14 +99,14 @@ func TestImage(t *testing.T) {
 				g.Fail(getFileReaderErr)
 			}
 
-			name, createImageErr := productRepo.CreateImage(1, fileReader)
+			createdImage, createImageErr := productRepo.CreateImage(1, fileReader)
 			if createImageErr != nil {
 				g.Fail(createImageErr)
 			}
 
-			g.Assert(len(name) > 0).IsTrue()
+			g.Assert(len(createdImage.Name) > 0).IsTrue()
 
-			savedFileName, savedFileDirectory, savedFileReader, getImageErr := productRepo.GetImage(name)
+			savedFileName, savedFileDirectory, savedFileReader, getImageErr := productRepo.GetImage(createdImage.Name)
 
 			g.Assert(len(savedFileName) > 0).IsTrue()
 			g.Assert(savedFileDirectory).Equal(config.IMAGE_LOCAL_STORAGE)
@@ -129,12 +129,12 @@ func TestImage(t *testing.T) {
 				g.Fail(getFileReaderErr)
 			}
 
-			createdImageName, createImageErr := productRepo.CreateImage(1, fileReader)
+			createdImage, createImageErr := productRepo.CreateImage(1, fileReader)
 			if createImageErr != nil {
 				g.Fail(createImageErr)
 			}
 
-			g.Assert(len(createdImageName) > 0).IsTrue()
+			g.Assert(len(createdImage.Name) > 0).IsTrue()
 
 			productWithImage, getProductErr := productRepo.GetProduct(1)
 			if getProductErr != nil {
@@ -144,7 +144,7 @@ func TestImage(t *testing.T) {
 			g.Assert(len(productWithImage.Img)).Equal(1)
 			g.Assert(productWithImage.Img[0].Id > 0).IsTrue()
 			g.Assert(productWithImage.Img[0].ProductId == 1).IsTrue()
-			g.Assert(productWithImage.Img[0].Name).Equal(createdImageName)
+			g.Assert(productWithImage.Img[0].Name).Equal(createdImage.Name)
 		})
 
 		g.It("Should fail during image creation when product does not exist", func() {
@@ -153,10 +153,10 @@ func TestImage(t *testing.T) {
 				g.Fail(getFileReaderErr)
 			}
 
-			name, createImageErr := productRepo.CreateImage(999, fileReader)
+			createdImage, createImageErr := productRepo.CreateImage(999, fileReader)
 			g.Assert(createImageErr).IsNotNil()
 
-			g.Assert(len(name)).Equal(0)
+			g.Assert(len(createdImage.Name)).Equal(0)
 		})
 
 		g.It("Should create multiple images to a product", func() {
@@ -173,12 +173,12 @@ func TestImage(t *testing.T) {
 					g.Fail(getFileReaderErr)
 				}
 
-				createdImageName, createImageErr := productRepo.CreateImage(1, fileReader)
+				createdImage, createImageErr := productRepo.CreateImage(1, fileReader)
 				if createImageErr != nil {
 					g.Fail(createImageErr)
 				}
 
-				createdImageFile, createdImageFileErr := os.Open(config.IMAGE_LOCAL_STORAGE + "/" + createdImageName)
+				createdImageFile, createdImageFileErr := os.Open(config.IMAGE_LOCAL_STORAGE + "/" + createdImage.Name)
 				if createdImageFileErr != nil {
 					g.Fail(createdImageFileErr)
 				}
