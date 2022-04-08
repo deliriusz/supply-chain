@@ -2,6 +2,7 @@ package api_test
 
 import (
 	"bytes"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -58,6 +59,10 @@ func Setup() {
 
 func Cleanup() {
 	os.Remove("./" + TABLE_NAME)
+	dir, _ := ioutil.ReadDir(config.IMAGE_LOCAL_STORAGE)
+	for _, d := range dir {
+		os.RemoveAll(config.IMAGE_LOCAL_STORAGE + d.Name())
+	}
 }
 
 func ServeTestRequest(router *gin.Engine, method, uri string, data []byte, headers map[string]string) *httptest.ResponseRecorder {
