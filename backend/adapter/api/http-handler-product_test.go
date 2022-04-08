@@ -183,6 +183,64 @@ func TestImage(t *testing.T) {
 			g.Assert(product.Img[0].Id == 1).IsTrue()
 			g.Assert(product.Img[0].Name).Equal(image.Name)
 		})
+
+		g.It("Should create multiple images for a products", func() {
+			g.Timeout(time.Hour)
+
+			for i := 0; i < GET_PRODUCTS_GENERATED_COUNT; i++ {
+				bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
+
+				g.Assert(err).IsNil()
+
+				CREATE_IMAGE_HEADERS[CONTENT_TYPE_HEADER_NAME] = contentType
+
+				respRecorder := ServeTestRequest(router, "POST",
+					fmt.Sprintf(CREATE_IMAGE_BASE_URI, 1), *bytePayload, CREATE_IMAGE_HEADERS)
+
+				image := getImageResponseFromByteArray(respRecorder.Body)
+
+				g.Assert(respRecorder.Code).Equal(http.StatusOK)
+				g.Assert(image.Id > 0).IsTrue()
+				g.Assert(len(image.Name) > 0).IsTrue()
+				g.Assert(image.Url).Equal(config.IMAGE_REPO_BASE_URI + image.Name)
+
+				product, err := productRepository.GetProduct(1)
+
+				g.Assert(err).IsNil()
+				g.Assert(len(product.Img)).Equal(i + 1)
+				g.Assert(product.Img[i].Id == uint(i+1)).IsTrue()
+				g.Assert(product.Img[i].Name).Equal(image.Name)
+			}
+		})
+
+		g.It("Should create single image for multiple products", func() {
+			g.Timeout(time.Hour)
+
+			for i := 0; i < GET_PRODUCTS_GENERATED_COUNT; i++ {
+				bytePayload, contentType, err := getMimeFileBytesFromName("../testdata/", "image.png")
+
+				g.Assert(err).IsNil()
+
+				CREATE_IMAGE_HEADERS[CONTENT_TYPE_HEADER_NAME] = contentType
+
+				respRecorder := ServeTestRequest(router, "POST",
+					fmt.Sprintf(CREATE_IMAGE_BASE_URI, i+1), *bytePayload, CREATE_IMAGE_HEADERS)
+
+				image := getImageResponseFromByteArray(respRecorder.Body)
+
+				g.Assert(respRecorder.Code).Equal(http.StatusOK)
+				g.Assert(image.Id > 0).IsTrue()
+				g.Assert(len(image.Name) > 0).IsTrue()
+				g.Assert(image.Url).Equal(config.IMAGE_REPO_BASE_URI + image.Name)
+
+				product, err := productRepository.GetProduct(uint(i + 1))
+
+				g.Assert(err).IsNil()
+				g.Assert(len(product.Img)).Equal(1)
+				g.Assert(product.Img[0].Id == uint(i+1)).IsTrue()
+				g.Assert(product.Img[0].Name).Equal(image.Name)
+			}
+		})
 	})
 }
 
