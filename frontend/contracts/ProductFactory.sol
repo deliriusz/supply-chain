@@ -41,25 +41,23 @@ contract ProductFactory is Ownable, IERC721Receiver {
         nft = FirmexProductNFT(nftAddress);
     }
 
-    function renounceOwnership() public override view onlyOwner {
-       revert();
+    function renounceOwnership() public view override onlyOwner {
+        revert();
     }
 
-    function transferOwnership(address newOwner) public override view onlyOwner {
-       newOwner; //just for compiler not to complain about unused variable, as we override parent
-       revert();
+    function transferOwnership(address) public view override onlyOwner {
+        revert();
     }
 
     /**
         @dev IERC721Receiver implementation
      */
     function onERC721Received(
-        address ,
-        address ,
+        address,
+        address,
         uint256 tokenId,
-        bytes calldata 
-    ) external override view productExists(tokenId) returns (bytes4) {
-
+        bytes calldata
+    ) external view override productExists(tokenId) returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
@@ -97,7 +95,7 @@ contract ProductFactory is Ownable, IERC721Receiver {
         emit ProductCreated(_name, _initialPrice, _extId, _nftUri);
     }
 
-   /**
+    /**
       @dev changes product state, only if product exists and the next state is greater than actual
       @param _extId externalId used to match a product
       @param _newState new lifecycle state
@@ -114,7 +112,7 @@ contract ProductFactory is Ownable, IERC721Receiver {
         matchingProduct.state = _newState;
     }
 
-   /**
+    /**
       @dev retrieves full product from mapping
       @param _extId externalId used to match a product
    */
@@ -127,22 +125,32 @@ contract ProductFactory is Ownable, IERC721Receiver {
         return _products[_extId];
     }
 
-   /**
+    /**
       @dev If payed amount required for a product matches it price, it transfers NFT to `_to` address, and sends the data to contract owner
       @param _extId externalId used to match a product
       @param _to address to which send product NFT
    */
-    function sellProduct(uint256 _extId, address _to) public payable productExists(_extId) {
-       ProductLib.Product storage product = _products[_extId];
+    function sellProduct(uint256 _extId, address _to)
+        public
+        payable
+        productExists(_extId)
+    {
+        ProductLib.Product storage product = _products[_extId];
 
-       require(_to != address(0), "destination address cannot be 0");
-       require(msg.value == product.initialPrice, "Value sent for the product does not match product's price");
-       require(product.state == ProductLib.LifecycleState.Created, "Product should be created and not yet payed");
-       product.state = ProductLib.LifecycleState.Payed;
+        require(_to != address(0), "destination address cannot be 0");
+        require(
+            msg.value == product.initialPrice,
+            "Value sent for the product does not match product's price"
+        );
+        require(
+            product.state == ProductLib.LifecycleState.Created,
+            "Product should be created and not yet payed"
+        );
+        product.state = ProductLib.LifecycleState.Payed;
 
-       nft.safeTransferFrom(address(this), _to, _extId);
-       payable(owner()).transfer(msg.value);
+        nft.safeTransferFrom(address(this), _to, _extId);
+        payable(owner()).transfer(msg.value);
 
-       emit ProductSold(product.initialPrice, _extId, _to);
+        emit ProductSold(product.initialPrice, _extId, _to);
     }
 }
