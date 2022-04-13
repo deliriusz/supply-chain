@@ -38,8 +38,9 @@ const ProductDetails = () => {
                         <PurchaseButton
                            primary
                            size='small'
-                           purchaseProductId={product!.id!}
-                           purchaseAmount={product!.price}
+                           active={(!!product && !!product?.id)}
+                           purchaseProductId={product?.id || -1}
+                           purchaseAmount={product?.price || -1}
                         >
                         </PurchaseButton>
                      </Grid.Column>
