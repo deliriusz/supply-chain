@@ -19,7 +19,20 @@ async function main() {
   console.log("ProductFactory address:", productFactory.address);
 
   const deployedNft = (await ethers.getContractAt("FirmexProductNFT", firmexProductNFT.address, deployer)) as FirmexProductNFT;
-  deployedNft.transferOwnership(productFactory.address);
+  await deployedNft.transferOwnership(productFactory.address)
+    .then(transaction => {
+      return transaction.wait(1)
+    }
+    )
+    .then(receipt => {
+      if (receipt.status !== 1) {
+        console.error("Transfering ownership of deployed nft failed")
+        console.error(JSON.stringify(receipt))
+      }
+    })
+
+  console.log("Ownership of product nft changed properly. New owner address: " + await deployedNft.owner())
+  console.log("done")
 }
 
 main()

@@ -2,7 +2,7 @@ import { ethers, waffle } from 'hardhat'
 import { Signer } from 'ethers'
 import chai, { expect } from 'chai'
 import { FirmexProductNFT } from '../src/types/FirmexProductNFT'
-import FirmexProductNFTArtifact from '../artifacts/contracts/FirmexProductNFT.sol/FirmexProductNFT.json'
+import FirmexProductNFTArtifact from '../src/artifacts/src/contracts/FirmexProductNFT.sol/FirmexProductNFT.json'
 import chaiAsPromised from 'chai-as-promised'
 import { MockProvider, solidity } from 'ethereum-waffle'
 

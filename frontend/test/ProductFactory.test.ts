@@ -2,9 +2,9 @@ import { ethers, waffle } from 'hardhat'
 import { Signer } from 'ethers'
 import chai, { expect } from 'chai'
 import { FirmexProductNFT } from '../src/types/FirmexProductNFT'
-import FirmexProductNFTArtifact from '../artifacts/contracts/FirmexProductNFT.sol/FirmexProductNFT.json'
+import FirmexProductNFTArtifact from '../src/artifacts/src/contracts/FirmexProductNFT.sol/FirmexProductNFT.json'
 import { ProductFactory } from '../src/types/ProductFactory'
-import ProductFactoryArtifact from '../artifacts/contracts/ProductFactory.sol/ProductFactory.json'
+import ProductFactoryArtifact from '../src/artifacts/src/contracts/ProductFactory.sol/ProductFactory.json'
 import chaiAsPromised from 'chai-as-promised'
 import { solidity, MockProvider } from 'ethereum-waffle'
 
@@ -46,8 +46,8 @@ describe('ProductFactory contract', () => {
 
    it('can create nft', async () => {
       await productFactory.create('product1', 1000, 1, 'uri1');
-      await expect('safeMint').to.be.calledOnContractWith(firmexProductNFT, [ownerAddress, 'uri1', 1]);
-      expect(ownerAddress).to.be.eq(await firmexProductNFT.ownerOf(1));
+      await expect('safeMint').to.be.calledOnContractWith(firmexProductNFT, [productFactory.address, 'uri1', 1]);
+      expect(productFactory.address).to.be.eq(await firmexProductNFT.ownerOf(1));
    })
 
    it('fails when non-owner tries to create a product', async () => {

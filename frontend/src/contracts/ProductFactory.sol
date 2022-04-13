@@ -66,7 +66,7 @@ contract ProductFactory is Ownable, IERC721Receiver {
     }
 
     /**
-   @dev Creates an object
+   @dev Creates an object. Please remember to transfer ownership to this contract for FirmexProductNFT
    @param _name product name
    @param _initialPrice initial price in wei
    @param _extId externalId, used to match product NFT with external DB
