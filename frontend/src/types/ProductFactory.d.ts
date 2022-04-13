@@ -218,10 +218,7 @@ export class ProductFactory extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<[void]>;
+    transferOwnership(arg0: string, overrides?: CallOverrides): Promise<[void]>;
   };
 
   changeProductState(
@@ -269,7 +266,7 @@ export class ProductFactory extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
+  transferOwnership(arg0: string, overrides?: CallOverrides): Promise<void>;
 
   callStatic: {
     changeProductState(
@@ -317,10 +314,7 @@ export class ProductFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    transferOwnership(arg0: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -430,7 +424,7 @@ export class ProductFactory extends BaseContract {
     ): Promise<BigNumber>;
 
     transferOwnership(
-      newOwner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -476,7 +470,7 @@ export class ProductFactory extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
-      newOwner: string,
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

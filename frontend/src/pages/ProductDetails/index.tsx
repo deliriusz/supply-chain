@@ -4,11 +4,13 @@ import Product from "../../interfaces/Product";
 import { useParams } from 'react-router-dom';
 import * as ProductService from '../../services/ProductService'
 import ImageCarousel from "../../components/ImageCarousel";
+import PurchaseButton from "../../components/PurchaseButton";
 
 const ProductDetails = () => {
    let { productId } = useParams()
    useEffect(() => {
-      ProductService.getProduct(parseInt(productId + '')).then(product => setProduct(product))
+      ProductService.getProduct(parseInt(productId + ''))
+         .then(product => setProduct(product))
    }, [])
    let [product, setProduct] = useState<Product | undefined>()
 
@@ -33,14 +35,13 @@ const ProductDetails = () => {
                         <h2>{product?.price} wei </h2>
                      </Grid.Column>
                      <Grid.Column>
-                        <Button
-                           icon
-                           labelPosition='left'
+                        <PurchaseButton
                            primary
                            size='small'
+                           purchaseProductId={product!.id!}
+                           purchaseAmount={product!.price}
                         >
-                           <Icon name='shopping cart' /> Buy
-                        </Button>
+                        </PurchaseButton>
                      </Grid.Column>
                   </Grid>
 

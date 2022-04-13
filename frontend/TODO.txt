@@ -1,5 +1,4 @@
 TODO: if time permits
 * time restrict login attempts from one IP address
 * add check for account change
-* introduce useEthereumPayment hook
-* add common payment button
+* not sign message digest hash, but the message so that user sees what he signs
