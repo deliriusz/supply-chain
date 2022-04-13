@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import GenericErrorModal from './components/GenericErrorModal';
+import GenericModal from './components/GenericErrorModal';
 import AuthContext, { loadState, reducer } from './hooks/AuthContext';
 import Layout from './layouts/Layout';
 
@@ -13,7 +13,12 @@ const App = () => {
         auth: state,
         dispatcher: dispatch
       }}>
-        <GenericErrorModal open={state.isError} description={state.message} header="Login error" />
+        <GenericModal
+          open={state.isError}
+          description={state.message}
+          header="Login error"
+          isPositive={false}
+        />
         <Layout />
       </AuthContext.Provider>
     </div>

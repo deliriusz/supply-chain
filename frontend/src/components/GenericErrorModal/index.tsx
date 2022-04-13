@@ -1,7 +1,11 @@
 import React from 'react'
 import { Button, Modal, ModalProps } from 'semantic-ui-react'
 
-function GenericErrorModal(props: ModalProps) {
+type GenericModalProps = ModalProps & {
+   isPositive: boolean
+}
+
+function GenericModal(props: GenericModalProps) {
    const [open, setOpen] = React.useState(props.open)
    React.useEffect(() => {
       setOpen(props.open)
@@ -25,11 +29,12 @@ function GenericErrorModal(props: ModalProps) {
                labelPosition='right'
                icon='checkmark'
                onClick={() => setOpen(false)}
-               negative
+               negative={!props.isPositive}
+               positive={props.isPositive}
             />
          </Modal.Actions>
       </Modal>
    )
 }
 
-export default GenericErrorModal
+export default GenericModal
