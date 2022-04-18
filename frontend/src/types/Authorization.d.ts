@@ -106,10 +106,12 @@ interface AuthorizationInterface extends ethers.utils.Interface {
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
     "RoleAssigned(address,bytes4)": EventFragment;
+    "RoleRevoked(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAssigned"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
 }
 
 export type OwnershipTransferredEvent = TypedEvent<
@@ -119,6 +121,8 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type RoleAssignedEvent = TypedEvent<
   [string, string] & { to: string; role: string }
 >;
+
+export type RoleRevokedEvent = TypedEvent<[string] & { who: string }>;
 
 export class Authorization extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -308,6 +312,14 @@ export class Authorization extends BaseContract {
       to?: string | null,
       role?: null
     ): TypedEventFilter<[string, string], { to: string; role: string }>;
+
+    "RoleRevoked(address)"(
+      who?: string | null
+    ): TypedEventFilter<[string], { who: string }>;
+
+    RoleRevoked(
+      who?: string | null
+    ): TypedEventFilter<[string], { who: string }>;
   };
 
   estimateGas: {

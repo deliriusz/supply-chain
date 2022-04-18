@@ -21,7 +21,7 @@ describe('ProductFactory contract', () => {
    let signer3Address: string;
    let authorization: Authorization;
 
-   let ROLE_ASSIGNMENT_DELAY_SECS = 30;
+   let ROLE_ASSIGNMENT_DELAY_SECS = 5;
    let ROLE_ADMIN: string;
    let ROLE_DASHBOARD_VIEWER: string;
 
@@ -42,13 +42,23 @@ describe('ProductFactory contract', () => {
    it('assigns admin role instantly after deployment', async () => {
       expect(ownerAddress).to.be.eq(await authorization.owner());
 
-      expect(await authorization.ROLE_ADMIN()).to.be.eq(await authorization.getUserRole(ownerAddress));
+      console.log("USER ROLE=" + await authorization.getUserRole(ownerAddress))
+
+      expect(ROLE_ADMIN).to.be.eq(await authorization.getUserRole(ownerAddress));
    })
 
    it('assigns roles to different users', async () => {
-      // await expect('safeMint').to.be.calledOnContractWith(authorization, [productFactory.address, 'uri1', 1]);
+      await authorization.assignRole(signer1Address, ROLE_DASHBOARD_VIEWER);
+      await expect('assignRole').to.be.calledOnContractWith(authorization, [signer1Address, ROLE_DASHBOARD_VIEWER]);
 
-      expect(await authorization.ROLE_ADMIN()).to.be.eq(await authorization.getUserRole(ownerAddress));
+      await authorization.assignRole(signer2Address, ROLE_DASHBOARD_VIEWER);
+      await expect('assignRole').to.be.calledOnContractWith(authorization, [signer2Address, ROLE_DASHBOARD_VIEWER]);
+
+      setTimeout(async () => {
+         expect(await authorization.getUserRole(signer1Address)).to.be.eq(ROLE_DASHBOARD_VIEWER)
+         expect(await authorization.getUserRole(signer2Address)).to.be.eq(ROLE_DASHBOARD_VIEWER)
+         console.log("INSIDE SETTIMEOUT")
+      }, ROLE_ASSIGNMENT_DELAY_SECS * 1000)
    })
 
    it('fails when non admin tries to change access', async () => {
@@ -61,11 +71,14 @@ describe('ProductFactory contract', () => {
    it('returns assigned role only if required amount of time passed', async () => {
    })
 
+   it('fails when trying to assign not existing role', async () => {
+   })
+
    it('emits an event on role assignment', async () => {
-      expect(authorization.assignRole(signer1Address, ROLE_ADMIN)).to.emit(authorization, 'productcreated').withArgs(signer1Address, ROLE_ADMIN);
+      expect(authorization.assignRole(signer1Address, ROLE_ADMIN)).to.emit(authorization, 'RoleAssigned').withArgs(signer1Address, ROLE_ADMIN);
    })
 
    it('emits an event on role revocation', async () => {
-      // expect(productfactory.create('product1', 1000, 1, 'uri1')).to.emit(productfactory, 'productcreated').withargs('product1', 1000, 1, 'uri1');
+      expect(authorization.revokeRole(signer1Address)).to.emit(authorization, 'RoleRevoked').withArgs(signer1Address);
    })
 })
