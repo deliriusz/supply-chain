@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 /**
  * @title Authorization
@@ -30,8 +31,7 @@ contract Authorization is Ownable {
 
     modifier isRoleActive(address _who) {
         require(
-            block.timestamp - _accoutRoleAssignmentTime[_who] >
-                ROLE_ASSIGNMENT_DELAY_SECS,
+            _accoutRoleAssignmentTime[_who] <= block.timestamp,
             "Authorization: the address does not have an active role assigned yet."
         );
         _;
@@ -78,12 +78,10 @@ contract Authorization is Ownable {
     }
 
     function getUserRole(address _who) public view returns (bytes4) {
-        if (
-            block.timestamp - _accoutRoleAssignmentTime[_who] <
-            ROLE_ASSIGNMENT_DELAY_SECS
-        ) {
+        if (_accoutRoleAssignmentTime[_who] > block.timestamp) {
             return bytes4(0);
         }
+
         return _accountRoleAssigned[_who];
     }
 }
