@@ -25,6 +25,9 @@ var PROJECT_ROOT string
 var COOKIE_SESSIONID string
 var CORS_ALLOW_ORIGINS []string
 var ADDRESS_LOGIN_NONCE_MAP map[string]int64
+var AUTHORIZATION_CONTRACT_ADDRESS string
+var ETH_PROVIDER_URI string
+var ETH_PRIVATE_KEY string
 var VALID_ADDRESS_REGEXP *regexp.Regexp
 
 func Init(envFiles ...string) {
@@ -38,6 +41,9 @@ func Init(envFiles ...string) {
 	CORS_ALLOW_ORIGINS = strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"), ",")
 	PROJECT_ROOT = os.Getenv("PROJECT_ROOT")
 	LOGIN_SESSION_TTL_IN_SECS, _ = strconv.Atoi(os.Getenv("LOGIN_SESSION_TTL_IN_SECS"))
+	AUTHORIZATION_CONTRACT_ADDRESS = os.Getenv("AUTHORIZATION_CONTRACT_ADDRESS")
+	ETH_PROVIDER_URI = os.Getenv("ETH_PROVIDER_URI")
+	ETH_PRIVATE_KEY = os.Getenv("ETH_PRIVATE_KEY")
 
 	ADDRESS_LOGIN_NONCE_MAP = make(map[string]int64)
 	VALID_ADDRESS_REGEXP = regexp.MustCompile("^0x[0-9a-fA-F]{40}$")
