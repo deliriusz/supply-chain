@@ -16,7 +16,7 @@ eth:
 	mkdir -p build
 	mkdir -p artifacts
 	solc @openzeppelin=../frontend/node_modules/@openzeppelin \
-		--abi ../frontend/src/contracts/Authorization.sol > build/Authorization.abi
+		--abi ../frontend/src/contracts/Authorization.sol -o build --overwrite
 	solc @openzeppelin=../frontend/node_modules/@openzeppelin \
-		--bin ../frontend/src/contracts/Authorization.sol > build/Authorization.bin
+		--bin ../frontend/src/contracts/Authorization.sol -o build --overwrite
 	abigen --bin=build/Authorization.bin --abi=build/Authorization.abi --pkg authorization --out=artifacts/Authorization.go
