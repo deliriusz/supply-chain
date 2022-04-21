@@ -1,4 +1,7 @@
 asset
+artifacts/
+build/
+bin/
 .vscode
 *.db
 *.db-journal
