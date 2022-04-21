@@ -113,6 +113,19 @@ describe('Authorization contract', () => {
       expect(await authorization._accoutRoleAssignmentTime(signer1Address)).to.be.eq(roleActivationTime)
    })
 
+   it('revokes a user role immediately', async () => {
+      await authorization.assignRole(signer1Address, ROLE_DASHBOARD_VIEWER);
+      await expect('assignRole').to.be.calledOnContractWith(authorization, [signer1Address, ROLE_DASHBOARD_VIEWER])
+
+      await provider.send('evm_increaseTime', [ROLE_ASSIGNMENT_DELAY_SECS]);
+      await provider.send('evm_mine', []);
+
+      expect(await authorization.getUserRole(signer1Address)).to.be.eq(ROLE_DASHBOARD_VIEWER)
+
+      await authorization.revokeRole(signer1Address)
+      expect(await authorization.getUserRole(signer1Address)).to.be.eq(ROLE_UNAUTHORIZED)
+   })
+
    it('emits an event on role assignment', async () => {
       expect(authorization.assignRole(signer1Address, ROLE_ADMIN)).to.emit(authorization, 'RoleAssigned').withArgs(signer1Address, ROLE_ADMIN);
    })
