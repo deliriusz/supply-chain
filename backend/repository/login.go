@@ -12,7 +12,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	log "github.com/sirupsen/logrus"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 	domain "rafal-kalinowski.pl/domain/service"
@@ -60,8 +59,9 @@ func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, erro
 		ExpiresAt: currentTimestamp + int64(sessionTTL)*1000,
 		TTL:       uint(sessionTTL),
 	}
-	log.Info(login.Address[2:])
 
+	// standard DB.Where did not work - value starting with "0X" is automatically treated as hex number
+	// and sqlite DB complained about number too big, even after trying to wrap it into quotes
 	if err := DB.Exec("DELETE FROM logins WHERE ADDRESS = \"?\"", login.Address).Error; err != nil {
 		return nil, err
 	}
