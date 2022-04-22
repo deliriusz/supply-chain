@@ -1,33 +1,63 @@
 package repository
 
 import (
+	"reflect"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
 	"rafal-kalinowski.pl/domain/model"
 )
 
-type RepoConnector interface {
-	InitConnection(name, url string) error
-	GetConnector() *gorm.DB
+var ProviderFactory *DataProviderFactory
+
+type DataProviderFactory struct {
+	dataProviders map[string]any
 }
 
-type connector struct {
+func GetProvider[T RepoType](factory *DataProviderFactory) RepoConnector[T] {
+	var provider T
+	prov, has := factory.dataProviders[reflect.TypeOf(provider).Name()]
+	if !has {
+		return nil
+	}
+
+	return prov.(RepoConnector[T])
+}
+
+func RegisterProvider[T RepoType](factory *DataProviderFactory, p RepoConnector[T]) {
+	var provider T
+	factory.dataProviders[reflect.TypeOf(provider).Name()] = p
+}
+
+type RepoType interface {
+	*EthereumRepoConnector | *DBRepoConnector
+}
+
+type RepoConnector[T RepoType] interface {
+	InitConnection(name, url string) error
+	GetConnector() T
+}
+
+type DBRepoConnector struct {
 	DB *gorm.DB
 }
 
 // GetConnector implements RepoConnector
-func (c *connector) GetConnector() *gorm.DB {
-	return c.DB
+func (c *DBRepoConnector) GetConnector() *DBRepoConnector {
+	return c
 }
 
 // InitConnection implements RepoConnector
-func (c *connector) InitConnection(name, url string) error {
+func (c *DBRepoConnector) InitConnection(name, connectionString string) error {
 	database, err := gorm.Open("sqlite3", name)
 
 	if err != nil {
 		panic(err)
 	}
+
+	x := EthereumRepoConnector{}
+	x.GetConnector()
 
 	database.AutoMigrate(&model.Image{})
 	database.AutoMigrate(&model.Specification{})
@@ -40,13 +70,16 @@ func (c *connector) InitConnection(name, url string) error {
 	return err
 }
 
-func NewRepoConnector() RepoConnector {
-	repo := &connector{
-		DB: nil,
-	}
-
-	return repo
+// func NewRepoConnector[T RepoType](v T) RepoConnector[T] {
+func NewRepoConnector[T RepoType](v T) RepoConnector[*EthereumRepoConnector] {
+	x := EthereumRepoConnector{}
+	return &x
+	// return &v
 }
+
+// func NewRepoConnector[T RepoType](v T) RepoConnector[T] {
+// 	return v
+// }
 
 func Paginate(limit, offset int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
@@ -62,4 +95,13 @@ func Paginate(limit, offset int) func(db *gorm.DB) *gorm.DB {
 
 		return db.Offset(offset).Limit(limit)
 	}
+}
+
+func init() {
+	ProviderFactory = &DataProviderFactory{
+		dataProviders: make(map[string]any),
+	}
+
+	RegisterProvider[*EthereumRepoConnector](ProviderFactory, &EthereumRepoConnector{})
+	RegisterProvider[*DBRepoConnector](ProviderFactory, &DBRepoConnector{})
 }
