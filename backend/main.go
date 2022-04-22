@@ -10,16 +10,16 @@ import (
 func main() {
 	config.Init()
 
-	repoConnector := repository.NewRepoConnector()
-	if err := repoConnector.InitConnection("firmex.db", ""); err != nil {
+	dbRepoConnector := repository.GetProvider[*repository.DBRepoConnector](repository.ProviderFactory)
+	if err := dbRepoConnector.InitConnection("firmex.db", ""); err != nil {
 		panic(err)
 	}
 
-	loginRepository := repository.NewLoginRepository(repoConnector)
+	loginRepository := repository.NewLoginRepository(dbRepoConnector)
 	loginService := domain.NewLoginService(loginRepository)
-	productRepository := repository.NewProductRepository(repoConnector)
+	productRepository := repository.NewProductRepository(dbRepoConnector)
 	productService := domain.NewProductService(productRepository)
-	purchaseRepository := repository.NewPurchaseRepository(repoConnector)
+	purchaseRepository := repository.NewPurchaseRepository(dbRepoConnector)
 	purchaseService := domain.NewPurchaseService(purchaseRepository)
 
 	httpApi := api.NewHTTPHandler(loginService, productService, purchaseService)

@@ -20,7 +20,8 @@ func init() {
 }
 
 func Setup() {
-	repoConn := repository.NewRepoConnector()
+	repoConn := repository.GetProvider[*repository.DBRepoConnector](repository.ProviderFactory)
+
 	if err := repoConn.InitConnection(TABLE_NAME, ""); err != nil {
 		panic(err)
 	}

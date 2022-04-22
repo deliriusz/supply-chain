@@ -6,10 +6,10 @@ import (
 )
 
 type purchaseRepository struct {
-	repoConnector RepoConnector
+	repoConnector RepoConnector[*DBRepoConnector]
 }
 
-func NewPurchaseRepository(c RepoConnector) domain.PurchaseRepository {
+func NewPurchaseRepository(c RepoConnector[*DBRepoConnector]) domain.PurchaseRepository {
 	repo := &purchaseRepository{
 		repoConnector: c,
 	}
@@ -18,7 +18,7 @@ func NewPurchaseRepository(c RepoConnector) domain.PurchaseRepository {
 }
 
 func (r *purchaseRepository) GetPurchases(limit, offset uint) ([]model.PurchaseOrder, uint) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var purchase []model.PurchaseOrder
 
 	count := uint(0)
@@ -32,7 +32,7 @@ func (r *purchaseRepository) GetPurchases(limit, offset uint) ([]model.PurchaseO
 }
 
 func (r *purchaseRepository) GetPurchase(id uint) (model.PurchaseOrder, error) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var purchase model.PurchaseOrder
 
 	if err := DB.Where("id = ?", id).Preload("Product").
@@ -44,7 +44,7 @@ func (r *purchaseRepository) GetPurchase(id uint) (model.PurchaseOrder, error) {
 }
 
 func (r *purchaseRepository) CreatePurchase(purchase *model.PurchaseOrder) error {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	if err := DB.Create(&purchase).Error; err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (r *purchaseRepository) CreatePurchase(purchase *model.PurchaseOrder) error
 }
 
 func (r *purchaseRepository) GetPurchasesForUser(limit, offset uint, user string) ([]model.PurchaseOrder, uint) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var purchase []model.PurchaseOrder
 	count := uint(0)
 

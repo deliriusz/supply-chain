@@ -16,10 +16,10 @@ import (
 )
 
 type productRepository struct {
-	repoConnector RepoConnector
+	repoConnector RepoConnector[*DBRepoConnector]
 }
 
-func NewProductRepository(c RepoConnector) domain.ProductRepository {
+func NewProductRepository(c RepoConnector[*DBRepoConnector]) domain.ProductRepository {
 	repo := &productRepository{
 		repoConnector: c,
 	}
@@ -28,7 +28,7 @@ func NewProductRepository(c RepoConnector) domain.ProductRepository {
 }
 
 func (r *productRepository) GetProducts(limit, offset uint) ([]model.Product, uint) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var products []model.Product
 
 	count := uint(0)
@@ -48,7 +48,7 @@ func (r *productRepository) GetProduct(id uint) (model.Product, error) {
 }
 
 func (r *productRepository) CreateProduct(product *model.Product) error {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	if err := DB.Create(&product).Error; err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (r *productRepository) CreateProduct(product *model.Product) error {
 func (r *productRepository) CreateImage(productId uint, file *bufio.Reader) (model.Image, error) {
 	image := model.Image{}
 
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	if _, err := r.getProduct(productId); err != nil {
 		return image, err
 	}
@@ -91,7 +91,7 @@ func (r *productRepository) GetImage(fileName string) (string, string, *bufio.Re
 }
 
 func (r *productRepository) getProduct(productId uint) (model.Product, error) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var product model.Product
 
 	if err := DB.Where("id = ?",

@@ -18,7 +18,7 @@ import (
 )
 
 type loginRepository struct {
-	repoConnector RepoConnector
+	repoConnector RepoConnector[*DBRepoConnector]
 }
 
 // GetLoginChallenge implements domain.LoginRepository
@@ -39,7 +39,7 @@ func (r *loginRepository) GetLoginChallenge(login *model.LoginChallenge) (*model
 
 // Login implements domain.LoginRepository
 func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, error) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	expectedNonce := config.ADDRESS_LOGIN_NONCE_MAP[login.Address]
 
 	if !verifySig(login.Address, login.Signature, []byte(strconv.FormatInt(expectedNonce, 10))) {
@@ -75,7 +75,7 @@ func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, erro
 
 // Logout implements domain.LoginRepository
 func (r *loginRepository) Logout(login *model.Login) error {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var session model.Login
 
 	err := DB.Where("session_id = ?", login.SessionId).
@@ -89,7 +89,7 @@ func (r *loginRepository) Logout(login *model.Login) error {
 }
 
 func (r *loginRepository) GetSessionById(sessionId string) (*model.Login, error) {
-	DB := r.repoConnector.GetConnector()
+	DB := r.repoConnector.GetConnector().DB
 	var login model.Login
 
 	if err := DB.Where("session_id = ?",
@@ -100,7 +100,7 @@ func (r *loginRepository) GetSessionById(sessionId string) (*model.Login, error)
 	return &login, nil
 }
 
-func NewLoginRepository(c RepoConnector) domain.LoginRepository {
+func NewLoginRepository(c RepoConnector[*DBRepoConnector]) domain.LoginRepository {
 	repo := &loginRepository{
 		repoConnector: c,
 	}
