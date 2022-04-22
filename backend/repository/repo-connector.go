@@ -2,8 +2,6 @@ package repository
 
 import (
 	"reflect"
-
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 var ProviderFactory *DataProviderFactory
