@@ -20,15 +20,16 @@ func init() {
 }
 
 func Setup() {
-	repoConn := repository.GetProvider[*repository.DBRepoConnector](repository.ProviderFactory)
+	dbRepoConn := repository.GetProvider[*repository.DBRepoConnector](repository.ProviderFactory)
+	ethRepoConn := repository.GetProvider[*repository.EthereumRepoConnector](repository.ProviderFactory)
 
-	if err := repoConn.InitConnection(TABLE_NAME, ""); err != nil {
+	if err := dbRepoConn.InitConnection(TABLE_NAME, ""); err != nil {
 		panic(err)
 	}
 
-	productRepo = repository.NewProductRepository(repoConn)
-	loginRepo = repository.NewLoginRepository(repoConn)
-	purchaseRepo = repository.NewPurchaseRepository(repoConn)
+	productRepo = repository.NewProductRepository(dbRepoConn)
+	loginRepo = repository.NewLoginRepository(dbRepoConn, ethRepoConn)
+	purchaseRepo = repository.NewPurchaseRepository(dbRepoConn)
 }
 
 func Cleanup() {

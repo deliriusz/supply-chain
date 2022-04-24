@@ -91,6 +91,9 @@ func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 		}
 
 		assignedRole, err := hdl.loginService.GetUserRole(session.Address)
+		if err != nil {
+			abortAuthWithMessage(c, "An error occured. Please try again later.")
+		}
 
 		switch role {
 		case model.Admin:
@@ -101,6 +104,11 @@ func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 		case model.DashboardViewer:
 			if assignedRole.Role > model.DashboardViewer {
 				abortAuthWithMessage(c, "You don't have required permissions to perform this action")
+			}
+
+		case model.Client:
+			if assignedRole.Role > model.Client {
+				abortAuthWithMessage(c, "Please log in in order to perform this action.")
 			}
 
 		default:
@@ -125,7 +133,7 @@ func (hdl *httpHandler) setupNormalRoutes() {
 func (hdl *httpHandler) setupAuthenticatedRoutes() {
 	authenticatedRoutes := hdl.router.Group("/")
 	{
-		authenticatedRoutes.Use(hdl.authenticate(config.ROLE_CLIENT))
+		authenticatedRoutes.Use(hdl.authenticate(model.Client))
 		authenticatedRoutes.GET("/auth/logout", hdl.Logout)
 		authenticatedRoutes.GET("/purchase", hdl.GetPurchases)
 		authenticatedRoutes.GET("/purchase/:id", hdl.GetPurchase)
@@ -136,7 +144,7 @@ func (hdl *httpHandler) setupAuthenticatedRoutes() {
 func (hdl *httpHandler) setupAdminRoutes() {
 	adminRoutes := hdl.router.Group("/")
 	{
-		adminRoutes.Use(hdl.authenticate(config.ROLE_ADMIN))
+		adminRoutes.Use(hdl.authenticate(model.Admin))
 		adminRoutes.POST("/product", hdl.CreateProduct)
 		adminRoutes.POST("/product/:id/image", hdl.CreateImage)
 	}

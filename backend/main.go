@@ -15,7 +15,12 @@ func main() {
 		panic(err)
 	}
 
-	loginRepository := repository.NewLoginRepository(dbRepoConnector)
+	ethRepoConnector := repository.GetProvider[*repository.EthereumRepoConnector](repository.ProviderFactory)
+	if err := dbRepoConnector.InitConnection("firmex.db", ""); err != nil {
+		panic(err)
+	}
+
+	loginRepository := repository.NewLoginRepository(dbRepoConnector, ethRepoConnector)
 	loginService := domain.NewLoginService(loginRepository)
 	productRepository := repository.NewProductRepository(dbRepoConnector)
 	productService := domain.NewProductService(productRepository)
