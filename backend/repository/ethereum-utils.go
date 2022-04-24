@@ -21,6 +21,7 @@ func GetDefaultTransactionProps(conn *EthereumRepoConnector) (*bind.TransactOpts
 		return nil, err
 	}
 
+	//TODO: use new type of transactor - current is deprecated
 	transactionOpts := bind.NewKeyedTransactor(conn.PrivateKey)
 	transactionOpts.Nonce = big.NewInt(int64(nonce))
 	transactionOpts.Value = big.NewInt(0)     // in wei

@@ -36,7 +36,7 @@ func Setup() {
 	}
 
 	ethRepoConnector := repository.GetProvider[*repository.EthereumRepoConnector](repository.ProviderFactory)
-	if err := dbRepoConnector.InitConnection(TABLE_NAME, ""); err != nil {
+	if err := ethRepoConnector.InitConnection(TABLE_NAME, ""); err != nil {
 		panic(err)
 	}
 
