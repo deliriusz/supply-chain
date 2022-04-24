@@ -10,14 +10,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type AUTH_ROLE int
-
-const (
-	ROLE_ADMIN AUTH_ROLE = iota
-	ROLE_USER
-	ROLE_CLIENT
-)
-
 var LOGIN_SESSION_TTL_IN_SECS int
 var IMAGE_LOCAL_STORAGE string
 var IMAGE_REPO_BASE_URI string

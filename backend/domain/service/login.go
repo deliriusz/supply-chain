@@ -7,6 +7,7 @@ type LoginService interface {
 	Login(*model.LoginChallenge) (*model.Login, error)
 	Logout(*model.Login) error
 	GetSessionById(string) (*model.Login, error)
+	GetUserRole(address string) (*model.Login, error)
 }
 
 type LoginRepository interface {
@@ -14,4 +15,5 @@ type LoginRepository interface {
 	Login(*model.LoginChallenge) (*model.Login, error)
 	Logout(*model.Login) error
 	GetSessionById(string) (*model.Login, error)
+	GetUserRole(address string) (*model.Login, error)
 }

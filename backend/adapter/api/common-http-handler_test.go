@@ -30,16 +30,21 @@ func init() {
 }
 
 func Setup() {
-	repoConnector := repository.GetProvider[*repository.DBRepoConnector](repository.ProviderFactory)
-	if err := repoConnector.InitConnection(TABLE_NAME, ""); err != nil {
+	dbRepoConnector := repository.GetProvider[*repository.DBRepoConnector](repository.ProviderFactory)
+	if err := dbRepoConnector.InitConnection(TABLE_NAME, ""); err != nil {
 		panic(err)
 	}
 
-	loginRepository = repository.NewLoginRepository(repoConnector)
+	ethRepoConnector := repository.GetProvider[*repository.EthereumRepoConnector](repository.ProviderFactory)
+	if err := dbRepoConnector.InitConnection(TABLE_NAME, ""); err != nil {
+		panic(err)
+	}
+
+	loginRepository = repository.NewLoginRepository(dbRepoConnector, ethRepoConnector)
 	loginService = domain.NewLoginService(loginRepository)
-	productRepository = repository.NewProductRepository(repoConnector)
+	productRepository = repository.NewProductRepository(dbRepoConnector)
 	productService = domain.NewProductService(productRepository)
-	purchaseRepository = repository.NewPurchaseRepository(repoConnector)
+	purchaseRepository = repository.NewPurchaseRepository(dbRepoConnector)
 	purchaseService = domain.NewPurchaseService(purchaseRepository)
 	httpApi = api.NewHTTPHandler(loginService, productService, purchaseService)
 

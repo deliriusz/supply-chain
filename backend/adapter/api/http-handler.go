@@ -75,29 +75,33 @@ func checkLoginRequest(input *model.LoginChallenge, c *gin.Context) error {
 	return nil
 }
 
-func (hdl *httpHandler) authenticate(role config.AUTH_ROLE) gin.HandlerFunc {
+func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, _ := c.Cookie(config.COOKIE_SESSIONID)
 		session, err := hdl.loginService.GetSessionById(cookie)
 		currentTimestamp := time.Now().UnixMilli()
 
 		if err != nil || session.ExpiresAt == 0 {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-			c.Abort()
+			abortAuthWithMessage(c, "Unauthorized")
 		}
 
 		if currentTimestamp > session.ExpiresAt {
 			hdl.loginService.Logout(session)
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token expired. Please log in again."})
-			c.Abort()
+			abortAuthWithMessage(c, "Token expired. Please log in again.")
 		}
 
-		switch role {
-		case config.ROLE_ADMIN:
-			//TODO: use smart contract to check if it's admin
+		assignedRole, err := hdl.loginService.GetUserRole(session.Address)
 
-		case config.ROLE_USER:
-			//TODO: use smart contract to check if it's user
+		switch role {
+		case model.Admin:
+			if assignedRole.Role != model.Admin {
+				abortAuthWithMessage(c, "You don't have required permissions to perform this action")
+			}
+
+		case model.DashboardViewer:
+			if assignedRole.Role > model.DashboardViewer {
+				abortAuthWithMessage(c, "You don't have required permissions to perform this action")
+			}
 
 		default:
 			//good to go, nothing to check now
@@ -172,4 +176,9 @@ func safePaginationFromContext(c *gin.Context) (int, int) {
 	}
 
 	return safeLimit, safeOffset
+}
+
+func abortAuthWithMessage(c *gin.Context, message string) {
+	c.JSON(http.StatusUnauthorized, gin.H{"error": message})
+	c.Abort()
 }

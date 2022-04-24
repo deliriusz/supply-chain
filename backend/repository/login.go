@@ -12,13 +12,15 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	authorization "rafal-kalinowski.pl/artifacts"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 	domain "rafal-kalinowski.pl/domain/service"
 )
 
 type loginRepository struct {
-	repoConnector RepoConnector[*DBRepoConnector]
+	dbRepoConnector  RepoConnector[*DBRepoConnector]
+	ethRepoConnector RepoConnector[*EthereumRepoConnector]
 }
 
 // GetLoginChallenge implements domain.LoginRepository
@@ -39,7 +41,7 @@ func (r *loginRepository) GetLoginChallenge(login *model.LoginChallenge) (*model
 
 // Login implements domain.LoginRepository
 func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, error) {
-	DB := r.repoConnector.GetConnector().DB
+	DB := r.dbRepoConnector.GetConnector().DB
 	expectedNonce := config.ADDRESS_LOGIN_NONCE_MAP[login.Address]
 
 	if !verifySig(login.Address, login.Signature, []byte(strconv.FormatInt(expectedNonce, 10))) {
@@ -75,7 +77,7 @@ func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, erro
 
 // Logout implements domain.LoginRepository
 func (r *loginRepository) Logout(login *model.Login) error {
-	DB := r.repoConnector.GetConnector().DB
+	DB := r.dbRepoConnector.GetConnector().DB
 	var session model.Login
 
 	err := DB.Where("session_id = ?", login.SessionId).
@@ -89,7 +91,7 @@ func (r *loginRepository) Logout(login *model.Login) error {
 }
 
 func (r *loginRepository) GetSessionById(sessionId string) (*model.Login, error) {
-	DB := r.repoConnector.GetConnector().DB
+	DB := r.dbRepoConnector.GetConnector().DB
 	var login model.Login
 
 	if err := DB.Where("session_id = ?",
@@ -100,9 +102,10 @@ func (r *loginRepository) GetSessionById(sessionId string) (*model.Login, error)
 	return &login, nil
 }
 
-func NewLoginRepository(c RepoConnector[*DBRepoConnector]) domain.LoginRepository {
+func NewLoginRepository(c RepoConnector[*DBRepoConnector], c2 RepoConnector[*EthereumRepoConnector]) domain.LoginRepository {
 	repo := &loginRepository{
-		repoConnector: c,
+		dbRepoConnector:  c,
+		ethRepoConnector: c2,
 	}
 
 	return repo
@@ -143,4 +146,49 @@ func getSecureRandom() (int64, error) {
 		return 1, err
 	}
 	return nBig.Int64() + 1, nil
+}
+
+func (r *loginRepository) GetUserRole(address string) (*model.Login, error) {
+	login := &model.Login{Address: address}
+	authContract, err := r.getAuthorizationContract()
+	if err != nil {
+		return login, err
+	}
+
+	addr := common.HexToAddress(address)
+
+	//TODO: cache available roles
+	ROLES_MAP := make(map[[4]byte]model.UserRole)
+
+	roleAdmin, err := authContract.ROLEADMIN(GetDefaultCallOpts())
+	if err != nil {
+		return login, err
+	}
+
+	roleDashboardViewer, err := authContract.ROLEDASHBOARDVIEWER(GetDefaultCallOpts())
+	if err != nil {
+		return login, err
+	}
+
+	ROLES_MAP[roleAdmin] = model.Admin
+	ROLES_MAP[roleDashboardViewer] = model.DashboardViewer
+
+	role, err := authContract.GetUserRole(GetDefaultCallOpts(), addr)
+	if err != nil {
+		return login, err
+	}
+
+	login.Role = ROLES_MAP[role]
+
+	return login, nil
+}
+
+func (r *loginRepository) getAuthorizationContract() (*authorization.Authorization, error) {
+	address := common.HexToAddress(config.AUTHORIZATION_CONTRACT_ADDRESS)
+	instance, err := authorization.NewAuthorization(address, r.ethRepoConnector.GetConnector().Client)
+	if err != nil {
+		return nil, err
+	}
+
+	return instance, nil
 }
