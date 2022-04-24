@@ -12,7 +12,8 @@ type DataProviderFactory struct {
 
 func GetProvider[T RepoType](factory *DataProviderFactory) RepoConnector[T] {
 	var provider T
-	prov, has := factory.dataProviders[reflect.TypeOf(provider).Name()]
+	providerType := reflect.TypeOf(&provider).Elem()
+	prov, has := factory.dataProviders[providerType.String()]
 	if !has {
 		return nil
 	}
@@ -22,7 +23,8 @@ func GetProvider[T RepoType](factory *DataProviderFactory) RepoConnector[T] {
 
 func RegisterProvider[T RepoType](factory *DataProviderFactory, p RepoConnector[T]) {
 	var provider T
-	factory.dataProviders[reflect.TypeOf(provider).Name()] = p
+	providerType := reflect.TypeOf(&provider).Elem()
+	factory.dataProviders[providerType.String()] = p
 }
 
 type RepoType interface {
@@ -32,14 +34,6 @@ type RepoType interface {
 type RepoConnector[T RepoType] interface {
 	InitConnection(name, url string) error
 	GetConnector() T
-}
-
-// GetConnector implements RepoConnector
-
-// func NewRepoConnector[T RepoType](v T) RepoConnector[T] {
-func NewRepoConnector[T RepoType](v T) RepoConnector[*EthereumRepoConnector] {
-	x := EthereumRepoConnector{}
-	return &x
 }
 
 func init() {
