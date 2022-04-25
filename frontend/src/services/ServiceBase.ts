@@ -18,10 +18,6 @@ const callService = async <T>(uri: string, requestOptions: RequestInit = DEFAULT
 
          responseContent = { isOk: response.ok, status: response.status }
 
-         if (!response.ok) {
-            throw new Error(response.statusText)
-         }
-
          return response.text()
       }).then(response => {
          try {
