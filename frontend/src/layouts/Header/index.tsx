@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Icon, Image } from "semantic-ui-react";
-import { getChallenge, login, logout } from "../../services/LoginService";
-import web3 from "../../web3";
 import './style.css'
 import PageInformationModal from "../../components/PageInformationModal";
 import AuthContext from "../../hooks/AuthContext";

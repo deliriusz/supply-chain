@@ -2,7 +2,7 @@ import React from "react";
 import Auth from '../interfaces/Auth'
 
 
-export const initialState: Auth = {
+const initialState: Auth = {
    isAuthenticated: false,
    address: null,
    message: "",
@@ -10,7 +10,7 @@ export const initialState: Auth = {
    action: "LOGOUT",
 };
 
-export const loadState = (): Auth => {
+const loadState = (): Auth => {
    let userString = localStorage.getItem("user")
    if (userString != null) {
       return JSON.parse(userString)
@@ -26,17 +26,16 @@ interface AuthDispatchContext {
 
 const AuthContext = React.createContext<AuthDispatchContext>({ auth: initialState, dispatcher: null });
 
-export const reducer = (state: Auth, action: Auth) => {
-   console.log(action)
+const reducer = (state: Auth, action: Auth) => {
    switch (action.action) {
       case "LOGIN":
          localStorage.setItem("user", JSON.stringify(action))
          return action
       case "LOGIN_ERROR":
-         localStorage.clear()
+         localStorage.removeItem("user")
          return action
       case "LOGOUT":
-         localStorage.clear()
+         localStorage.removeItem("user")
          return action
       default:
          return state
@@ -44,5 +43,6 @@ export const reducer = (state: Auth, action: Auth) => {
 };
 
 export default AuthContext
+export { reducer, initialState, loadState }
 
 export type { AuthDispatchContext }
