@@ -44,3 +44,5 @@ export const reducer = (state: Auth, action: Auth) => {
 };
 
 export default AuthContext
+
+export type { AuthDispatchContext }
