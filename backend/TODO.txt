@@ -1,3 +1,9 @@
 TODO:
 * change repository to mock service to verify api test correctness
 * make eth step more generic in Makefile
+* time restrict login attempts from one IP address
+
+NEXT STEPS:
+add info about user roles
+change product model, to decouple product from purchase
+implement TheGraph to gather info about user purchases
