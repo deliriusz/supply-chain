@@ -82,34 +82,32 @@ func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 		currentTimestamp := time.Now().UnixMilli()
 
 		if err != nil || session.ExpiresAt == 0 {
-			abortAuthWithMessage(c, "Unauthorized")
+			abortAuthWithMessage(c, http.StatusUnauthorized, "Unauthorized")
 		}
 
 		if currentTimestamp > session.ExpiresAt {
 			hdl.loginService.Logout(session)
-			abortAuthWithMessage(c, "Token expired. Please log in again.")
+			abortAuthWithMessage(c, http.StatusUnauthorized, "Token expired. Please log in again.")
 		}
 
 		assignedRole, err := hdl.loginService.GetUserRole(session.Address)
 		if err != nil {
-			abortAuthWithMessage(c, "An error occured. Please try again later.")
+			abortAuthWithMessage(c, http.StatusInternalServerError, "An error occured. Please try again later.")
 		}
 
 		switch role {
 		case model.Admin:
 			if assignedRole.Role != model.Admin {
-				abortAuthWithMessage(c, "You don't have required permissions to perform this action")
+				abortAuthWithMessage(c, http.StatusForbidden, "You don't have required permissions to perform this action")
 			}
 
 		case model.DashboardViewer:
 			if assignedRole.Role > model.DashboardViewer {
-				abortAuthWithMessage(c, "You don't have required permissions to perform this action")
+				abortAuthWithMessage(c, http.StatusForbidden, "You don't have required permissions to perform this action")
 			}
 
 		case model.Client:
-			if assignedRole.Role > model.Client {
-				abortAuthWithMessage(c, "Please log in in order to perform this action.")
-			}
+			//In this case it suffices that the user is logged in
 
 		default:
 			//good to go, nothing to check now
@@ -186,7 +184,7 @@ func safePaginationFromContext(c *gin.Context) (int, int) {
 	return safeLimit, safeOffset
 }
 
-func abortAuthWithMessage(c *gin.Context, message string) {
-	c.JSON(http.StatusUnauthorized, gin.H{"error": message})
+func abortAuthWithMessage(c *gin.Context, status int, message string) {
+	c.JSON(status, gin.H{"error": message})
 	c.Abort()
 }
