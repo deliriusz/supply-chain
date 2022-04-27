@@ -56,7 +56,7 @@ const ProductsTable = () => {
                   products?.map((val, idx, arr) => {
                      return (
                         <Table.Row>
-                           <Table.Cell><Image src={val.images && val.images[0]} /></Table.Cell>
+                           <Table.Cell><Image size="tiny" src={val.images && val.images[0].url} /></Table.Cell>
                            <Table.Cell selectable><a href={`/product/${val.id}`}>{val.title}</a></Table.Cell>
                            <Table.Cell><Rating disabled icon='star' defaultRating={3 + idx % 3} maxRating={5} /></Table.Cell>
                            <Table.Cell>{val.price}</Table.Cell>

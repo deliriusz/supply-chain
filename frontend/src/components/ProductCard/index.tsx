@@ -11,10 +11,10 @@ const ProductCard = (props: ProductCardProps) => {
    return (
       <Card>
          <Card.Content>
-            <Image
-               src={props.product.images && props.product.images[0]}
-            />
             <Card.Header>{props.product.title}</Card.Header>
+            <Image
+               src={props.product.images && props.product.images[0].url}
+            />
          </Card.Content>
          <Card.Content extra>
             <div className='ui two buttons'>
