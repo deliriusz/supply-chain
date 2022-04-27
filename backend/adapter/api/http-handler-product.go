@@ -46,7 +46,7 @@ func (hdl *httpHandler) GetProductModel(c *gin.Context) {
 	c.JSON(http.StatusOK, model.ToProductDTO(product))
 }
 
-func (hdl *httpHandler) CreateProduct(c *gin.Context) {
+func (hdl *httpHandler) CreateProductModel(c *gin.Context) {
 	var input model.ProductModelDTO
 
 	if err := c.ShouldBindJSON(&input); err != nil {

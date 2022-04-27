@@ -19,7 +19,7 @@ type HTTPHandler interface {
 	Logout(*gin.Context)
 	GetProductModels(*gin.Context)
 	GetProductModel(*gin.Context)
-	CreateProduct(*gin.Context)
+	CreateProductModel(*gin.Context)
 	CreateImage(*gin.Context)
 	GetImage(*gin.Context)
 	GetPurchases(*gin.Context)
@@ -122,8 +122,8 @@ func (hdl *httpHandler) setupNormalRoutes() {
 
 	router.POST("/auth/challenge", hdl.GetLoginChallenge)
 	router.POST("/auth/login", hdl.Login)
-	router.GET("/product", hdl.GetProductModels)
-	router.GET("/product/:id", hdl.GetProductModel)
+	router.GET("/product-model", hdl.GetProductModels)
+	router.GET("/product-model/:id", hdl.GetProductModel)
 	router.GET("/image/:fileName", hdl.GetImage)
 	router.POST("/purchase", hdl.CreatePurchase)
 }
@@ -143,8 +143,8 @@ func (hdl *httpHandler) setupAdminRoutes() {
 	adminRoutes := hdl.router.Group("/")
 	{
 		adminRoutes.Use(hdl.authenticate(model.Admin))
-		adminRoutes.POST("/product", hdl.CreateProduct)
-		adminRoutes.POST("/product/:id/image", hdl.CreateImage)
+		adminRoutes.POST("/product-model", hdl.CreateProductModel)
+		adminRoutes.POST("/product-model/:id/image", hdl.CreateImage)
 	}
 }
 

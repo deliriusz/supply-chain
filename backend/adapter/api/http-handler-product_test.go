@@ -22,7 +22,7 @@ var GET_PRODUCTS_GENERATED_COUNT int
 
 func TestCreateProduct(t *testing.T) {
 	g := Goblin(t)
-	PRODUCT_BASE_URI := "/product"
+	PRODUCT_BASE_URI := "/product-model"
 	productJson := `
 	{
 		"title": "title",
@@ -68,7 +68,7 @@ func TestCreateProduct(t *testing.T) {
 
 func TestGetProductModel(t *testing.T) {
 	g := Goblin(t)
-	PRODUCT_BASE_URI := "/product"
+	PRODUCT_BASE_URI := "/product-model"
 
 	g.Describe("Test GetProductModel", func() {
 		g.JustBeforeEach(Cleanup)
@@ -131,7 +131,7 @@ func TestGetProductModel(t *testing.T) {
 func TestImage(t *testing.T) {
 	g := Goblin(t)
 
-	CREATE_IMAGE_BASE_URI := "/product/%d/image"
+	CREATE_IMAGE_BASE_URI := "/product-model/%d/image"
 	CONTENT_TYPE_HEADER_NAME := "Content-Type"
 	CREATE_IMAGE_HEADERS := map[string]string{}
 
