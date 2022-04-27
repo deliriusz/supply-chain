@@ -6,6 +6,7 @@ import PageInformationModal from "../../components/PageInformationModal";
 import AuthContext from "../../hooks/AuthContext";
 import { useLogin } from "../../hooks/useLogin";
 import { useLogout } from "../../hooks/useLogout";
+import { UserRole } from "../../interfaces/UserRole";
 
 const Header = () => {
    const authContext = React.useContext(AuthContext)
@@ -23,6 +24,12 @@ const Header = () => {
                <Link className="item" to="/product">Products</Link>
                <Link className="item" to="/trace">Trace</Link>
                <div className="right menu">
+                  {(authContext.auth.role == UserRole.Admin
+                     || authContext.auth.role == UserRole.DashboardViewer) &&
+                     <Link className="item" to="/admin">
+                        <Icon name="th list" />&nbsp;Dashboard
+                     </Link>
+                  }
                   <PageInformationModal />
                   {authContext.auth.isAuthenticated &&
                      <a className="item" onClick={logout}>Log out &nbsp;
