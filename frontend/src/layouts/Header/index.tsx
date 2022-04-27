@@ -24,8 +24,8 @@ const Header = () => {
                <Link className="item" to="/product">Products</Link>
                <Link className="item" to="/trace">Trace</Link>
                <div className="right menu">
-                  {(authContext.auth.role == UserRole.Admin
-                     || authContext.auth.role == UserRole.DashboardViewer) &&
+                  {(authContext.auth.role === UserRole.Admin
+                     || authContext.auth.role === UserRole.DashboardViewer) &&
                      <Link className="item" to="/admin">
                         <Icon name="th list" />&nbsp;Dashboard
                      </Link>
