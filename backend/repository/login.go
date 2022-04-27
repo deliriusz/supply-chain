@@ -86,10 +86,8 @@ func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, erro
 // Logout implements domain.LoginRepository
 func (r *loginRepository) Logout(login *model.Login) error {
 	DB := r.dbRepoConnector.GetConnector().DB
-	var session model.Login
 
-	err := DB.Where("session_id = ?", login.SessionId).
-		First(&session, login.SessionId).Error
+	session, err := r.GetSessionById(login.SessionId)
 
 	if err == nil && session.ExpiresAt > 0 {
 		return DB.Delete(&model.Login{}, session.Id).Error
@@ -103,7 +101,7 @@ func (r *loginRepository) GetSessionById(sessionId string) (*model.Login, error)
 	var login model.Login
 
 	if err := DB.Where("session_id = ?",
-		sessionId).First(&login, sessionId).Error; err != nil {
+		sessionId).First(&login).Error; err != nil {
 		return &login, err
 	}
 

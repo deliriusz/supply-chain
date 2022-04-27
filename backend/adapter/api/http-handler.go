@@ -83,27 +83,32 @@ func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 
 		if err != nil || session.ExpiresAt == 0 {
 			abortAuthWithMessage(c, http.StatusUnauthorized, "Unauthorized")
+			return
 		}
 
 		if currentTimestamp > session.ExpiresAt {
 			hdl.loginService.Logout(session)
 			abortAuthWithMessage(c, http.StatusUnauthorized, "Token expired. Please log in again.")
+			return
 		}
 
 		assignedRole, err := hdl.loginService.GetUserRole(session.Address)
 		if err != nil {
 			abortAuthWithMessage(c, http.StatusInternalServerError, "An error occured. Please try again later.")
+			return
 		}
 
 		switch role {
 		case model.Admin:
 			if assignedRole.Role != model.Admin {
 				abortAuthWithMessage(c, http.StatusForbidden, "You don't have required permissions to perform this action")
+				return
 			}
 
 		case model.DashboardViewer:
 			if assignedRole.Role > model.DashboardViewer {
 				abortAuthWithMessage(c, http.StatusForbidden, "You don't have required permissions to perform this action")
+				return
 			}
 
 		case model.Client:
