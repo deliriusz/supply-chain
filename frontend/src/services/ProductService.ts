@@ -7,27 +7,30 @@ interface GetProductsResponse {
    products: Product[]
 }
 
-const getProducts = async (offset: number = 0, limit: number = 10): Promise<GetProductsResponse> => {
-   return callService<GetProductsResponse>(`product?offset=${offset}&limit=${limit}`)
+const getProductModels = async (offset: number = 0, limit: number = 10): Promise<GetProductsResponse> => {
+   return callService<GetProductsResponse>(`product-model?offset=${offset}&limit=${limit}`)
       .then(response => {
-         return response.data || { total: 0, products: [] }
+         return {
+            total: response.data?.total || 0,
+            products: response.data?.products || [],
+         }
       })
 }
 
-const getProduct = async (id: number): Promise<Product | undefined> => {
-   return callService<Product | undefined>(`product/${id}`)
+const getProductModel = async (id: number): Promise<Product | undefined> => {
+   return callService<Product | undefined>(`product-model/${id}`)
       .then(response => {
          return response.data
       })
 }
 
-const createProduct = async (product: Product): Promise<ResponseContent<any>> => {
+const createProductModel = async (product: Product): Promise<ResponseContent<any>> => {
    const requestOptions: RequestInit = {
       method: "POST",
       body: JSON.stringify(product),
    }
 
-   return callService<any>(`product`, requestOptions)
+   return callService<any>(`product-model`, requestOptions)
 }
 
-export { getProduct, getProducts, createProduct }
+export { getProductModel as getProduct, getProductModels as getProducts, createProductModel as createProduct }
