@@ -6,3 +6,4 @@ frontend/contracts/flat_*
 frontend/contracts/.deps
 frontend/contracts/.debugger
 **/.DS_Store
+backend/__debug_bin
