@@ -1,6 +1,9 @@
 TODO: if time permits
 * add check for account change
 * not sign message digest hash, but the message so that user sees what he signspurchase
+* change hardcodes to env variables in scripts/deploy.ts
 
 NEXT STEPS:
+automate contract setup and deployments
 implement dashboard with new auth model
+change dashboard mock to real implementation

@@ -7,3 +7,4 @@ NEXT STEPS:
 add info about user roles
 change product model, to decouple product from purchase
 implement TheGraph to gather info about user purchases
+implement TheGraph RepoConnector to get purchase info for dashboard
