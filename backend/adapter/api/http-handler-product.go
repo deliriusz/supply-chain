@@ -10,15 +10,15 @@ import (
 	"rafal-kalinowski.pl/domain/model"
 )
 
-type GetProductsResponse struct {
-	Total    int             `json:"total"`
+type GetProductModelsResponse struct {
+	Total    int                  `json:"total"`
 	Products []model.ProductModel `json:"products"`
 }
 
-func (hdl *httpHandler) GetProducts(c *gin.Context) {
+func (hdl *httpHandler) GetProductModels(c *gin.Context) {
 	var productDtos []model.ProductModelDTO
 	limit, offset := safePaginationFromContext(c)
-	products, count := hdl.productService.GetProducts(uint(limit), uint(offset))
+	products, count := hdl.productService.GetProductModels(uint(limit), uint(offset))
 
 	for _, returnedProduct := range products {
 		productDtos = append(productDtos, model.ToProductDTO(returnedProduct))
@@ -27,7 +27,7 @@ func (hdl *httpHandler) GetProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"total": count, "products": productDtos})
 }
 
-func (hdl *httpHandler) GetProduct(c *gin.Context) {
+func (hdl *httpHandler) GetProductModel(c *gin.Context) {
 	productId, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (hdl *httpHandler) GetProduct(c *gin.Context) {
 		return
 	}
 
-	product, err := hdl.productService.GetProduct(uint(productId))
+	product, err := hdl.productService.GetProductModel(uint(productId))
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
@@ -57,7 +57,7 @@ func (hdl *httpHandler) CreateProduct(c *gin.Context) {
 
 	product := model.ToProduct(input)
 
-	if err := hdl.productService.CreateProduct(&product); err != nil {
+	if err := hdl.productService.CreateProductModel(&product); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		log.Error(err)
 		return

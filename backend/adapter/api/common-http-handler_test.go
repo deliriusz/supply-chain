@@ -53,8 +53,8 @@ func Setup() {
 	router.POST("/auth/challenge", httpApi.GetLoginChallenge)
 
 	//product
-	router.GET("/product", httpApi.GetProducts)
-	router.GET("/product/:id", httpApi.GetProduct)
+	router.GET("/product", httpApi.GetProductModels)
+	router.GET("/product/:id", httpApi.GetProductModel)
 	router.POST("/product/:id/image", httpApi.CreateImage)
 	router.GET("/image/:fileName", httpApi.GetImage)
 	router.POST("/product", httpApi.CreateProduct)

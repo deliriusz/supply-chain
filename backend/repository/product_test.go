@@ -12,10 +12,10 @@ import (
 	"rafal-kalinowski.pl/domain/model"
 )
 
-func TestCreateProduct(t *testing.T) {
+func TestCreateProductModel(t *testing.T) {
 	g := Goblin(t)
 
-	g.Describe("Test CreateProduct", func() {
+	g.Describe("Test CreateProductModel", func() {
 		g.JustBeforeEach(Cleanup)
 		g.JustBeforeEach(Setup)
 		g.After(Cleanup)
@@ -23,7 +23,7 @@ func TestCreateProduct(t *testing.T) {
 		g.It("Should create a product without an error", func() {
 			testProduct := createRandomProduct()
 
-			if err := productRepo.CreateProduct(testProduct); err != nil {
+			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
 			}
 		})
@@ -31,11 +31,11 @@ func TestCreateProduct(t *testing.T) {
 		g.It("Should return created product with the same data", func() {
 			testProduct := createRandomProduct()
 
-			if err := productRepo.CreateProduct(testProduct); err != nil {
+			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
 			}
 
-			createdProducts, count := productRepo.GetProducts(10, 0)
+			createdProducts, count := productRepo.GetProductModels(10, 0)
 			firstCreatedProduct := createdProducts[0]
 
 			// for some reason it fails with message 0x1 is not equal to 1 when testing for equality
@@ -62,12 +62,12 @@ func TestCreateProduct(t *testing.T) {
 			for i := 0; i < createdProductCount; i++ {
 				testProduct := createRandomProduct()
 
-				if err := productRepo.CreateProduct(testProduct); err != nil {
+				if err := productRepo.CreateProductModel(testProduct); err != nil {
 					g.Fail(err)
 				}
 			}
 
-			createdProducts, count := productRepo.GetProducts(10, uint(createdProductCount-10))
+			createdProducts, count := productRepo.GetProductModels(10, uint(createdProductCount-10))
 
 			g.Assert(count == uint(createdProductCount)).IsTrue()
 			g.Assert(len(createdProducts)).Equal(10)
@@ -90,7 +90,7 @@ func TestImage(t *testing.T) {
 		g.It("Should create image for existing product", func() {
 			testProduct := createRandomProduct()
 
-			if err := productRepo.CreateProduct(testProduct); err != nil {
+			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
 			}
 
@@ -120,7 +120,7 @@ func TestImage(t *testing.T) {
 		g.It("Should assign image to product", func() {
 			testProduct := createRandomProduct()
 
-			if err := productRepo.CreateProduct(testProduct); err != nil {
+			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
 			}
 
@@ -136,7 +136,7 @@ func TestImage(t *testing.T) {
 
 			g.Assert(len(createdImage.Name) > 0).IsTrue()
 
-			productWithImage, getProductErr := productRepo.GetProduct(1)
+			productWithImage, getProductErr := productRepo.GetProductModel(1)
 			if getProductErr != nil {
 				g.Fail(getProductErr)
 			}
@@ -163,7 +163,7 @@ func TestImage(t *testing.T) {
 			createdImagesCount := 5
 			testProduct := createRandomProduct()
 
-			if err := productRepo.CreateProduct(testProduct); err != nil {
+			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
 			}
 
@@ -185,7 +185,7 @@ func TestImage(t *testing.T) {
 				createdImageFile.Close()
 			}
 
-			productWithImages, getProductErr := productRepo.GetProduct(1)
+			productWithImages, getProductErr := productRepo.GetProductModel(1)
 			if getProductErr != nil {
 				g.Fail(getProductErr)
 			}

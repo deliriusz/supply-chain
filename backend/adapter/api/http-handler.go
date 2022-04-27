@@ -17,8 +17,8 @@ type HTTPHandler interface {
 	GetLoginChallenge(*gin.Context)
 	Login(*gin.Context)
 	Logout(*gin.Context)
-	GetProducts(*gin.Context)
-	GetProduct(*gin.Context)
+	GetProductModels(*gin.Context)
+	GetProductModel(*gin.Context)
 	CreateProduct(*gin.Context)
 	CreateImage(*gin.Context)
 	GetImage(*gin.Context)
@@ -122,8 +122,8 @@ func (hdl *httpHandler) setupNormalRoutes() {
 
 	router.POST("/auth/challenge", hdl.GetLoginChallenge)
 	router.POST("/auth/login", hdl.Login)
-	router.GET("/product", hdl.GetProducts)
-	router.GET("/product/:id", hdl.GetProduct)
+	router.GET("/product", hdl.GetProductModels)
+	router.GET("/product/:id", hdl.GetProductModel)
 	router.GET("/image/:fileName", hdl.GetImage)
 	router.POST("/purchase", hdl.CreatePurchase)
 }

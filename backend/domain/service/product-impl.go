@@ -10,16 +10,16 @@ type productService struct {
 	repository ProductRepository
 }
 
-func (s *productService) GetProducts(limit, offset uint) ([]model.ProductModel, uint) {
-	return s.repository.GetProducts(limit, offset)
+func (s *productService) GetProductModels(limit, offset uint) ([]model.ProductModel, uint) {
+	return s.repository.GetProductModels(limit, offset)
 }
 
-func (s *productService) GetProduct(id uint) (model.ProductModel, error) {
-	return s.repository.GetProduct(id)
+func (s *productService) GetProductModel(id uint) (model.ProductModel, error) {
+	return s.repository.GetProductModel(id)
 }
 
-func (s *productService) CreateProduct(product *model.ProductModel) error {
-	return s.repository.CreateProduct(product)
+func (s *productService) CreateProductModel(product *model.ProductModel) error {
+	return s.repository.CreateProductModel(product)
 }
 
 func (s *productService) CreateImage(productId uint, file *bufio.Reader) (model.Image, error) {

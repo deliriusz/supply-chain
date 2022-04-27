@@ -48,7 +48,7 @@ func TestCreateProduct(t *testing.T) {
 
 		g.It("Should fail when trying to create product with invalid data", func() {
 			respRecorder := ServeTestRequest(router, "POST", PRODUCT_BASE_URI, []byte("{}"), nil)
-			savedProducts, count := productRepository.GetProducts(10, 0)
+			savedProducts, count := productRepository.GetProductModels(10, 0)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusBadRequest)
 			g.Assert(count == 0).IsTrue()
@@ -57,7 +57,7 @@ func TestCreateProduct(t *testing.T) {
 
 		g.It("Should create product from valid request", func() {
 			respRecorder := ServeTestRequest(router, "POST", PRODUCT_BASE_URI, []byte(productJson), nil)
-			savedProducts, count := productRepository.GetProducts(10, 0)
+			savedProducts, count := productRepository.GetProductModels(10, 0)
 
 			g.Assert(respRecorder.Code).Equal(http.StatusOK)
 			g.Assert(count == 1).IsTrue()
@@ -66,11 +66,11 @@ func TestCreateProduct(t *testing.T) {
 	})
 }
 
-func TestGetProduct(t *testing.T) {
+func TestGetProductModel(t *testing.T) {
 	g := Goblin(t)
 	PRODUCT_BASE_URI := "/product"
 
-	g.Describe("Test GetProduct", func() {
+	g.Describe("Test GetProductModel", func() {
 		g.JustBeforeEach(Cleanup)
 		g.JustBeforeEach(Setup)
 		g.JustBeforeEach(fillProductsRepo)
@@ -176,7 +176,7 @@ func TestImage(t *testing.T) {
 			g.Assert(len(image.Name) > 0).IsTrue()
 			g.Assert(image.Url).Equal(config.IMAGE_REPO_BASE_URI + image.Name)
 
-			product, err := productRepository.GetProduct(1)
+			product, err := productRepository.GetProductModel(1)
 
 			g.Assert(err).IsNil()
 			g.Assert(len(product.Img)).Equal(1)
@@ -204,7 +204,7 @@ func TestImage(t *testing.T) {
 				g.Assert(len(image.Name) > 0).IsTrue()
 				g.Assert(image.Url).Equal(config.IMAGE_REPO_BASE_URI + image.Name)
 
-				product, err := productRepository.GetProduct(1)
+				product, err := productRepository.GetProductModel(1)
 
 				g.Assert(err).IsNil()
 				g.Assert(len(product.Img)).Equal(i + 1)
@@ -233,7 +233,7 @@ func TestImage(t *testing.T) {
 				g.Assert(len(image.Name) > 0).IsTrue()
 				g.Assert(image.Url).Equal(config.IMAGE_REPO_BASE_URI + image.Name)
 
-				product, err := productRepository.GetProduct(uint(i + 1))
+				product, err := productRepository.GetProductModel(uint(i + 1))
 
 				g.Assert(err).IsNil()
 				g.Assert(len(product.Img)).Equal(1)
@@ -265,7 +265,7 @@ func fillProductsRepo() {
 			},
 		}
 
-		productRepository.CreateProduct(product)
+		productRepository.CreateProductModel(product)
 	}
 }
 
@@ -311,9 +311,9 @@ func getImageResponseFromByteArray(data *bytes.Buffer) *model.ImageDTO {
 	return &respData
 }
 
-func getProductsResponseFromByteArray(data *bytes.Buffer) *api.GetProductsResponse {
+func getProductsResponseFromByteArray(data *bytes.Buffer) *api.GetProductModelsResponse {
 	dataBytes, _ := ioutil.ReadAll(data)
-	respData := api.GetProductsResponse{}
+	respData := api.GetProductModelsResponse{}
 	json.Unmarshal(dataBytes, &respData)
 
 	return &respData
@@ -322,7 +322,7 @@ func getProductsResponseFromByteArray(data *bytes.Buffer) *api.GetProductsRespon
 func assertPaginatedProductsAreValid(g *G, uri string, offset, limit int) {
 	respRecorder := ServeTestRequest(router, "GET", uri, nil, nil)
 	resp := getProductsResponseFromByteArray(respRecorder.Body)
-	savedProducts, count := productRepository.GetProducts(uint(limit), uint(offset))
+	savedProducts, count := productRepository.GetProductModels(uint(limit), uint(offset))
 
 	var expectedReturnedProductsCount int
 	if GET_PRODUCTS_GENERATED_COUNT-offset < limit {
