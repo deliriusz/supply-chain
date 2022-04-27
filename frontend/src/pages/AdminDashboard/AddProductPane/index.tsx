@@ -102,15 +102,16 @@ const AddProductPane = () => {
          setFormSubmitErrorMessage(JSON.stringify(response.data))
          setFormSubmitError(true)
          setFormSubmitSuccess(false)
+      } else {
+         setCreatedProductId(response.data.id)
+
+         await Promise.all(
+            images.map((val, idx, arr) => { return createImage(response.data.id, val) })
+         )
+
+         setFormSubmitError(false)
+         setFormSubmitSuccess(true)
       }
-      setCreatedProductId(response.data.id)
-
-      await Promise.all(
-         images.map((val, idx, arr) => { return createImage(response.data.id, val) })
-      )
-
-      setFormSubmitError(false)
-      setFormSubmitSuccess(true)
    }
 
    const removeImage = (id: number) => {
