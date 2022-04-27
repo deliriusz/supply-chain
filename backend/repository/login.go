@@ -55,11 +55,19 @@ func (r *loginRepository) Login(login *model.LoginChallenge) (*model.Login, erro
 	sessionIdSeed := fmt.Sprintf("%s-%d-%d", login.Signature, currentTimestamp, sessionIdNonceSeed)
 	sessionId := hex.EncodeToString(crypto.Keccak256([]byte(sessionIdSeed)))
 
+	userRole := model.Client
+	if loginUserRole, err := r.GetUserRole(login.Address); err != nil {
+		return nil, err
+	} else {
+		userRole = loginUserRole.Role
+	}
+
 	loginSession := &model.Login{
 		Address:   login.Address,
 		SessionId: sessionId,
 		ExpiresAt: currentTimestamp + int64(sessionTTL)*1000,
 		TTL:       uint(sessionTTL),
+		Role:      userRole,
 	}
 
 	// standard DB.Where did not work - value starting with "0X" is automatically treated as hex number
@@ -178,7 +186,11 @@ func (r *loginRepository) GetUserRole(address string) (*model.Login, error) {
 		return login, err
 	}
 
-	login.Role = ROLES_MAP[role]
+	if assignedRole, ok := ROLES_MAP[role]; ok {
+		login.Role = assignedRole
+	} else {
+		login.Role = model.Client
+	}
 
 	return login, nil
 }

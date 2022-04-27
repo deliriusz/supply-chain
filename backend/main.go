@@ -16,7 +16,7 @@ func main() {
 	}
 
 	ethRepoConnector := repository.GetProvider[*repository.EthereumRepoConnector](repository.ProviderFactory)
-	if err := dbRepoConnector.InitConnection("firmex.db", ""); err != nil {
+	if err := ethRepoConnector.InitConnection("firmex.db", ""); err != nil {
 		panic(err)
 	}
 

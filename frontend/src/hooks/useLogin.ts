@@ -2,6 +2,7 @@ import React from "react";
 import { getChallenge, login } from "../services/LoginService";
 import web3 from "../web3";
 import { AuthDispatchContext } from "../hooks/AuthContext";
+import { UserRole } from "../interfaces/UserRole";
 
 const useLogin = (authContext: AuthDispatchContext) => async () => {
    if (typeof web3 === "undefined") {
@@ -33,8 +34,9 @@ const useLogin = (authContext: AuthDispatchContext) => async () => {
          {
             isAuthenticated: response.isOk,
             address: accounts[0],
-            message: response.data,
+            message: response.isOk ? '' : JSON.stringify(response.data),
             isError: !response.isOk,
+            role: response.data?.role || UserRole.Unauthorized,
             action: response.isOk ? "LOGIN" : "LOGIN_ERROR",
          })
 

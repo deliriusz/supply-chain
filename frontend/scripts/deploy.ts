@@ -1,8 +1,10 @@
 import { FirmexProductNFT } from '../src/types/FirmexProductNFT'
+import { Authorization } from '../src/types/Authorization'
 import { ethers } from 'hardhat'
 
 async function main() {
-  const [deployer] = await ethers.getSigners();
+  //TODO: remove dashboardViewer
+  const [deployer, dashboardViewer] = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", deployer.address);
 
@@ -32,6 +34,16 @@ async function main() {
     })
 
   console.log("Ownership of product nft changed properly. New owner address: " + await deployedNft.owner())
+
+  const Authorization = await ethers.getContractFactory("Authorization");
+  const authorization = await Authorization.deploy(10);
+
+  console.log("Authorization address:", authorization.address);
+
+  await authorization.assignRole(dashboardViewer.address, await authorization.ROLE_DASHBOARD_VIEWER())
+
+  console.log(`Role DASHBOARD_VIEWER assigned to address ${dashboardViewer.address}`)
+
   console.log("done")
 }
 

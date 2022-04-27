@@ -1,5 +1,6 @@
 import React from "react";
 import Auth from '../interfaces/Auth'
+import { UserRole } from "../interfaces/UserRole";
 
 
 const initialState: Auth = {
@@ -7,6 +8,7 @@ const initialState: Auth = {
    address: null,
    message: "",
    isError: false,
+   role: UserRole.Unauthorized,
    action: "LOGOUT",
 };
 

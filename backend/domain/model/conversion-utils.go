@@ -28,6 +28,15 @@ func ToPurchase(purchase PurchaseOrderDTO) PurchaseOrder {
 	}
 }
 
+func ToLoginDTO(login Login) LoginDTO {
+	return LoginDTO{
+		Address:   login.Address,
+		Role:      login.Role.String(),
+		ExpiresAt: login.ExpiresAt,
+		TTL:       login.TTL,
+	}
+}
+
 func ToProductDTO(product Product) ProductDTO {
 	var imgDtos []ImageDTO
 	var specDtos []SpecificationDTO

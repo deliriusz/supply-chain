@@ -42,7 +42,9 @@ func (hdl *httpHandler) Login(c *gin.Context) {
 		log.Error(err)
 		return
 	} else {
+		//TODO: verify if localhost is ok here
 		c.SetCookie(config.COOKIE_SESSIONID, login.SessionId, int(login.TTL), "/", "localhost", true, true)
+		c.JSON(http.StatusOK, model.ToLoginDTO(*login))
 	}
 }
 
