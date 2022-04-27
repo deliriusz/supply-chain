@@ -29,7 +29,7 @@ func (c *DBRepoConnector) InitConnection(name, connectionString string) error {
 
 	database.AutoMigrate(&model.Image{})
 	database.AutoMigrate(&model.Specification{})
-	database.AutoMigrate(&model.Product{})
+	database.AutoMigrate(&model.ProductModel{})
 	database.AutoMigrate(&model.PurchaseOrder{})
 	database.AutoMigrate(&model.Login{})
 

@@ -12,11 +12,11 @@ import (
 
 type GetProductsResponse struct {
 	Total    int             `json:"total"`
-	Products []model.Product `json:"products"`
+	Products []model.ProductModel `json:"products"`
 }
 
 func (hdl *httpHandler) GetProducts(c *gin.Context) {
-	var productDtos []model.ProductDTO
+	var productDtos []model.ProductModelDTO
 	limit, offset := safePaginationFromContext(c)
 	products, count := hdl.productService.GetProducts(uint(limit), uint(offset))
 
@@ -47,7 +47,7 @@ func (hdl *httpHandler) GetProduct(c *gin.Context) {
 }
 
 func (hdl *httpHandler) CreateProduct(c *gin.Context) {
-	var input model.ProductDTO
+	var input model.ProductModelDTO
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

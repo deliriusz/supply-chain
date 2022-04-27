@@ -37,7 +37,7 @@ func ToLoginDTO(login Login) LoginDTO {
 	}
 }
 
-func ToProductDTO(product Product) ProductDTO {
+func ToProductDTO(product ProductModel) ProductModelDTO {
 	var imgDtos []ImageDTO
 	var specDtos []SpecificationDTO
 
@@ -49,7 +49,7 @@ func ToProductDTO(product Product) ProductDTO {
 		specDtos = append(specDtos, ToSpecificationDTO(spec))
 	}
 
-	return ProductDTO{
+	return ProductModelDTO{
 		Id:            product.Id,
 		Title:         product.Title,
 		Description:   product.Description,
@@ -90,7 +90,7 @@ func ToSpecification(specDto SpecificationDTO) Specification {
 	}
 }
 
-func ToProduct(productDto ProductDTO) Product {
+func ToProduct(productDto ProductModelDTO) ProductModel {
 	var imgs []Image
 	var specs []Specification
 
@@ -102,7 +102,7 @@ func ToProduct(productDto ProductDTO) Product {
 		specs = append(specs, ToSpecification(spec))
 	}
 
-	return Product{
+	return ProductModel{
 		Id:            productDto.Id,
 		Title:         productDto.Title,
 		Description:   productDto.Description,

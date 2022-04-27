@@ -1,6 +1,6 @@
 package model
 
-type Product struct {
+type ProductModel struct {
 	Id            uint            `json:"id" gorm:"primaryKey"`
 	Img           []Image         `json:"img" gorm:"foreignKey:ProductId"`
 	Title         string          `json:"title"`

@@ -248,7 +248,7 @@ func fillProductsRepo() {
 	count := GET_PRODUCTS_GENERATED_COUNT
 
 	for i := 0; i < count; i++ {
-		product := &model.Product{
+		product := &model.ProductModel{
 			Title:       "title",
 			Description: "lorem ipslum",
 			Price:       uint(i + 1),
@@ -295,9 +295,9 @@ func getMimeFileBytesFromName(dir, name string) (*[]byte, string, error) {
 	return &bytes, contentType, err
 }
 
-func getSingleProductResponseFromByteArray(data *bytes.Buffer) *model.ProductDTO {
+func getSingleProductResponseFromByteArray(data *bytes.Buffer) *model.ProductModelDTO {
 	dataBytes, _ := ioutil.ReadAll(data)
-	respData := model.ProductDTO{}
+	respData := model.ProductModelDTO{}
 	json.Unmarshal(dataBytes, &respData)
 
 	return &respData

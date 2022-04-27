@@ -10,15 +10,15 @@ type productService struct {
 	repository ProductRepository
 }
 
-func (s *productService) GetProducts(limit, offset uint) ([]model.Product, uint) {
+func (s *productService) GetProducts(limit, offset uint) ([]model.ProductModel, uint) {
 	return s.repository.GetProducts(limit, offset)
 }
 
-func (s *productService) GetProduct(id uint) (model.Product, error) {
+func (s *productService) GetProduct(id uint) (model.ProductModel, error) {
 	return s.repository.GetProduct(id)
 }
 
-func (s *productService) CreateProduct(product *model.Product) error {
+func (s *productService) CreateProduct(product *model.ProductModel) error {
 	return s.repository.CreateProduct(product)
 }
 

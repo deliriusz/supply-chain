@@ -199,11 +199,11 @@ func TestImage(t *testing.T) {
 	})
 }
 
-func createRandomProduct() *model.Product {
+func createRandomProduct() *model.ProductModel {
 	randomBaseNumber := rand.Int()
 	randomBaseString := strconv.Itoa(randomBaseNumber)
 
-	return &model.Product{
+	return &model.ProductModel{
 		Title:       randomBaseString + " title",
 		Description: randomBaseString + " description",
 		Price:       uint(randomBaseNumber),

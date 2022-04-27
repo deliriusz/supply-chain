@@ -1,6 +1,6 @@
 package model
 
-type ProductDTO struct {
+type ProductModelDTO struct {
 	Id            uint               `json:"id"`
 	Img           []ImageDTO         `json:"images"`
 	Title         string             `json:"title" binding:"required"`

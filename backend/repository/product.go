@@ -27,12 +27,12 @@ func NewProductRepository(c RepoConnector[*DBRepoConnector]) domain.ProductRepos
 	return repo
 }
 
-func (r *productRepository) GetProducts(limit, offset uint) ([]model.Product, uint) {
+func (r *productRepository) GetProducts(limit, offset uint) ([]model.ProductModel, uint) {
 	DB := r.repoConnector.GetConnector().DB
-	var products []model.Product
+	var products []model.ProductModel
 
 	count := uint(0)
-	DB.Find(&[]model.Product{}).Count(&count)
+	DB.Find(&[]model.ProductModel{}).Count(&count)
 
 	DB.Preload("Img").Preload("Specification").
 		Scopes(Paginate(int(limit), int(offset))).
@@ -41,13 +41,13 @@ func (r *productRepository) GetProducts(limit, offset uint) ([]model.Product, ui
 	return products, count
 }
 
-func (r *productRepository) GetProduct(id uint) (model.Product, error) {
+func (r *productRepository) GetProduct(id uint) (model.ProductModel, error) {
 	product, err := r.getProduct(id)
 
 	return product, err
 }
 
-func (r *productRepository) CreateProduct(product *model.Product) error {
+func (r *productRepository) CreateProduct(product *model.ProductModel) error {
 	DB := r.repoConnector.GetConnector().DB
 	if err := DB.Create(&product).Error; err != nil {
 		return err
@@ -90,13 +90,13 @@ func (r *productRepository) GetImage(fileName string) (string, string, *bufio.Re
 	return fileName, directory, bufio.NewReader(file), err
 }
 
-func (r *productRepository) getProduct(productId uint) (model.Product, error) {
+func (r *productRepository) getProduct(productId uint) (model.ProductModel, error) {
 	DB := r.repoConnector.GetConnector().DB
-	var product model.Product
+	var product model.ProductModel
 
 	if err := DB.Where("id = ?",
 		productId).Preload("Img").Preload("Specification").First(&product, productId).Error; err != nil {
-		return model.Product{}, err
+		return model.ProductModel{}, err
 	}
 
 	return product, nil
