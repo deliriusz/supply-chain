@@ -19,4 +19,4 @@ eth:
 		--abi ../frontend/src/contracts/Authorization.sol -o build --overwrite
 	solc @openzeppelin=../frontend/node_modules/@openzeppelin \
 		--bin ../frontend/src/contracts/Authorization.sol -o build --overwrite
-	abigen --bin=build/Authorization.bin --abi=build/Authorization.abi --pkg authorization --out=artifacts/Authorization.go
+	abigen --bin=build/Authorization.bin --abi=build/Authorization.abi --pkg artifacts --out=artifacts/Authorization.go

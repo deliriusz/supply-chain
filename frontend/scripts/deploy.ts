@@ -41,8 +41,17 @@ async function main() {
   console.log("Authorization address:", authorization.address);
 
   await authorization.assignRole(dashboardViewer.address, await authorization.ROLE_DASHBOARD_VIEWER())
-
-  console.log(`Role DASHBOARD_VIEWER assigned to address ${dashboardViewer.address}`)
+    .then(transaction => {
+      return transaction.wait(1)
+    })
+    .then(receipt => {
+      if (receipt.status !== 1) {
+        console.error("Dashboard viewer role not assigned")
+        console.error(JSON.stringify(receipt))
+      } else {
+        console.log(`Role DASHBOARD_VIEWER assigned to address ${dashboardViewer.address}`)
+      }
+    })
 
   console.log("done")
 }
