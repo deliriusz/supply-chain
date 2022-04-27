@@ -33,4 +33,15 @@ const createProductModel = async (product: Product): Promise<ResponseContent<any
    return callService<any>(`product-model`, requestOptions)
 }
 
-export { getProductModel as getProduct, getProductModels as getProducts, createProductModel as createProduct }
+const createImage = async (productId: number, file: File): Promise<ResponseContent<any>> => {
+   const data = new FormData()
+   data.append("upload", file)
+   const requestOptions: RequestInit = {
+      method: "POST",
+      body: data
+   }
+
+   return callService<any>(`product-model/${productId}/image`, requestOptions)
+}
+
+export { getProductModel as getProduct, getProductModels as getProducts, createProductModel as createProduct, createImage }

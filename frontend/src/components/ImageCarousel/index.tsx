@@ -1,13 +1,13 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Card, Grid, Image } from "semantic-ui-react";
+import { Image as ProductImage } from "../../interfaces/Product";
 import './style.css'
 
 const IMAGE_PREVIEW_WIDTH = 3;
 const IMAGE_PREVIEW_SILDER_WIDTH = 1;
 const IMAGE_PREVIEW_COUNT = Math.floor(16 / IMAGE_PREVIEW_WIDTH) - 1;
-// const PLACEHOLDER_IMG = <div className="ui placeholder"><div className="image"></div></div>
 
-const ImageCarousel: React.FC<{ images: string[] | undefined }> = ({ images }) => {
+const ImageCarousel: React.FC<{ images: ProductImage[] | undefined }> = ({ images }) => {
 
    const getImageForLocation = (imgLocation: string | undefined) => {
       let imageToDisplay: any;
@@ -42,8 +42,12 @@ const ImageCarousel: React.FC<{ images: string[] | undefined }> = ({ images }) =
       }
    }
 
-   let [imgToDisplay, setImgToDisplay] = useState<any>(getImageForLocation(images?.[0]))
+   let [imgToDisplay, setImgToDisplay] = useState<any>(getImageForLocation(images?.[0].url))
    let [page, setPage] = useState<number>(0)
+
+   useEffect(() => {
+      setImageComponentToPreview(images?.[0].url)
+   }, [images?.[0].url])
 
    return (
       <>
@@ -61,10 +65,10 @@ const ImageCarousel: React.FC<{ images: string[] | undefined }> = ({ images }) =
                if (idx >= idxToDisplayFrom && idx < idxToDisplayFrom + IMAGE_PREVIEW_COUNT) {
                   return (
                      <Grid.Column id={idx} verticalAlign="middle"
-                        onClick={() => setImageComponentToPreview(val)} width={IMAGE_PREVIEW_WIDTH}>
+                        onClick={() => setImageComponentToPreview(val.url)} width={IMAGE_PREVIEW_WIDTH}>
                         <Image
                            size='small'
-                           src={val} />
+                           src={val.url} />
                      </Grid.Column>
                   )
                }

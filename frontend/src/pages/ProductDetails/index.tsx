@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
+import { Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
 import Product from "../../interfaces/Product";
 import { useParams } from 'react-router-dom';
 import * as ProductService from '../../services/ProductService'
@@ -9,16 +9,16 @@ import PurchaseButton from "../../components/PurchaseButton";
 const ProductDetails = () => {
    let { productId } = useParams()
    useEffect(() => {
-      ProductService.getProduct(parseInt(productId + ''))
+      ProductService.getProduct(parseInt(productId!))
          .then(product => setProduct(product))
-   }, [])
+   }, [productId])
    let [product, setProduct] = useState<Product | undefined>()
 
    return (
       <Grid>
          <Grid.Row>
             <Grid.Column width={10}>
-               <ImageCarousel images={product?.imgUrl} />
+               <ImageCarousel images={product?.images} />
             </Grid.Column>
             <Grid.Column width={6}>
 
@@ -63,7 +63,7 @@ const ProductDetails = () => {
                            <Table.Body>
                               {
                                  product?.specification.map((val, idx, arr) => {
-                                    return (<Table.Row>
+                                    return (<Table.Row key={idx}>
                                        <Table.Cell>{val.name}</Table.Cell>
                                        <Table.Cell>{val.value}</Table.Cell>
                                     </Table.Row>)

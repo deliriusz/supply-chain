@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Form, FormProps, GridRow, Header, Icon, Image, Label, Message } from "semantic-ui-react";
 import Product from '../../../interfaces/Product'
 import ResponseContent from "../../../interfaces/ResponseContent";
-import { createProduct } from '../../../services/ProductService'
+import { createImage, createProduct } from '../../../services/ProductService'
 import './style.css'
 
 const EMPTY_SPEC = { name: '', value: '' }
@@ -15,7 +15,7 @@ const AddProductPane = () => {
       price: 0,
       quantity: 0,
       id: undefined,
-      imgUrl: [],
+      images: [],
       specification: [{ name: '', value: '' }],
    })
    const [images, setImages] = useState<File[]>([])
@@ -97,11 +97,20 @@ const AddProductPane = () => {
       }
 
       const response: ResponseContent<any> = await createProduct(normalizedProduct)
-      console.log(response)
-      setFormSubmitErrorMessage(JSON.stringify(response.data))
-      setFormSubmitError(!response.isOk)
-      setFormSubmitSuccess(response.isOk)
+
+      if (!response.isOk) {
+         setFormSubmitErrorMessage(JSON.stringify(response.data))
+         setFormSubmitError(true)
+         setFormSubmitSuccess(false)
+      }
       setCreatedProductId(response.data.id)
+
+      await Promise.all(
+         images.map((val, idx, arr) => { return createImage(response.data.id, val) })
+      )
+
+      setFormSubmitError(false)
+      setFormSubmitSuccess(true)
    }
 
    const removeImage = (id: number) => {

@@ -12,7 +12,7 @@ const ProductCard = (props: ProductCardProps) => {
       <Card>
          <Card.Content>
             <Image
-               src={props.product.imgUrl && props.product.imgUrl[0]}
+               src={props.product.images && props.product.images[0]}
             />
             <Card.Header>{props.product.title}</Card.Header>
          </Card.Content>
