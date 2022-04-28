@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	authorization "rafal-kalinowski.pl/artifacts"
+	"rafal-kalinowski.pl/artifacts/authorization"
 	"rafal-kalinowski.pl/config"
 	"rafal-kalinowski.pl/domain/model"
 	domain "rafal-kalinowski.pl/domain/service"

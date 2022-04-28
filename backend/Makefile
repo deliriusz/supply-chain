@@ -15,8 +15,4 @@ build:
 eth:
 	mkdir -p build
 	mkdir -p artifacts
-	solc @openzeppelin=../frontend/node_modules/@openzeppelin \
-		--abi ../frontend/src/contracts/Authorization.sol -o build --overwrite
-	solc @openzeppelin=../frontend/node_modules/@openzeppelin \
-		--bin ../frontend/src/contracts/Authorization.sol -o build --overwrite
-	abigen --bin=build/Authorization.bin --abi=build/Authorization.abi --pkg artifacts --out=artifacts/Authorization.go
+	scripts/generate-contract-artifacts.sh
