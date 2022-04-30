@@ -37,7 +37,17 @@ func ToLoginDTO(login Login) LoginDTO {
 	}
 }
 
-func ToProductDTO(product ProductModel) ProductModelDTO {
+func ToProductDTO(product Product) ProductDTO {
+	return ProductDTO{
+		Id:    product.Id,
+		Model: ToProductModelDTO(product.Model),
+		State: product.State.String(),
+		Owner: product.Owner,
+		Price: product.Price,
+	}
+}
+
+func ToProductModelDTO(product ProductModel) ProductModelDTO {
 	var imgDtos []ImageDTO
 	var specDtos []SpecificationDTO
 
@@ -53,7 +63,7 @@ func ToProductDTO(product ProductModel) ProductModelDTO {
 		Id:            product.Id,
 		Title:         product.Title,
 		Description:   product.Description,
-		Price:         product.Price,
+		BasePrice:     product.BasePrice,
 		Quantity:      product.Quantity,
 		Img:           imgDtos,
 		Specification: specDtos,
@@ -90,7 +100,18 @@ func ToSpecification(specDto SpecificationDTO) Specification {
 	}
 }
 
-func ToProduct(productDto ProductModelDTO) ProductModel {
+func ToProduct(productDto ProductDTO) Product {
+	state, _ := ProductStateFromString(productDto.State)
+	return Product{
+		Id:    productDto.Id,
+		Model: ToProductModel(productDto.Model),
+		State: state,
+		Owner: productDto.Owner,
+		Price: productDto.Price,
+	}
+}
+
+func ToProductModel(productDto ProductModelDTO) ProductModel {
 	var imgs []Image
 	var specs []Specification
 
@@ -106,7 +127,7 @@ func ToProduct(productDto ProductModelDTO) ProductModel {
 		Id:            productDto.Id,
 		Title:         productDto.Title,
 		Description:   productDto.Description,
-		Price:         productDto.Price,
+		BasePrice:     productDto.BasePrice,
 		Quantity:      productDto.Quantity,
 		Img:           imgs,
 		Specification: specs,

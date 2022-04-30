@@ -12,6 +12,92 @@ import (
 	"rafal-kalinowski.pl/domain/model"
 )
 
+func TestCreateProduct(t *testing.T) {
+	g := Goblin(t)
+
+	g.Describe("Test CreateProduct", func() {
+		g.JustBeforeEach(Cleanup)
+		g.JustBeforeEach(Setup)
+		g.After(Cleanup)
+
+		g.It("Should create a product without an error", func() {
+			if err := productRepo.CreateProductModel(createRandomProductModel()); err != nil {
+				g.Fail(err)
+			}
+
+			testProduct := createRandomProduct(0)
+
+			if err := productRepo.CreateProduct(testProduct); err != nil {
+				g.Fail(err)
+			}
+		})
+
+		g.It("Should return created product with the same data", func() {
+			testProduct := createRandomProduct(0)
+
+			if err := productRepo.CreateProduct(testProduct); err != nil {
+				g.Fail(err)
+			}
+
+			createdProduct, err := productRepo.GetProduct(1)
+
+			g.Assert(err).IsNil()
+
+			g.Assert(createdProduct.Id == 1).IsTrue()
+			g.Assert(createdProduct.Model.Id).Equal(testProduct.Model.Id)
+			g.Assert(createdProduct.Model.BasePrice).Equal(testProduct.Model.BasePrice)
+			g.Assert(createdProduct.Model.Description).Equal(testProduct.Model.Description)
+			g.Assert(createdProduct.Model.Quantity).Equal(testProduct.Model.Quantity)
+			g.Assert(createdProduct.Model.Title).Equal(testProduct.Model.Title)
+			g.Assert(createdProduct.Owner).Equal(testProduct.Owner)
+			g.Assert(createdProduct.Price).Equal(testProduct.Price)
+			g.Assert(createdProduct.State).Equal(testProduct.State)
+		})
+
+		g.It("Should create multiple products for the same ProductModel", func() {
+			productRepo.CreateProductModel(createRandomProductModel())
+			createdProductCount := 100
+			for i := 0; i < createdProductCount; i++ {
+				testProduct := createRandomProduct(1)
+
+				if err := productRepo.CreateProduct(testProduct); err != nil {
+					g.Fail(err)
+				}
+			}
+
+			createdProducts, count := productRepo.GetProducts(10, uint(createdProductCount-10))
+
+			g.Assert(count == uint(createdProductCount)).IsTrue()
+			g.Assert(len(*createdProducts)).Equal(10)
+
+			for _, v := range *createdProducts {
+				g.Assert(v.Id >= 90).IsTrue()
+			}
+		})
+
+		g.It("Should create multiple products for multiple ProductModel", func() {
+			createdProductCount := 100
+			for i := 0; i < createdProductCount; i++ {
+				testProduct := createRandomProduct(0)
+
+				if err := productRepo.CreateProduct(testProduct); err != nil {
+					g.Fail(err)
+				}
+			}
+
+			createdProducts, count := productRepo.GetProducts(10, uint(createdProductCount-10))
+
+			g.Assert(count == uint(createdProductCount)).IsTrue()
+			g.Assert(len(*createdProducts)).Equal(10)
+
+			for _, v := range *createdProducts {
+				g.Assert(v.Id >= 90).IsTrue()
+				g.Assert(v.Id).Equal(v.Model.Id)
+			}
+		})
+	})
+}
+
 func TestCreateProductModel(t *testing.T) {
 	g := Goblin(t)
 
@@ -21,7 +107,7 @@ func TestCreateProductModel(t *testing.T) {
 		g.After(Cleanup)
 
 		g.It("Should create a product without an error", func() {
-			testProduct := createRandomProduct()
+			testProduct := createRandomProductModel()
 
 			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
@@ -29,7 +115,7 @@ func TestCreateProductModel(t *testing.T) {
 		})
 
 		g.It("Should return created product with the same data", func() {
-			testProduct := createRandomProduct()
+			testProduct := createRandomProductModel()
 
 			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
@@ -45,7 +131,7 @@ func TestCreateProductModel(t *testing.T) {
 			g.Assert(firstCreatedProduct.Id == 1).IsTrue()
 			g.Assert(firstCreatedProduct.Quantity).Equal(testProduct.Quantity)
 			g.Assert(firstCreatedProduct.Description).Equal(testProduct.Description)
-			g.Assert(firstCreatedProduct.Price).Equal(testProduct.Price)
+			g.Assert(firstCreatedProduct.BasePrice).Equal(testProduct.BasePrice)
 			g.Assert(firstCreatedProduct.Title).Equal(testProduct.Title)
 
 			g.Assert(len(firstCreatedProduct.Specification)).Equal(len(testProduct.Specification))
@@ -60,7 +146,7 @@ func TestCreateProductModel(t *testing.T) {
 		g.It("Should create multiple products", func() {
 			createdProductCount := 100
 			for i := 0; i < createdProductCount; i++ {
-				testProduct := createRandomProduct()
+				testProduct := createRandomProductModel()
 
 				if err := productRepo.CreateProductModel(testProduct); err != nil {
 					g.Fail(err)
@@ -88,7 +174,7 @@ func TestImage(t *testing.T) {
 		g.After(Cleanup)
 
 		g.It("Should create image for existing product", func() {
-			testProduct := createRandomProduct()
+			testProduct := createRandomProductModel()
 
 			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
@@ -118,7 +204,7 @@ func TestImage(t *testing.T) {
 		})
 
 		g.It("Should assign image to product", func() {
-			testProduct := createRandomProduct()
+			testProduct := createRandomProductModel()
 
 			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
@@ -161,7 +247,7 @@ func TestImage(t *testing.T) {
 
 		g.It("Should create multiple images to a product", func() {
 			createdImagesCount := 5
-			testProduct := createRandomProduct()
+			testProduct := createRandomProductModel()
 
 			if err := productRepo.CreateProductModel(testProduct); err != nil {
 				g.Fail(err)
@@ -199,14 +285,30 @@ func TestImage(t *testing.T) {
 	})
 }
 
-func createRandomProduct() *model.ProductModel {
+func createRandomProduct(modelId uint) *model.Product {
+	if modelId < 1 {
+		productRepo.CreateProductModel(createRandomProductModel())
+		modelId = 1
+	}
+
+	productModel, _ := productRepo.GetProductModel(modelId)
+
+	return &model.Product{
+		Model: productModel,
+		State: model.InProduction,
+		Owner: "",
+		Price: productModel.BasePrice,
+	}
+}
+
+func createRandomProductModel() *model.ProductModel {
 	randomBaseNumber := rand.Int()
 	randomBaseString := strconv.Itoa(randomBaseNumber)
 
 	return &model.ProductModel{
 		Title:       randomBaseString + " title",
 		Description: randomBaseString + " description",
-		Price:       uint(randomBaseNumber),
+		BasePrice:   uint(randomBaseNumber),
 		Quantity:    uint(randomBaseNumber),
 		Specification: []model.Specification{
 			{

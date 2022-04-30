@@ -21,7 +21,7 @@ func (hdl *httpHandler) GetProductModels(c *gin.Context) {
 	products, count := hdl.productService.GetProductModels(uint(limit), uint(offset))
 
 	for _, returnedProduct := range products {
-		productDtos = append(productDtos, model.ToProductDTO(returnedProduct))
+		productDtos = append(productDtos, model.ToProductModelDTO(returnedProduct))
 	}
 
 	c.JSON(http.StatusOK, gin.H{"total": count, "products": productDtos})
@@ -43,7 +43,7 @@ func (hdl *httpHandler) GetProductModel(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, model.ToProductDTO(product))
+	c.JSON(http.StatusOK, model.ToProductModelDTO(product))
 }
 
 func (hdl *httpHandler) CreateProductModel(c *gin.Context) {
@@ -55,7 +55,7 @@ func (hdl *httpHandler) CreateProductModel(c *gin.Context) {
 		return
 	}
 
-	product := model.ToProduct(input)
+	product := model.ToProductModel(input)
 
 	if err := hdl.productService.CreateProductModel(&product); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -344,7 +344,7 @@ func assertPaginatedProductsAreValid(g *G, uri string, offset, limit int) {
 		g.Assert(resp.Products[i].Id).Equal(savedProducts[i].Id)
 		g.Assert(resp.Products[i].Title).Equal(savedProducts[i].Title)
 		g.Assert(resp.Products[i].Quantity).Equal(savedProducts[i].Quantity)
-		g.Assert(resp.Products[i].Price).Equal(savedProducts[i].Price)
+		g.Assert(resp.Products[i].BasePrice).Equal(savedProducts[i].BasePrice)
 		g.Assert(len(resp.Products[i].Specification)).Equal(len(savedProducts[i].Specification))
 		g.Assert(resp.Products[i].Specification[0].Name).Equal(savedProducts[i].Specification[0].Name)
 	}

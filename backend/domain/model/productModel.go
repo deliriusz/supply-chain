@@ -1,11 +1,13 @@
 package model
 
+// ProductModel is just a set of characteristins for a model of a product.
+// Unique products for a model are then created and NFT is generated for them.
 type ProductModel struct {
-	Id            uint            `json:"id" gorm:"primaryKey"`
-	Img           []Image         `json:"img" gorm:"foreignKey:ProductId"`
-	Title         string          `json:"title"`
-	Description   string          `json:"description"`
-	Price         uint            `json:"price"`
-	Quantity      uint            `json:"quantity"`
-	Specification []Specification `json:"specification" gorm:"foreignKey:ProductId"`
+	Id            uint            `gorm:"primaryKey"`
+	Img           []Image         `gorm:"foreignKey:ProductId"`
+	Title         string          ``
+	Description   string          ``
+	BasePrice     uint            ``
+	Quantity      uint            ``
+	Specification []Specification `gorm:"foreignKey:ProductId"`
 }

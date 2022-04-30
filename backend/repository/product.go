@@ -56,6 +56,82 @@ func (r *productRepository) CreateProductModel(product *model.ProductModel) erro
 	return nil
 }
 
+func (r *productRepository) GetProduct(id uint) (*model.Product, error) {
+	DB := r.repoConnector.GetConnector().DB
+
+	var product model.Product
+
+	if err := DB.Where("id = ?",
+		id).Preload("Model").First(&product, id).Error; err != nil {
+		return &model.Product{}, err
+	}
+
+	return &product, nil
+}
+
+func (r *productRepository) GetProducts(limit, offset uint) (*[]model.Product, uint) {
+	DB := r.repoConnector.GetConnector().DB
+	var products []model.Product
+
+	count := uint(0)
+	DB.Find(&[]model.Product{}).Count(&count)
+
+	DB.Preload("Model").
+		Scopes(Paginate(int(limit), int(offset))).
+		Find(&products)
+
+	return &products, count
+}
+
+func (r *productRepository) GetProductsForUser(user string, limit, offset uint) (*[]model.Product, uint) {
+	DB := r.repoConnector.GetConnector().DB
+	var product *[]model.Product
+	count := uint(0)
+
+	DB.Where("owner = ?", user).Find(&[]model.Product{}).Count(&count)
+
+	DB.Preload("Model").
+		Scopes(Paginate(int(limit), int(offset))).
+		Where("user_id = ?", user).Find(product)
+
+	// DB.Where("user_id = ?", user).Preload("Product").Find(product)
+	return product, count
+}
+
+func (r *productRepository) CreateProduct(product *model.Product) error {
+	DB := r.repoConnector.GetConnector().DB
+
+	if err := DB.Create(&product).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *productRepository) UpdateProduct(product *model.Product) error {
+	DB := r.repoConnector.GetConnector().DB
+
+	productToUpdate, err := r.GetProduct(product.Id)
+	if err != nil {
+		return err
+	}
+
+	if productToUpdate.Id < 1 {
+		return fmt.Errorf("product with %d not found", product.Id)
+	}
+
+	productToUpdate.Owner = product.Owner
+	productToUpdate.Price = product.Price
+	productToUpdate.State = product.State
+
+	if err := DB.Where("id = ?",
+		product.Id).Update(&product).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *productRepository) CreateImage(productId uint, file *bufio.Reader) (model.Image, error) {
 	image := model.Image{}
 
