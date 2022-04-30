@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 for CONTRACT in ../frontend/src/contracts/*.sol; do
    echo CONTRACT = $CONTRACT
    CONTRACT_FULL_NAME=$(basename $CONTRACT)
