@@ -2,6 +2,7 @@ TODO:
 * change repository to mock service to verify api test correctness
 * make eth step more generic in Makefile
 * time restrict login attempts from one IP address
+* allow multiple user roles
 
 NEXT STEPS:
 decouple nft product from purchase

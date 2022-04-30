@@ -2,6 +2,7 @@ TODO: if time permits
 * add check for account change
 * not sign message digest hash, but the message so that user sees what he signspurchase
 * change hardcodes to env variables in scripts/deploy.ts
+* move smart contracts and deployment scripts to its own folder to remove js module loading issue(commonjs vs esnext)
 
 NEXT STEPS:
 automate contract setup and deployments
