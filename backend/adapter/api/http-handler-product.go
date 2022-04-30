@@ -66,6 +66,103 @@ func (hdl *httpHandler) CreateProductModel(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": product.Id})
 }
 
+func (hdl *httpHandler) GetProduct(c *gin.Context) {
+	productId, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	product, err := hdl.productService.GetProduct(uint(productId))
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, model.ToProductDTO(*product))
+}
+
+func (hdl *httpHandler) GetProducts(c *gin.Context) {
+	session, err := hdl.getSessionByIdFromCookie(c)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err})
+		return
+	}
+
+	if session.Role != model.Admin {
+		abortAuthWithMessage(c, http.StatusForbidden, "you don't have permission to read info about other users' purchases")
+		return
+	}
+
+	var productDtos []model.ProductDTO
+	limit, offset := safePaginationFromContext(c)
+	products, count := hdl.productService.GetProducts(uint(limit), uint(offset))
+
+	for _, returnedProduct := range *products {
+		productDtos = append(productDtos, model.ToProductDTO(returnedProduct))
+	}
+
+	c.JSON(http.StatusOK, gin.H{"total": count, "products": productDtos})
+}
+
+func (hdl *httpHandler) GetProductsForUser(c *gin.Context) {
+	userId := c.Param("userId")
+
+	var productDtos []model.ProductDTO
+	limit, offset := safePaginationFromContext(c)
+	products, count := hdl.productService.GetProductsForUser(userId, uint(limit), uint(offset))
+
+	for _, returnedProduct := range *products {
+		productDtos = append(productDtos, model.ToProductDTO(returnedProduct))
+	}
+
+	c.JSON(http.StatusOK, gin.H{"total": count, "products": productDtos})
+}
+
+func (hdl *httpHandler) CreateProduct(c *gin.Context) {
+	var input model.ProductDTO
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	product := model.ToProduct(input)
+
+	if err := hdl.productService.CreateProduct(&product); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": product.Id})
+}
+
+func (hdl *httpHandler) ChangeProductState(c *gin.Context) {
+	productId, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	stateId, err := model.ProductStateFromString(c.Param("state"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	hdl.productService.ChangeProductState(uint(productId), stateId)
+}
+
 func (hdl *httpHandler) CreateImage(c *gin.Context) {
 	productId, err := strconv.Atoi(c.Param("id"))
 

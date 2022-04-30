@@ -20,6 +20,11 @@ type HTTPHandler interface {
 	GetProductModels(*gin.Context)
 	GetProductModel(*gin.Context)
 	CreateProductModel(*gin.Context)
+	GetProduct(*gin.Context)
+	GetProducts(*gin.Context)
+	GetProductsForUser(*gin.Context)
+	CreateProduct(*gin.Context)
+	ChangeProductState(*gin.Context)
 	CreateImage(*gin.Context)
 	GetImage(*gin.Context)
 	GetPurchases(*gin.Context)
@@ -77,8 +82,7 @@ func checkLoginRequest(input *model.LoginChallenge, c *gin.Context) error {
 
 func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cookie, _ := c.Cookie(config.COOKIE_SESSIONID)
-		session, err := hdl.loginService.GetSessionById(cookie)
+		session, err := hdl.getSessionByIdFromCookie(c)
 		currentTimestamp := time.Now().UnixMilli()
 
 		if err != nil || session.ExpiresAt == 0 {
@@ -138,6 +142,8 @@ func (hdl *httpHandler) setupAuthenticatedRoutes() {
 	{
 		authenticatedRoutes.Use(hdl.authenticate(model.Client))
 		authenticatedRoutes.GET("/auth/logout", hdl.Logout)
+		authenticatedRoutes.GET("/product", hdl.GetProducts)
+		authenticatedRoutes.GET("/product/:id", hdl.GetProduct)
 		authenticatedRoutes.GET("/purchase", hdl.GetPurchases)
 		authenticatedRoutes.GET("/purchase/:id", hdl.GetPurchase)
 		authenticatedRoutes.GET("/purchase/user/:id", hdl.GetPurchasesForUser)
@@ -150,6 +156,9 @@ func (hdl *httpHandler) setupAdminRoutes() {
 		adminRoutes.Use(hdl.authenticate(model.Admin))
 		adminRoutes.POST("/product-model", hdl.CreateProductModel)
 		adminRoutes.POST("/product-model/:id/image", hdl.CreateImage)
+		adminRoutes.POST("/product", hdl.CreateProduct)
+		adminRoutes.POST("/product/:id/state/:stateId", hdl.ChangeProductState)
+		adminRoutes.GET("/product/:userId", hdl.GetProductsForUser)
 	}
 }
 
@@ -192,4 +201,9 @@ func safePaginationFromContext(c *gin.Context) (int, int) {
 func abortAuthWithMessage(c *gin.Context, status int, message string) {
 	c.JSON(status, gin.H{"error": message})
 	c.Abort()
+}
+
+func (hdl *httpHandler) getSessionByIdFromCookie(c *gin.Context) (*model.Login, error) {
+	cookie, _ := c.Cookie(config.COOKIE_SESSIONID)
+	return hdl.loginService.GetSessionById(cookie)
 }
