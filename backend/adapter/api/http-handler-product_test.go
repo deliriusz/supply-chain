@@ -251,7 +251,7 @@ func fillProductsRepo() {
 		product := &model.ProductModel{
 			Title:       "title",
 			Description: "lorem ipslum",
-			Price:       uint(i + 1),
+			BasePrice:   uint(i + 1),
 			Quantity:    uint(i + 1),
 			Specification: []model.Specification{
 				{

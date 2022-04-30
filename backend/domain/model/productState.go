@@ -14,28 +14,28 @@ const (
 func (s ProductState) String() string {
 	switch s {
 	case InProduction:
-		return "InProduction"
+		return "IN_PRODUCTION"
 	case Created:
-		return "Created"
+		return "CREATED"
 	case Payed:
-		return "Payed"
+		return "PAYED"
 	case Delivered:
-		return "Delivered"
+		return "DELIVERED"
 	}
 
-	return "InvalidState"
+	return "INVALID_STATE"
 }
 
 func ProductStateFromString(strState string) (ProductState, error) {
 	var state ProductState
 	switch strState {
-	case "InProduction":
+	case "IN_PRODUCTION":
 		state = InProduction
-	case "Created":
+	case "CREATED":
 		state = Created
-	case "Payed":
+	case "PAYED":
 		state = Payed
-	case "Delivered":
+	case "DELIVERED":
 		state = Delivered
 	default:
 		return state, fmt.Errorf("passed state is invalid")
