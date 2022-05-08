@@ -61,9 +61,9 @@ func (hdl *httpHandler) Init() {
 	hdl.router = gin.Default()
 
 	hdl.setupCors()
-	hdl.setupAdminRoutes()
-	hdl.setupAuthenticatedRoutes()
 	hdl.setupNormalRoutes()
+	hdl.setupAuthenticatedRoutes()
+	hdl.setupAdminRoutes()
 }
 
 func checkLoginRequest(input *model.LoginChallenge, c *gin.Context) error {
@@ -157,8 +157,8 @@ func (hdl *httpHandler) setupAdminRoutes() {
 		adminRoutes.POST("/product-model", hdl.CreateProductModel)
 		adminRoutes.POST("/product-model/:id/image", hdl.CreateImage)
 		adminRoutes.POST("/product", hdl.CreateProduct)
-		adminRoutes.POST("/product/:id/state/:stateId", hdl.ChangeProductState)
-		adminRoutes.GET("/product/:userId", hdl.GetProductsForUser)
+		adminRoutes.POST("/product/:id/state/:stateId", hdl.ChangeProductState) // had to
+		adminRoutes.GET("/product/user/:userId", hdl.GetProductsForUser)
 	}
 }
 
