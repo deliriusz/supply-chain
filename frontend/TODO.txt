@@ -7,6 +7,5 @@ TODO: if time permits
 
 NEXT STEPS:
 automate contract setup and deployments
-add support for NFT metadata read
 implement dashboard with new auth model
 change dashboard mock to real implementation

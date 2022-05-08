@@ -1,9 +1,11 @@
 TODO:
 * change repository to mock service to verify api test correctness
-* make eth step more generic in Makefile
 * time restrict login attempts from one IP address
 * allow multiple user roles
+* remove params from repo InitConnection function - it should be taken from config
 
 NEXT STEPS:
+create helper to create products for a product model
+add support for NFT metadata read
 implement TheGraph to gather info about user purchases
 implement TheGraph RepoConnector to get purchase info for dashboard
