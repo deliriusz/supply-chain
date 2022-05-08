@@ -5,6 +5,5 @@ TODO:
 * allow multiple user roles
 
 NEXT STEPS:
-decouple nft product from purchase
 implement TheGraph to gather info about user purchases
 implement TheGraph RepoConnector to get purchase info for dashboard
