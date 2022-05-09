@@ -133,6 +133,8 @@ func (hdl *httpHandler) setupNormalRoutes() {
 	router.POST("/auth/login", hdl.Login)
 	router.GET("/product-model", hdl.GetProductModels)
 	router.GET("/product-model/:id", hdl.GetProductModel)
+	router.GET("/product", hdl.GetProducts)
+	router.GET("/product/:id", hdl.GetProduct)
 	router.GET("/image/:fileName", hdl.GetImage)
 	router.POST("/purchase", hdl.CreatePurchase)
 }
@@ -142,8 +144,6 @@ func (hdl *httpHandler) setupAuthenticatedRoutes() {
 	{
 		authenticatedRoutes.Use(hdl.authenticate(model.Client))
 		authenticatedRoutes.GET("/auth/logout", hdl.Logout)
-		authenticatedRoutes.GET("/product", hdl.GetProducts)
-		authenticatedRoutes.GET("/product/:id", hdl.GetProduct)
 		authenticatedRoutes.GET("/purchase", hdl.GetPurchases)
 		authenticatedRoutes.GET("/purchase/:id", hdl.GetPurchase)
 		authenticatedRoutes.GET("/purchase/user/:id", hdl.GetPurchasesForUser)
