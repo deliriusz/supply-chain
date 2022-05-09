@@ -61,7 +61,7 @@ func (hdl *httpHandler) Init() {
 	hdl.router = gin.Default()
 
 	hdl.setupCors()
-	hdl.setupNormalRoutes()
+	hdl.setupPublicRoutes()
 	hdl.setupAuthenticatedRoutes()
 	hdl.setupAdminRoutes()
 }
@@ -126,7 +126,7 @@ func (hdl *httpHandler) authenticate(role model.UserRole) gin.HandlerFunc {
 	}
 }
 
-func (hdl *httpHandler) setupNormalRoutes() {
+func (hdl *httpHandler) setupPublicRoutes() {
 	router := hdl.router
 
 	router.POST("/auth/challenge", hdl.GetLoginChallenge)
