@@ -1,10 +1,10 @@
-import Product from "../interfaces/Product";
+import ProductModel from "../interfaces/Product";
 import ResponseContent from "../interfaces/ResponseContent";
 import { callService } from "./ServiceBase";
 
 interface GetProductsResponse {
    total: number,
-   products: Product[]
+   products: ProductModel[]
 }
 
 const getProductModels = async (offset: number = 0, limit: number = 10): Promise<GetProductsResponse> => {
@@ -17,14 +17,14 @@ const getProductModels = async (offset: number = 0, limit: number = 10): Promise
       })
 }
 
-const getProductModel = async (id: number): Promise<Product | undefined> => {
-   return callService<Product | undefined>(`product-model/${id}`)
+const getProductModel = async (id: number): Promise<ProductModel | undefined> => {
+   return callService<ProductModel | undefined>(`product-model/${id}`)
       .then(response => {
          return response.data
       })
 }
 
-const createProductModel = async (product: Product): Promise<ResponseContent<any>> => {
+const createProductModel = async (product: ProductModel): Promise<ResponseContent<any>> => {
    const requestOptions: RequestInit = {
       method: "POST",
       body: JSON.stringify(product),

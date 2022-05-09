@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Product from '../../interfaces/Product';
+import ProductModel from '../../interfaces/Product';
 import ProductCard from '../ProductCard';
 import * as ProductService from '../../services/ProductService'
 import { Grid, GridColumn } from 'semantic-ui-react';
@@ -8,7 +8,7 @@ const ProductListing = () => {
    useEffect(() => {
       ProductService.getProducts().then(products => setProducts(products.products))
    }, [])
-   const [products, setProducts] = useState<Product[]>([]);
+   const [products, setProducts] = useState<ProductModel[]>([]);
 
    return (
       <>

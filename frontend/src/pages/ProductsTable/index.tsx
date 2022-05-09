@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Image, Menu, Icon, Rating } from "semantic-ui-react";
-import Product from "../../interfaces/Product";
+import ProductModel from "../../interfaces/Product";
 import * as ProductService from '../../services/ProductService'
 import _ from 'lodash';
 
@@ -26,7 +26,7 @@ const getPages = (page: number, maxPage: number, pagesToGenerate = 5): number[] 
 
 const ProductsTable = () => {
    const PAGE_SIZE = 10
-   const [products, setProducts] = useState<Product[]>([]);
+   const [products, setProducts] = useState<ProductModel[]>([]);
    const [currentPage, setCurrentPage] = useState<number>(0)
    const [productsCount, setProductsCount] = useState<number>(0)
 

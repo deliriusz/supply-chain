@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
-import Product from "../../interfaces/Product";
+import ProductModel from "../../interfaces/Product";
 import { useParams } from 'react-router-dom';
 import * as ProductService from '../../services/ProductService'
 import ImageCarousel from "../../components/ImageCarousel";
@@ -12,7 +12,7 @@ const ProductDetails = () => {
       ProductService.getProduct(parseInt(productId!))
          .then(product => setProduct(product))
    }, [productId])
-   let [product, setProduct] = useState<Product | undefined>()
+   let [product, setProduct] = useState<ProductModel | undefined>()
 
    return (
       <Grid>

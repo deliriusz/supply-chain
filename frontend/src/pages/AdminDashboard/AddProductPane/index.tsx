@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, FormProps, GridRow, Header, Icon, Image, Label, Message } from "semantic-ui-react";
-import Product from '../../../interfaces/Product'
+import ProductModel from '../../../interfaces/Product'
 import ResponseContent from "../../../interfaces/ResponseContent";
 import { createImage, createProduct } from '../../../services/ProductService'
 import './style.css'
@@ -9,7 +9,7 @@ const EMPTY_SPEC = { name: '', value: '' }
 
 //TODO: add images when creating product, add loading when from is submitted
 const AddProductPane = () => {
-   const [product, setProduct] = useState<Product>({
+   const [product, setProduct] = useState<ProductModel>({
       description: '',
       title: '',
       price: 0,
@@ -88,7 +88,7 @@ const AddProductPane = () => {
    const submitForm = async (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
       event.preventDefault()
 
-      const normalizedProduct: Product = (JSON.parse(JSON.stringify(product)))
+      const normalizedProduct: ProductModel = (JSON.parse(JSON.stringify(product)))
       if (typeof normalizedProduct.price === "string") {
          normalizedProduct.price = parseInt(normalizedProduct.price)
       }

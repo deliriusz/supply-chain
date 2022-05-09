@@ -10,7 +10,7 @@ export interface Image {
    url: string
 }
 
-export default interface Product {
+export default interface ProductModel {
    id: number | undefined
    images: Image[]
    title: string
