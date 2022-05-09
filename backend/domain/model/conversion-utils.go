@@ -102,9 +102,10 @@ func ToSpecification(specDto SpecificationDTO) Specification {
 
 func ToProduct(productDto ProductDTO) Product {
 	state, _ := ProductStateFromString(productDto.State)
+
 	return Product{
 		Id:    productDto.Id,
-		Model: ToProductModel(productDto.Model),
+		Model: ProductModel{Id: productDto.ModelId},
 		State: state,
 		Owner: productDto.Owner,
 		Price: productDto.Price,

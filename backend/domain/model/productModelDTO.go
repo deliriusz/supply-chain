@@ -3,9 +3,9 @@ package model
 type ProductModelDTO struct {
 	Id            uint               `json:"id"`
 	Img           []ImageDTO         `json:"images"`
-	Title         string             `json:"title" binding:"required"`
-	Description   string             `json:"description" binding:"required"`
-	BasePrice     uint               `json:"price" binding:"required"`
-	Quantity      uint               `json:"quantity" binding:"required"`
-	Specification []SpecificationDTO `json:"specification" binding:"required"`
+	Title         string             `json:"title"`
+	Description   string             `json:"description"`
+	BasePrice     uint               `json:"price"`
+	Quantity      uint               `json:"quantity"`
+	Specification []SpecificationDTO `json:"specification"`
 }

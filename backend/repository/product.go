@@ -94,7 +94,6 @@ func (r *productRepository) GetProductsForUser(user string, limit, offset uint) 
 		Scopes(Paginate(int(limit), int(offset))).
 		Where("user_id = ?", user).Find(product)
 
-	// DB.Where("user_id = ?", user).Preload("Product").Find(product)
 	return product, count
 }
 
