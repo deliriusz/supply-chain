@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Card, Grid, Image } from "semantic-ui-react";
-import { Image as ProductImage } from "../../interfaces/Product";
+import { Image as ProductImage } from "../../interfaces/ProductModel";
 import './style.css'
 
 const IMAGE_PREVIEW_WIDTH = 3;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, FormProps, GridRow, Header, Icon, Image, Label, Message } from "semantic-ui-react";
-import ProductModel from '../../../interfaces/Product'
+import ProductModel from '../../../interfaces/ProductModel'
 import ResponseContent from "../../../interfaces/ResponseContent";
 import { createImage, createProduct } from '../../../services/ProductService'
 import './style.css'

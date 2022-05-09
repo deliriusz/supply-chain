@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ProductModel from '../../interfaces/Product';
+import ProductModel from '../../interfaces/ProductModel';
 import ProductCard from '../ProductCard';
 import * as ProductService from '../../services/ProductService'
 import { Grid, GridColumn } from 'semantic-ui-react';

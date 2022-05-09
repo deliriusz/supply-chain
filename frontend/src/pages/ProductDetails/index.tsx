@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Grid, Header, Icon, Segment, Table } from "semantic-ui-react";
-import ProductModel from "../../interfaces/Product";
+import ProductModel from "../../interfaces/ProductModel";
 import { useParams } from 'react-router-dom';
 import * as ProductService from '../../services/ProductService'
 import ImageCarousel from "../../components/ImageCarousel";

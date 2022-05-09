@@ -1,4 +1,4 @@
-import ProductModel from "../interfaces/Product";
+import ProductModel from "../interfaces/ProductModel";
 import ResponseContent from "../interfaces/ResponseContent";
 import { callService } from "./ServiceBase";
 
