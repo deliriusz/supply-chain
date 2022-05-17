@@ -9,7 +9,7 @@ import Main from "../../pages/Main";
 import ProductDetails from "../../pages/ProductDetails";
 import ProductsTable from "../../pages/ProductsTable";
 import ProductStatus from "../../pages/ProductStatus";
-import Trace from "../../pages/Trace";
+import MyPurchases from "../../pages/MyPurchases";
 import Footer from "../Footer";
 
 const Layout = () => {
@@ -21,7 +21,7 @@ const Layout = () => {
                <div className="routing-content">
                   <Routes>
                      <Route path="/" element={<Main />} />
-                     <Route path="/trace" element={<Trace />} />
+                     <Route path="/trace" element={<MyPurchases />} />
                      <Route path="/trace/:id" element={<ProductStatus />} />
                      <Route path="/product" element={<ProductsTable />} />
                      <Route path="/product/:productId" element={<ProductDetails />} />
