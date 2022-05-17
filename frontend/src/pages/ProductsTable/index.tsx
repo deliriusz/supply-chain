@@ -31,7 +31,7 @@ const ProductsTable = () => {
    const [productsCount, setProductsCount] = useState<number>(0)
 
    useEffect(() => {
-      ProductService.getProducts(currentPage * PAGE_SIZE, PAGE_SIZE).then(products => {
+      ProductService.getProductModels(currentPage * PAGE_SIZE, PAGE_SIZE).then(products => {
          setProducts(products.products)
          setProductsCount(products.total)
       })

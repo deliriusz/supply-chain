@@ -9,7 +9,7 @@ import PurchaseButton from "../../components/PurchaseButton";
 const ProductDetails = () => {
    let { productId } = useParams()
    useEffect(() => {
-      ProductService.getProduct(parseInt(productId!))
+      ProductService.getProductModel(parseInt(productId!))
          .then(product => setProduct(product))
    }, [productId])
    let [product, setProduct] = useState<ProductModel | undefined>()

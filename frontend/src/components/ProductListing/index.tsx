@@ -6,7 +6,7 @@ import { Grid, GridColumn } from 'semantic-ui-react';
 
 const ProductListing = () => {
    useEffect(() => {
-      ProductService.getProducts().then(products => setProducts(products.products))
+      ProductService.getProductModels().then(products => setProducts(products.products))
    }, [])
    const [products, setProducts] = useState<ProductModel[]>([]);
 

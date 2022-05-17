@@ -44,4 +44,11 @@ const createImage = async (productId: number, file: File): Promise<ResponseConte
    return callService<any>(`product-model/${productId}/image`, requestOptions)
 }
 
-export { getProductModel as getProduct, getProductModels as getProducts, createProductModel as createProduct, createImage }
+const getProduct = async (id: number): Promise<ProductModel | undefined> => {
+   return callService<ProductModel | undefined>(`product-model/${id}`)
+      .then(response => {
+         return response.data
+      })
+}
+
+export { getProductModel, getProductModels, createProductModel, createImage }
