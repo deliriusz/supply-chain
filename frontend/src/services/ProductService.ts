@@ -1,10 +1,16 @@
 import ProductModel from "../interfaces/ProductModel";
+import Product from "../interfaces/Product";
 import ResponseContent from "../interfaces/ResponseContent";
 import { callService } from "./ServiceBase";
 
 interface GetProductModelsResponse {
    total: number,
    products: ProductModel[]
+}
+
+interface GetProductsResponse {
+   total: number,
+   products: Product[]
 }
 
 const getProductModels = async (offset: number = 0, limit: number = 10): Promise<GetProductModelsResponse> => {
@@ -44,11 +50,18 @@ const createImage = async (productId: number, file: File): Promise<ResponseConte
    return callService<any>(`product-model/${productId}/image`, requestOptions)
 }
 
-const getProduct = async (id: number): Promise<ProductModel | undefined> => {
-   return callService<ProductModel | undefined>(`product-model/${id}`)
+const getProduct = async (id: number): Promise<Product | undefined> => {
+   return callService<Product | undefined>(`product/${id}`)
       .then(response => {
          return response.data
       })
 }
 
-export { getProductModel, getProductModels, createProductModel, createImage }
+const getProductsForUser = async (user: string, offset: number = 0, limit: number = 10): Promise<GetProductsResponse | undefined> => {
+   return callService<GetProductsResponse | undefined>(`product/user/${user}`)
+      .then(response => {
+         return response.data
+      })
+}
+
+export { getProductModel, getProductModels, createProductModel, getProduct, getProductsForUser, createImage }
