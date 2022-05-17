@@ -152,7 +152,7 @@ func (hdl *httpHandler) ChangeProductState(c *gin.Context) {
 		return
 	}
 
-	stateId, err := model.ProductStateFromString(c.Param("state"))
+	stateId, err := strconv.Atoi(c.Param("stateId"))
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -160,7 +160,7 @@ func (hdl *httpHandler) ChangeProductState(c *gin.Context) {
 		return
 	}
 
-	hdl.productService.ChangeProductState(uint(productId), stateId)
+	hdl.productService.ChangeProductState(uint(productId), model.ProductState(stateId))
 }
 
 func (hdl *httpHandler) CreateImage(c *gin.Context) {

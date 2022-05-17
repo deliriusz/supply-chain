@@ -129,8 +129,8 @@ func (r *productRepository) UpdateProduct(product *model.Product) error {
 	productToUpdate.Price = product.Price
 	productToUpdate.State = product.State
 
-	if err := DB.Where("id = ?",
-		product.Id).Update(&product).Error; err != nil {
+	//TODO: remove debug
+	if err := DB.Model(&product).Debug().Omit("Model").Update("state", product.State).Error; err != nil {
 		return err
 	}
 
