@@ -125,10 +125,6 @@ func (r *productRepository) UpdateProduct(product *model.Product) error {
 		return fmt.Errorf("product with %d not found", product.Id)
 	}
 
-	productToUpdate.Owner = product.Owner
-	productToUpdate.Price = product.Price
-	productToUpdate.State = product.State
-
 	//TODO: remove debug
 	if err := DB.Model(&product).Debug().Omit("Model").Update("state", product.State).Error; err != nil {
 		return err
