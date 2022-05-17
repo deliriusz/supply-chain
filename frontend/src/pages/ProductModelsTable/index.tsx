@@ -24,7 +24,7 @@ const getPages = (page: number, maxPage: number, pagesToGenerate = 5): number[] 
    return range.filter((val, idx, arr) => val <= maxPage)
 }
 
-const ProductsTable = () => {
+const ProductModelsTable = () => {
    const PAGE_SIZE = 10
    const [products, setProducts] = useState<ProductModel[]>([]);
    const [currentPage, setCurrentPage] = useState<number>(0)
@@ -95,4 +95,4 @@ const ProductsTable = () => {
    )
 }
 
-export default ProductsTable;
+export default ProductModelsTable;

@@ -22,7 +22,7 @@ const Header = () => {
                   Firmex
                </Link>
                <Link className="item" to="/product">Products</Link>
-               <Link className="item" to="/trace">Trace</Link>
+               <Link className="item" to="/purchase">My Purchases</Link>
                <div className="right menu">
                   {(authContext.auth.role === UserRole.Admin
                      || authContext.auth.role === UserRole.DashboardViewer) &&

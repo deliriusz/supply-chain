@@ -6,7 +6,7 @@ import * as ProductService from '../../services/ProductService'
 import ImageCarousel from "../../components/ImageCarousel";
 import PurchaseButton from "../../components/PurchaseButton";
 
-const ProductDetails = () => {
+const ProductModelDetails = () => {
    let { productId } = useParams()
    useEffect(() => {
       ProductService.getProductModel(parseInt(productId!))
@@ -92,4 +92,4 @@ const ProductDetails = () => {
    )
 }
 
-export default ProductDetails;
+export default ProductModelDetails;
