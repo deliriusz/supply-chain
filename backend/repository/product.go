@@ -100,6 +100,12 @@ func (r *productRepository) GetProductsForUser(user string, limit, offset uint) 
 func (r *productRepository) CreateProduct(product *model.Product) error {
 	DB := r.repoConnector.GetConnector().DB
 
+	if productModel, err := r.getProductModel(product.Model.Id); err != nil {
+		return err
+	} else {
+		product.Model = productModel
+	}
+
 	if err := DB.Create(&product).Error; err != nil {
 		return err
 	}
