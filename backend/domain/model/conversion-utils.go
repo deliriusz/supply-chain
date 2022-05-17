@@ -7,13 +7,23 @@ import (
 )
 
 func ToPurchaseDTO(purchase PurchaseOrder) PurchaseOrderDTO {
+	totalPrice := uint(0)
+	minimalState := Delivered
+	for _, product := range purchase.Product {
+		totalPrice += product.Price
+
+		if minimalState > product.State {
+			minimalState = product.State
+		}
+	}
+
 	return PurchaseOrderDTO{
 		Id:      purchase.Id,
 		UserId:  purchase.UserId,
 		Product: purchase.Product,
-		Price:   purchase.Price,
+		Price:   totalPrice,
 		Date:    purchase.Date,
-		Status:  purchase.Status,
+		Status:  minimalState.String(),
 	}
 }
 
@@ -22,9 +32,7 @@ func ToPurchase(purchase PurchaseOrderDTO) PurchaseOrder {
 		Id:      purchase.Id,
 		UserId:  purchase.UserId,
 		Product: purchase.Product,
-		Price:   purchase.Price,
 		Date:    purchase.Date,
-		Status:  purchase.Status,
 	}
 }
 
