@@ -56,6 +56,32 @@ func (r *productRepository) CreateProductModel(product *model.ProductModel) erro
 	return nil
 }
 
+func (r *productRepository) GetProductMetadata(id uint) (*model.ProductMetadata, error) {
+	DB := r.repoConnector.GetConnector().DB
+
+	var product model.Product
+	var productMetadata model.ProductMetadata
+
+	if err := DB.Where("id = ?",
+		id).Preload("Model").First(&product, id).Error; err != nil {
+		return &model.ProductMetadata{}, err
+	}
+
+	if productModel, err := r.getProductModel(product.Model.Id); err != nil {
+		return &model.ProductMetadata{}, err
+	} else {
+		product.Model = productModel
+	}
+
+	imageDto := model.ToImageDTO(product.Model.Img[0])
+
+	productMetadata.Image = imageDto.Url
+	productMetadata.Name = fmt.Sprintf("%s #%d", product.Model.Title, product.Id)
+	productMetadata.Description = "This is an NFT metadata representation of product created at Firmex"
+
+	return &productMetadata, nil
+}
+
 func (r *productRepository) GetProduct(id uint) (*model.Product, error) {
 	DB := r.repoConnector.GetConnector().DB
 

@@ -5,7 +5,6 @@ TODO:
 * remove params from repo InitConnection function - it should be taken from config
 
 NEXT STEPS:
-create helper to create products for a product model
 add support for NFT metadata read
 implement TheGraph to gather info about user purchases
 implement TheGraph RepoConnector to get purchase info for dashboard

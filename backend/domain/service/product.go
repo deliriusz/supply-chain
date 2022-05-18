@@ -14,6 +14,7 @@ type ProductService interface {
 	GetProducts(limit, offset uint) (*[]model.Product, uint)
 	GetProductsForUser(user string, limit, offset uint) (*[]model.Product, uint)
 	CreateProduct(*model.Product) error
+	GetProductMetadata(id uint) (*model.ProductMetadata, error)
 	ChangeProductState(id uint, state model.ProductState) error
 	SellProduct(id uint, to string) error
 	CreateImage(productId uint, file *bufio.Reader) (model.Image, error)
@@ -28,6 +29,7 @@ type ProductRepository interface {
 	GetProducts(limit, offset uint) (*[]model.Product, uint)
 	GetProductsForUser(user string, limit, offset uint) (*[]model.Product, uint)
 	CreateProduct(*model.Product) error
+	GetProductMetadata(id uint) (*model.ProductMetadata, error)
 	UpdateProduct(*model.Product) error
 	CreateImage(productId uint, file *bufio.Reader) (model.Image, error)
 	GetImage(fileName string) (string, string, *bufio.Reader, error)

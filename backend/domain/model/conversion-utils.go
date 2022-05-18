@@ -6,6 +6,26 @@ import (
 	"rafal-kalinowski.pl/config"
 )
 
+func ToProductMetadataDTO(productMeta ProductMetadata) ProductMetadataDTO {
+	return ProductMetadataDTO{
+		Name:        productMeta.Name,
+		Description: productMeta.Description,
+		Image:       productMeta.Image,
+		Attributes:  productMeta.Attributes,
+		ExternalUri: productMeta.ExternalUri,
+	}
+}
+
+func ToProductMetadata(productMeta ProductMetadataDTO) ProductMetadata {
+	return ProductMetadata{
+		Name:        productMeta.Name,
+		Description: productMeta.Description,
+		Image:       productMeta.Image,
+		Attributes:  productMeta.Attributes,
+		ExternalUri: productMeta.ExternalUri,
+	}
+}
+
 func ToPurchaseDTO(purchase PurchaseOrder) PurchaseOrderDTO {
 	totalPrice := uint(0)
 	minimalState := Delivered

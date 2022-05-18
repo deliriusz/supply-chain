@@ -23,6 +23,7 @@ type HTTPHandler interface {
 	GetProduct(*gin.Context)
 	GetProducts(*gin.Context)
 	GetProductsForUser(*gin.Context)
+	GetProductMetadata(*gin.Context)
 	CreateProduct(*gin.Context)
 	ChangeProductState(*gin.Context)
 	CreateImage(*gin.Context)
@@ -135,6 +136,7 @@ func (hdl *httpHandler) setupPublicRoutes() {
 	router.GET("/product-model/:id", hdl.GetProductModel)
 	router.GET("/product", hdl.GetProducts)
 	router.GET("/product/:id", hdl.GetProduct)
+	router.GET("/product-metadata/:id", hdl.GetProductMetadata)
 	router.GET("/image/:fileName", hdl.GetImage)
 	router.POST("/purchase", hdl.CreatePurchase)
 }

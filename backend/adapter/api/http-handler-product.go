@@ -66,6 +66,25 @@ func (hdl *httpHandler) CreateProductModel(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": product.Id})
 }
 
+func (hdl *httpHandler) GetProductMetadata(c *gin.Context) {
+	productId, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Error(err)
+		return
+	}
+
+	product, err := hdl.productService.GetProductMetadata(uint(productId))
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, model.ToProductMetadataDTO(*product))
+}
+
 func (hdl *httpHandler) GetProduct(c *gin.Context) {
 	productId, err := strconv.Atoi(c.Param("id"))
 

@@ -47,6 +47,10 @@ func (s *productService) ChangeProductState(id uint, state model.ProductState) e
 	}
 }
 
+func (s *productService) GetProductMetadata(id uint) (*model.ProductMetadata, error) {
+	return s.repository.GetProductMetadata(id)
+}
+
 func (s *productService) SellProduct(id uint, to string) error {
 	if product, err := s.repository.GetProduct(id); err != nil {
 		return err
