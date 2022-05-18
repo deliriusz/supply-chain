@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"testing"
+	"time"
 
 	. "github.com/franela/goblin"
 	"rafal-kalinowski.pl/config"
@@ -283,6 +284,23 @@ func TestImage(t *testing.T) {
 			g.Assert(productWithImages.Img[createdImagesCount-1].ProductId == 1).IsTrue()
 		})
 	})
+}
+
+func createRandomPurchase() *model.PurchaseOrder {
+	createRandomProductModel()
+	createRandomProductModel()
+	purchaseProduct1 := createRandomProduct(1)
+	purchaseProduct2 := createRandomProduct(2)
+
+	poTime := time.Now().Add(time.Hour * (time.Duration(-rand.Intn(5000))))
+	return &model.PurchaseOrder{
+		UserId: "asdf",
+		Date:   poTime,
+		Product: []model.Product{
+			*purchaseProduct1,
+			*purchaseProduct2,
+		},
+	}
 }
 
 func createRandomProduct(modelId uint) *model.Product {
