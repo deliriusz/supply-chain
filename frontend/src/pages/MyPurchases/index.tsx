@@ -1,77 +1,47 @@
-import React, { useState } from "react";
+import { filter } from "lodash";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Divider, Form, FormProps, Grid, Icon, Segment } from "semantic-ui-react";
 import PurchaseCard from "../../components/PurchaseCard";
+import AuthContext from "../../hooks/AuthContext";
 import PurchaseOrder from "../../interfaces/PurchaseOrder";
+import { getPurchaseOrdersForUser } from "../../services/PurchaseOrderService";
 
-const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-   //TODO: implement
-}
 
 
 const MyPurchases = () => {
-   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(
-      [
-         {
-            id: "1",
-            userId: "",
-            date: "2020-05-13 15:23:58",
-            price: 100,
-            product: [
-               {
-                  price: 90,
-                  state: "IN_PROGRESS",
-                  productModel: {
-                     description: "",
-                     title: "product title",
-                     id: 1,
-                     images: [],
-                     specification: [],
-                     quantity: 1,
-                     price: 100
-                  }
-               },
-               {
-                  price: 10,
-                  state: "PAYED",
-                  productModel: {
-                     description: "",
-                     title: "product title 2",
-                     id: 1,
-                     images: [],
-                     specification: [],
-                     quantity: 1,
-                     price: 100
-                  }
-               }
-            ],
-            status: "IN_PROGRESS"
+   const PURCHASE_LIST_PAGE_SIZE = 10
+   const authContext = React.useContext(AuthContext)
+   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
+   const [filteredPurchaseOrders, setFilteredPurchaseOrders] = useState<PurchaseOrder[]>(purchaseOrders)
+   const [hasMoreData, setHasMoreData] = useState(false)
+   const [isDataFetching, setIsDataFetching] = useState(false)
+   const [fetchedDataOffset, setFetchedDataOffset] = useState(0)
 
-         },
-         {
-            id: "2",
-            userId: "",
-            date: "2021-12-24 09:30:00",
-            price: 250,
-            product: [
-               {
-                  price: 250,
-                  state: "DELIVERED",
-                  productModel: {
-                     description: "",
-                     title: "product title 3",
-                     id: 1,
-                     images: [],
-                     specification: [],
-                     quantity: 1,
-                     price: 100
-                  }
-               }
-            ],
-            status: "DELIVERED"
+   useEffect(() => {
+      if (authContext.auth.isAuthenticated == true) {
+         setIsDataFetching(true)
+         getPurchaseOrdersForUser(authContext.auth.address!, fetchedDataOffset).then(resp => {
+            const concatenatedPurchaseOrders = purchaseOrders.concat(resp.products)
+            setPurchaseOrders(concatenatedPurchaseOrders)
+            setFilteredPurchaseOrders(concatenatedPurchaseOrders)
+            setHasMoreData(fetchedDataOffset + PURCHASE_LIST_PAGE_SIZE < resp.total)
+         })
+         setIsDataFetching(false)
+      }
+   }, [fetchedDataOffset])
 
-         }
-      ]
-   )
+   const handleFetchData = () => {
+      setFetchedDataOffset(fetchedDataOffset + PURCHASE_LIST_PAGE_SIZE)
+   }
+
+   //TODO: add fetch from backend
+   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const filterText = event.target.value.toLowerCase()
+      setFilteredPurchaseOrders(purchaseOrders.filter((po, idx, arr) => {
+         return po.product.some((prod, idxProd, arrProd) => { return prod.productModel.title.toLowerCase().includes(filterText) })
+      })
+      )
+   }
 
    return (
       <>
@@ -92,9 +62,19 @@ const MyPurchases = () => {
          <hr />
 
          {
-            purchaseOrders?.map((val, idx, arr) => {
+            filteredPurchaseOrders?.map((val, idx, arr) => {
                return <PurchaseCard purchaseOrder={val} />
             })
+         }
+
+         {hasMoreData &&
+            <Button
+               color="teal"
+               loading={isDataFetching}
+               onClick={() => handleFetchData()}
+            >
+               Load more
+            </Button>
          }
       </>
    )
