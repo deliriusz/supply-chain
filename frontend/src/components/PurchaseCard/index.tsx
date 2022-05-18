@@ -1,9 +1,5 @@
-import React from "react";
-import { Button, Card, Grid, Icon, Image } from "semantic-ui-react";
-import ProductModel from "../../interfaces/ProductModel";
+import { Card, Grid, Icon, Label } from "semantic-ui-react";
 import PurchaseOrder from "../../interfaces/PurchaseOrder";
-import AddProductPane from "../../pages/AdminDashboard/AddProductPane";
-import PurchaseButton from "../PurchaseButton";
 
 interface PurchaseCardProps {
    purchaseOrder: PurchaseOrder
@@ -28,16 +24,18 @@ const PurchaseCard = (props: PurchaseCardProps) => {
          <Card.Content>
             <Grid divided="vertically">
                {
-                  props.purchaseOrder.product.map((elem, idx, arr) => {
+                  props.purchaseOrder.product.map((product, idx, arr) => {
                      return <Grid.Row>
                         <Grid.Column width={3}>
                            <img src='https://react.semantic-ui.com/images/wireframe/image.png' />
                         </Grid.Column>
                         <Grid.Column width={10}>
-                           <a href={`/product/${elem.id}`} >{elem.productModel?.title}</a>
+                           <a href={`/product/${product.productModel?.id}`} >{product.productModel?.title}</a>
                         </Grid.Column>
                         <Grid.Column width={3}>
-                           {elem.price} wei
+                           <Label tag color="teal">
+                              {product.price} wei
+                           </Label>
                         </Grid.Column>
                      </Grid.Row>
                   })
