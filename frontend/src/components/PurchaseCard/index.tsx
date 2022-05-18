@@ -29,7 +29,7 @@ const PurchaseCard = (props: PurchaseCardProps) => {
                         <Grid.Column width={3}>
                            <img src='https://react.semantic-ui.com/images/wireframe/image.png' />
                         </Grid.Column>
-                        <Grid.Column width={10}>
+                        <Grid.Column width={10} textAlign="left">
                            <a href={`/product/${product.productModel?.id}`} >{product.productModel?.title}</a>
                         </Grid.Column>
                         <Grid.Column width={3}>

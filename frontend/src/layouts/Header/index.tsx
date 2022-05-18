@@ -21,7 +21,7 @@ const Header = () => {
                   <Image size="mini" src={`${process.env.PUBLIC_URL}/logo-new.png`} />&nbsp;
                   Firmex
                </Link>
-               <Link className="item" to="/product">Products</Link>
+               <Link className="item" to="/product">Product catalogue</Link>
                <Link className="item" to="/purchase">My Purchases</Link>
                <div className="right menu">
                   {(authContext.auth.role === UserRole.Admin
