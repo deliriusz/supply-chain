@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"time"
 
 	"rafal-kalinowski.pl/config"
 )
@@ -42,18 +43,24 @@ func ToPurchaseDTO(purchase PurchaseOrder) PurchaseOrderDTO {
 		UserId:  purchase.UserId,
 		Product: purchase.Product,
 		Price:   totalPrice,
-		Date:    purchase.Date,
+		Date:    purchase.Date.Format(time.RFC3339),
 		Status:  minimalState.String(),
 	}
 }
 
-func ToPurchase(purchase PurchaseOrderDTO) PurchaseOrder {
+func ToPurchase(purchase PurchaseOrderDTO) (PurchaseOrder, error) {
+	parsedDate, err := time.Parse(time.RFC3339, purchase.Date)
+
+	if err != nil {
+		return PurchaseOrder{}, err
+	}
+
 	return PurchaseOrder{
 		Id:      purchase.Id,
 		UserId:  purchase.UserId,
 		Product: purchase.Product,
-		Date:    purchase.Date,
-	}
+		Date:    parsedDate,
+	}, nil
 }
 
 func ToLoginDTO(login Login) LoginDTO {
