@@ -312,10 +312,11 @@ func createRandomProduct(modelId uint) *model.Product {
 	productModel, _ := productRepo.GetProductModel(modelId)
 
 	return &model.Product{
-		Model: productModel,
-		State: model.InProduction,
-		Owner: "",
-		Price: productModel.BasePrice,
+		Model:   productModel,
+		State:   model.InProduction,
+		Owner:   "",
+		Price:   productModel.BasePrice,
+		ModelId: int(modelId),
 	}
 }
 
